@@ -322,7 +322,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                 data.append(
                     "This line is a comment block. Write whatever you want here.\n"
                 )
-        with open(filename, "w") as f:
+        with open(filename, "x") as f:
             f.writelines(data)
 
     # If the number of repos has changed, or force_cache is True

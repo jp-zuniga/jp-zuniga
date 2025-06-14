@@ -12,6 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          persist-credentials: true
           fetch-depth: 0
 
       - name: Set up uv
@@ -31,8 +32,8 @@ jobs:
       - name: Setup environment and run script
         working-directory: ./updater
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USER_NAME: ${{ secrets.USER_NAME }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv venv --python $(cat .python-version)
           uv sync
@@ -40,8 +41,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --global user.name "jp-zuniga/GH-Actions-Bot"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "jp-zuniga[bot]"
+          git config --global user.email "github-actions@github.com"
           git add .
           git commit -m "Update README.md"
           git push

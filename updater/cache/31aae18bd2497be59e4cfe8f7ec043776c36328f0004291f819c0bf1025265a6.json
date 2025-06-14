@@ -1,0 +1,44 @@
+{
+  "ca4ecda7309ec5ae31b806b5fb5d42e2ee2b0f4780ae611e824a86b662699cd8": {
+    "name": "jp-zuniga/Project-Euler",
+    "commits": 77,
+    "additions": 8024,
+    "deletions": 5301
+  },
+  "91063da024705c2554f58439f36b8225810ab9c2c4e1d37033ca9e8154c33704": {
+    "name": "jp-zuniga/GaussBot",
+    "commits": 202,
+    "additions": 80178,
+    "deletions": 49125
+  },
+  "68bed0ee8b9197ea34d2f16271526fdc51c5d37449dd99116021507c56ac859c": {
+    "name": "jp-zuniga/reforzamientos-python-basico",
+    "commits": 11,
+    "additions": 1216,
+    "deletions": 364
+  },
+  "304a81f87e2680013b73f5df728a0fc4ae01f6769fb4b477335ed1f8f69f3050": {
+    "name": "jp-zuniga/sistema-contable",
+    "commits": 1,
+    "additions": 4357,
+    "deletions": 0
+  },
+  "664f6458d9f7b627a6d692a6748e0e8fa1ed88d7be0ce80562ec3604b3e5e909": {
+    "name": "jp-zuniga/rust-learning",
+    "commits": 16,
+    "additions": 1749,
+    "deletions": 70
+  },
+  "3ffa619374f810af9159c5cb23e88d63cb98139fa3fa10a743d00d3256897e72": {
+    "name": "jp-zuniga/rust-practice",
+    "commits": 5,
+    "additions": 6814,
+    "deletions": 300
+  },
+  "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
+    "name": "jp-zuniga/jp-zuniga",
+    "commits": 21,
+    "additions": 1493,
+    "deletions": 596
+  }
+}

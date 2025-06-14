@@ -9,14 +9,13 @@ jobs:
   update:
     runs-on: ubuntu-latest
     permissions:
-      content: write
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
-          fetch-depth: 0
+          fetch-depth: 1
 
         - name: Set up uv
             run: |

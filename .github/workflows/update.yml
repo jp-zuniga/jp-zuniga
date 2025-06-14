@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-uv-${{ hashFiles('./updater/pyproject.toml') }}
           restore-keys: ${{ runner.os }}-uv-
 
-      - name: Setup environment
+      - name: Set up environment
         run: |
           cd updater
           uv venv --python $(cat .python-version)

@@ -1,14 +1,14 @@
-import datetime
-import hashlib
-import os
+from datetime import datetime
+from hashlib import sha256
+from os import environ
 
 import requests
 from dateutil import relativedelta
 from lxml import etree
 
-BIRTHDAY = datetime.datetime(2005, 7, 7)
-USER_NAME = os.environ["USER_NAME"]
-HEADERS = {"authorization": "token " + os.environ["GH_TOKEN"]}
+BIRTHDAY = datetime(2005, 7, 7)
+USER_NAME = environ["USER_NAME"]
+HEADERS = {"authorization": "token " + environ["GH_TOKEN"]}
 
 
 def calculate_age(birthday: datetime) -> str:
@@ -300,15 +300,15 @@ def loc_query(
 
 def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     """
-    Checks each repository in edges to see if it has been updated since the last time it was cached
-    If it has, run recursive_loc on that repository to update the LOC count
+    Checks each repository in 'edges' to see if it's changed since it's last cache.
+    If it has, run recursive_loc() on that repository to update the LOC count.
     """
 
     # Assume all repositories are cached
     cached = True
 
     # Create a unique filename for each user
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
 
     try:
         with open(filename, "r") as f:
@@ -333,13 +333,12 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
     cache_comment = data[:comment_size]  # save the comment block
     data = data[comment_size:]  # remove those lines
+
     for index in range(len(edges)):
         repo_hash, commit_count, *__ = data[index].split()
         if (
             repo_hash
-            == hashlib.sha256(
-                edges[index]["node"]["nameWithOwner"].encode("utf-8")
-            ).hexdigest()
+            == sha256(edges[index]["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
         ):
             try:
                 if (
@@ -367,7 +366,8 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                         + str(loc[1])
                         + "\n"
                     )
-            except TypeError:  # If the repo is empty
+            except TypeError:
+                # If the repo is empty
                 data[index] = repo_hash + " 0 0 0 0\n"
     with open(filename, "w") as f:
         f.writelines(cache_comment)
@@ -381,28 +381,30 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
 def flush_cache(edges, filename, comment_size):
     """
-    Wipes the cache file
-    This is called when the number of repositories changes or when the file is first created
+    Wipes the cache file.
     """
+
     with open(filename, "r") as f:
         data = []
         if comment_size > 0:
-            data = f.readlines()[:comment_size]  # only save the comment
+            # only save the comment
+            data = f.readlines()[:comment_size]
+
     with open(filename, "w") as f:
         f.writelines(data)
         for node in edges:
             f.write(
-                hashlib.sha256(node["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
+                sha256(node["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
                 + " 0 0 0 0\n"
             )
 
 
 def force_close_file(data, cache_comment):
     """
-    Forces the file to close, preserving whatever data was written to it
-    This is needed because if this function is called, the program would've crashed before the file is properly saved and closed
+    Forces the file to close, preserving whatever data was written to it.
     """
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
     with open(filename, "w") as f:
         f.writelines(cache_comment)
         f.writelines(data)
@@ -485,7 +487,7 @@ def commit_counter(comment_size):
     total_commits = 0
 
     # Use the same filename as cache_builder
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
 
     with open(filename, "r") as f:
         data = f.readlines()

@@ -40,8 +40,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --global user.name "jp-zuniga/GH-Actions-Bot"
-          git config --global user.email "actions@github.com"
+          git config --global user.name ${{ secrets.USER_NAME }}
+          git config --global user.email ${{ secrets.USER_EMAIL }}
           git add .
           git commit -m "Update README.md"
           git push

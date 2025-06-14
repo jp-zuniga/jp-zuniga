@@ -1,0 +1,47 @@
+name: Update README.md
+
+on:
+    schedule:
+        - cron: "0 0 * * 0"  # run every sunday
+    workflow-dispatch:       # for manual retriggers
+
+jobs:
+    update:
+        runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+
+        - name: Set up uv
+            run: |
+                curl -LsSf https://astral.sh/uv/install.sh |
+                echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+        - name: Cache dependencies
+            uses: actions/cache@v3
+            working-directory: ./updater
+            with:
+                path: |
+                    ~/.cache/uv
+                    .venv
+                key: ${{ runner.os }}-uv-${{ hashFiles("pyproject.toml") }}
+                restore-keys: ${{ runner.os }}-uv-
+
+        - name: Setup environment and run script
+            working-directory: ./updater
+            env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                USER_NAME: ${{ secrets.USER_NAME }}
+            run: |
+                uv venv --python $(cat .python-version)
+                uv sync
+                uv run main.py
+
+        - name: Commit changes
+            run: |
+                git config --global user.name "jp-zuniga/GH-Actions-Bot"
+                git config --global user.email "actions@github.com"
+                git add .
+                git commit -m "Update README.md"
+                git push

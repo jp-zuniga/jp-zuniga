@@ -25,7 +25,7 @@ jobs:
           path: |
             ~/.cache/uv
             ./updater/.venv
-          key: ${{ runner.os }}-uv-${{ hashFiles("./updater/pyproject.toml") }}
+          key: ${{ runner.os }}-uv-${{ hashFiles('./updater/pyproject.toml') }}
           restore-keys: ${{ runner.os }}-uv-
 
       - name: Setup environment and run script

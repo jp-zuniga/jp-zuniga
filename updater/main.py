@@ -1,6 +1,6 @@
 from datetime import datetime
 from hashlib import sha256
-from os import environ
+from os import environ, path
 
 import requests
 from dateutil.relativedelta import relativedelta
@@ -9,6 +9,7 @@ from lxml import etree
 BIRTHDAY = datetime(2005, 7, 7)
 USER_NAME = environ["USER_NAME"]
 HEADERS = {"authorization": "token " + environ["GH_TOKEN"]}
+DARK_SVG = path.join(path.curdir, "assets", "dark_mode.svg")
 
 
 def calculate_age(birthday: datetime) -> str:
@@ -454,7 +455,7 @@ def justify_format(root, element_id, new_text, length=0):
     """
 
     if isinstance(new_text, int):
-        new_text = f"{'{:,}'.format(new_text)}"
+        new_text = f"{new_text:,}"
     new_text = str(new_text)
 
     find_and_replace(root, element_id, new_text)
@@ -524,13 +525,13 @@ def main():
     OWNER_ID, _ = user_getter(USER_NAME)
 
     age_data = calculate_age(BIRTHDAY)
+    total_loc = loc_query(["OWNER"], 7)
+    commit_data = commit_counter(7)
     star_data = graph_repos_stars("stars", ["OWNER"])
     repo_data = graph_repos_stars("repos", ["OWNER"])
-    commit_data = commit_counter(7)
-    total_loc = loc_query(["OWNER"], 7)
 
     svg_overwrite(
-        "dark_mode.svg",
+        DARK_SVG,
         age_data,
         commit_data,
         star_data,

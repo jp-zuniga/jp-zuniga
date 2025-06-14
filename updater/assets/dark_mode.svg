@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', monospace" width="1600px" height="1000px">
     <style>
-        .title     { fill: #f28b0d; font-weight: bold; }
-        .pic       { fill: #ffffff; }
-        .border    { fill: #708090; }
-        .key       { fill: #ffa657; }
-        .value     { fill: #26acd9; }
+        .title { fill: #f28b0d; font-weight: bold; }
+        .pic { fill: #ffffff; }
+        .border { fill: #708090; }
+        .key { fill: #ffa657; }
+        .value { fill: #26acd9; }
         .add_color { fill: #3fb950; }
         .del_color { fill: #f85149; }
     </style>
@@ -63,7 +63,7 @@
         <tspan x="735" y="150">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan> ─────────────────────────────────────────╮
         <tspan x="735" y="190">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan id="age_data_dots"> ............................ </tspan><tspan class="value" id="age_data">19 years, 11 months, 7 days</tspan> │
         <tspan x="735" y="220">│ ‣ </tspan><tspan class="key">OS</tspan> ............................................ <tspan class="value">Linux Mint 22.1</tspan> │
-        <tspan x="735" y="250">│ ‣ </tspan><tspan class="key">IDE</tspan> .......................................,,... <tspan class="value">VSCodium 1.101</tspan> │
+        <tspan x="735" y="250">│ ‣ </tspan><tspan class="key">IDE</tspan> ............................................ <tspan class="value">VSCodium 1.101</tspan> │
         <tspan x="735" y="280">│ ‣ </tspan><tspan class="key">Shell</tspan> ......................................... <tspan class="value">Nushell 0.105.1</tspan> │
         <tspan x="735" y="320">├── </tspan><tspan class="title">User.Profile</tspan> ───────────────────────────────────────────────────┤
         <tspan x="735" y="360">│ ‣ </tspan><tspan class="key">Hobbies</tspan> ................. <tspan class="value">FOSS, Mentoring, Photography, Writing</tspan> │

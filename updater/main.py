@@ -1,14 +1,15 @@
-import datetime
-import hashlib
-import os
+from datetime import datetime
+from hashlib import sha256
+from os import environ, mkdir, path
 
 import requests
-from dateutil import relativedelta
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 
-BIRTHDAY = datetime.datetime(2005, 7, 7)
-USER_NAME = os.environ["USER_NAME"]
-HEADERS = {"authorization": "token " + os.environ["GH_TOKEN"]}
+BIRTHDAY = datetime(2005, 7, 7)
+USER_NAME = environ["USER_NAME"]
+HEADERS = {"authorization": "token " + environ["GH_TOKEN"]}
+DARK_SVG = path.join(path.curdir, "assets", "dark_mode.svg")
 
 
 def calculate_age(birthday: datetime) -> str:
@@ -20,8 +21,8 @@ def calculate_age(birthday: datetime) -> str:
     return (
         f"{'🎂 ' if diff.months == 0 and diff.days == 0 else ''}"
         + f"{diff.years} years"
-        + f"{f', {diff.months}' if diff.months != 0 else ''}{' month' + 's' if diff.months != 1 else ''}"
-        + f"{f', {diff.days}' if diff.days != 0 else ''}{' month' + 's' if diff.days != 1 else ''}"
+        + f"{f', {diff.months}' if diff.months != 0 else ''}{' month' + 's' if diff.months > 1 else ''}"
+        + f"{f', {diff.days}' if diff.days != 0 else ''}{' month' + 's' if diff.days > 1 else ''}"
     )
 
 
@@ -213,7 +214,7 @@ def loc_counter_one_repo(
     """
 
     for node in history["edges"]:
-        if node["node"]["author"]["user"] == OWNER_ID:
+        if node["node"]["author"]["user"] == user_getter(USER_NAME)[0]["id"]:
             my_commits += 1
             addition_total += node["node"]["additions"]
             deletion_total += node["node"]["deletions"]
@@ -300,15 +301,18 @@ def loc_query(
 
 def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     """
-    Checks each repository in edges to see if it has been updated since the last time it was cached
-    If it has, run recursive_loc on that repository to update the LOC count
+    Checks each repository in 'edges' to see if it's changed since it's last cache.
+    If it has, run recursive_loc() on that repository to update the LOC count.
     """
 
     # Assume all repositories are cached
     cached = True
 
+    if not path.exists("cache"):
+        mkdir("cache")
+
     # Create a unique filename for each user
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
 
     try:
         with open(filename, "r") as f:
@@ -321,7 +325,7 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                 data.append(
                     "This line is a comment block. Write whatever you want here.\n"
                 )
-        with open(filename, "w") as f:
+        with open(filename, "x") as f:
             f.writelines(data)
 
     # If the number of repos has changed, or force_cache is True
@@ -333,13 +337,12 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
     cache_comment = data[:comment_size]  # save the comment block
     data = data[comment_size:]  # remove those lines
+
     for index in range(len(edges)):
         repo_hash, commit_count, *__ = data[index].split()
         if (
             repo_hash
-            == hashlib.sha256(
-                edges[index]["node"]["nameWithOwner"].encode("utf-8")
-            ).hexdigest()
+            == sha256(edges[index]["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
         ):
             try:
                 if (
@@ -367,7 +370,8 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
                         + str(loc[1])
                         + "\n"
                     )
-            except TypeError:  # If the repo is empty
+            except TypeError:
+                # If the repo is empty
                 data[index] = repo_hash + " 0 0 0 0\n"
     with open(filename, "w") as f:
         f.writelines(cache_comment)
@@ -381,28 +385,30 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
 def flush_cache(edges, filename, comment_size):
     """
-    Wipes the cache file
-    This is called when the number of repositories changes or when the file is first created
+    Wipes the cache file.
     """
+
     with open(filename, "r") as f:
         data = []
         if comment_size > 0:
-            data = f.readlines()[:comment_size]  # only save the comment
+            # only save the comment
+            data = f.readlines()[:comment_size]
+
     with open(filename, "w") as f:
         f.writelines(data)
         for node in edges:
             f.write(
-                hashlib.sha256(node["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
+                sha256(node["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
                 + " 0 0 0 0\n"
             )
 
 
 def force_close_file(data, cache_comment):
     """
-    Forces the file to close, preserving whatever data was written to it
-    This is needed because if this function is called, the program would've crashed before the file is properly saved and closed
+    Forces the file to close, preserving whatever data was written to it.
     """
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
     with open(filename, "w") as f:
         f.writelines(cache_comment)
         f.writelines(data)
@@ -452,7 +458,7 @@ def justify_format(root, element_id, new_text, length=0):
     """
 
     if isinstance(new_text, int):
-        new_text = f"{'{:,}'.format(new_text)}"
+        new_text = f"{new_text:,}"
     new_text = str(new_text)
 
     find_and_replace(root, element_id, new_text)
@@ -485,7 +491,7 @@ def commit_counter(comment_size):
     total_commits = 0
 
     # Use the same filename as cache_builder
-    filename = "cache/" + hashlib.sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
 
     with open(filename, "r") as f:
         data = f.readlines()
@@ -518,17 +524,15 @@ def user_getter(username):
 
 
 def main():
-    global OWNER_ID
-    OWNER_ID, _ = user_getter(USER_NAME)
-
     age_data = calculate_age(BIRTHDAY)
+    print(age_data)
+    total_loc = loc_query(["OWNER"], 7)
+    commit_data = commit_counter(7)
     star_data = graph_repos_stars("stars", ["OWNER"])
     repo_data = graph_repos_stars("repos", ["OWNER"])
-    commit_data = commit_counter(7)
-    total_loc = loc_query(["OWNER"], 7)
 
     svg_overwrite(
-        "dark_mode.svg",
+        DARK_SVG,
         age_data,
         commit_data,
         star_data,

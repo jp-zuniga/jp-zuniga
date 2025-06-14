@@ -1,543 +1,411 @@
+import json
 from datetime import datetime
 from hashlib import sha256
-from os import environ, mkdir, path
+from pathlib import Path
+import os
+import sys
 
 import requests
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 
-BIRTHDAY = datetime(2005, 7, 7)
-USER_NAME = environ["USER_NAME"]
-HEADERS = {"authorization": "token " + environ["GH_TOKEN"]}
-DARK_SVG = path.join(path.curdir, "assets", "dark_mode.svg")
+
+class GitHubAPIError(Exception):
+    """Custom exception for GitHub API errors"""
+
+    pass
 
 
-def calculate_age(birthday: datetime) -> str:
-    """
-    Returns the length of time since 'birthday' as a formatted string.
-    """
+class CacheError(Exception):
+    """Custom exception for cache handling errors"""
 
-    diff = relativedelta(datetime.today(), birthday)
-    return (
-        f"{'🎂 ' if diff.months == 0 and diff.days == 0 else ''}"
-        + f"{diff.years} year{'s' if diff.years != 1 else ''}, "
-        + f"{diff.months} month{'s' if diff.months != 1 else ''}, "
-        + f"{diff.days} day{'s' if diff.days != 1 else ''}"
-    )
+    pass
 
 
-def simple_request(func_name, query, variables):
-    """
-    Returns a request, or raises an Exception if the response does not succeed.
-    """
+class GitHubStats:
+    """Main class for fetching and processing GitHub statistics"""
 
-    request = requests.post(
-        "https://api.github.com/graphql",
-        json={"query": query, "variables": variables},
-        headers=HEADERS,
-    )
+    GRAPHQL_ENDPOINT = "https://api.github.com/graphql"
+    CACHE_DIR = Path("cache")
+    SVG_DIR = Path("assets")
 
-    if request.status_code == 200:
-        return request
-    raise Exception(func_name, " has failed with a", request.status_code, request.text)
-
-
-def graph_commits(start_date, end_date):
-    """
-    Finds a user's total commit count.
-    """
-
-    query = """
-    query($start_date: DateTime!, $end_date: DateTime!, $login: String!) {
-        user(login: $login) {
-            contributionsCollection(from: $start_date, to: $end_date) {
-                contributionCalendar {
-                    totalContributions
+    # Centralized GraphQL queries
+    QUERIES = {
+        "user": """
+            query($login: String!){
+                user(login: $login) {
+                    id
+                    createdAt
                 }
             }
-        }
-    }"""
-
-    variables = {"start_date": start_date, "end_date": end_date, "login": USER_NAME}
-    request = simple_request(graph_commits.__name__, query, variables)
-    return int(
-        request.json()["data"]["user"]["contributionsCollection"]["contributionCalendar"][
-            "totalContributions"
-        ]
-    )
-
-
-def graph_repos_stars(count_type, owner_affiliation, cursor=None, add_loc=0, del_loc=0):
-    """
-    Find's a user's total repository, star, or lines of code count.
-    """
-
-    query = """
-    query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
-        user(login: $login) {
-            repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
-                totalCount
-                edges {
-                    node {
-                        ... on Repository {
-                            nameWithOwner
-                            stargazers {
-                                totalCount
-                            }
-                        }
-                    }
-                }
-                pageInfo {
-                    endCursor
-                    hasNextPage
-                }
-            }
-        }
-    }"""
-
-    variables = {
-        "owner_affiliation": owner_affiliation,
-        "login": USER_NAME,
-        "cursor": cursor,
-    }
-
-    request = simple_request(graph_repos_stars.__name__, query, variables)
-    if request.status_code == 200:
-        if count_type == "repos":
-            return request.json()["data"]["user"]["repositories"]["totalCount"]
-        elif count_type == "stars":
-            return stars_counter(request.json()["data"]["user"]["repositories"]["edges"])
-
-
-def recursive_loc(
-    owner,
-    repo_name,
-    data,
-    cache_comment,
-    addition_total=0,
-    deletion_total=0,
-    my_commits=0,
-    cursor=None,
-):
-    """
-    Fetches 100 commits from a repository at a time.
-    """
-
-    query = """
-    query ($repo_name: String!, $owner: String!, $cursor: String) {
-        repository(name: $repo_name, owner: $owner) {
-            defaultBranchRef {
-                target {
-                    ... on Commit {
-                        history(first: 100, after: $cursor) {
-                            totalCount
-                            edges {
-                                node {
-                                    ... on Commit {
-                                        committedDate
+        """,
+        "repos": """
+            query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
+                user(login: $login) {
+                    repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
+                        totalCount
+                        edges {
+                            node {
+                                ... on Repository {
+                                    nameWithOwner
+                                    stargazers {
+                                        totalCount
                                     }
-                                    author {
-                                        user {
-                                            id
-                                        }
-                                    }
-                                    deletions
-                                    additions
                                 }
                             }
-                            pageInfo {
-                                endCursor
-                                hasNextPage
+                        }
+                        pageInfo {
+                            endCursor
+                            hasNextPage
+                        }
+                    }
+                }
+            }
+        """,
+        "repo_history": """
+            query ($repo_name: String!, $owner: String!, $cursor: String) {
+                repository(name: $repo_name, owner: $owner) {
+                    defaultBranchRef {
+                        target {
+                            ... on Commit {
+                                history(first: 100, after: $cursor) {
+                                    totalCount
+                                    edges {
+                                        node {
+                                            ... on Commit {
+                                                author {
+                                                    user {
+                                                        id
+                                                    }
+                                                }
+                                                deletions
+                                                additions
+                                            }
+                                        }
+                                    }
+                                    pageInfo {
+                                        endCursor
+                                        hasNextPage
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-    }"""
+        """,
+        "loc_query": """
+            query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
+                user(login: $login) {
+                    repositories(first: 60, after: $cursor, ownerAffiliations: $owner_affiliation) {
+                        edges {
+                            node {
+                                ... on Repository {
+                                    nameWithOwner
+                                    defaultBranchRef {
+                                        target {
+                                            ... on Commit {
+                                                history {
+                                                    totalCount
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        pageInfo {
+                            endCursor
+                            hasNextPage
+                        }
+                    }
+                }
+            }
+        """,
+    }
 
-    variables = {"repo_name": repo_name, "owner": owner, "cursor": cursor}
+    def __init__(self, username: str, access_token: str, birthday: datetime):
+        self.username = username
+        self.access_token = access_token
+        self.birthday = birthday
+        self.user_id = None
+        self.cache_file = self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
+        self.headers = {"authorization": f"token {access_token}"}
+        self.CACHE_DIR.mkdir(exist_ok=True)
+        self.SVG_DIR.mkdir(exist_ok=True)
 
-    # I cannot use simple_request(), because I want to save the file before raising Exception
-    request = requests.post(
-        "https://api.github.com/graphql",
-        json={"query": query, "variables": variables},
-        headers=HEADERS,
-    )
+    def initialize(self):
+        """Initialize user data and cache"""
+        self.user_id = self.get_user_id()
 
-    if request.status_code == 200:
-        # Only count commits if repo isn't empty
-        if request.json()["data"]["repository"]["defaultBranchRef"] is not None:
-            return loc_counter_one_repo(
-                owner,
-                repo_name,
-                data,
-                cache_comment,
-                request.json()["data"]["repository"]["defaultBranchRef"]["target"][
-                    "history"
-                ],
-                addition_total,
-                deletion_total,
-                my_commits,
+    def get_user_id(self) -> str:
+        """Get GitHub user ID"""
+        query = self.QUERIES["user"]
+        variables = {"login": self.username}
+        data = self.simple_request(query, variables)
+        return data["data"]["user"]["id"]
+
+    def simple_request(self, query: str, variables: dict) -> dict:
+        """Make GraphQL request with error handling"""
+        try:
+            response = requests.post(
+                self.GRAPHQL_ENDPOINT,
+                json={"query": query, "variables": variables},
+                headers=self.headers,
+                timeout=10,
             )
-        else:
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            raise GitHubAPIError(f"Request failed: {str(e)}") from e
+
+    def calculate_age(self) -> str:
+        """Calculate age since birthday"""
+        diff = relativedelta(datetime.today(), self.birthday)
+        return (
+            f"{diff.years} year{'s' if diff.years != 1 else ''}, "
+            f"{diff.months} month{'s' if diff.months != 1 else ''}, "
+            f"{diff.days} day{'s' if diff.days != 1 else ''}"
+            f"{' 🎂' if (diff.months == 0 and diff.days == 0) else ''}"
+        )
+
+    def get_repos(self, owner_affiliation: list, count_type: str) -> int:
+        """Get repository count or star count with pagination"""
+        total = 0
+        cursor = None
+        has_next_page = True
+
+        while has_next_page:
+            variables = {
+                "owner_affiliation": owner_affiliation,
+                "login": self.username,
+                "cursor": cursor,
+            }
+            data = self.simple_request(self.QUERIES["repos"], variables)
+            repos = data["data"]["user"]["repositories"]
+
+            if count_type == "repos":
+                return repos["totalCount"]
+            elif count_type == "stars":
+                total += sum(
+                    edge["node"]["stargazers"]["totalCount"] for edge in repos["edges"]
+                )
+
+            page_info = repos["pageInfo"]
+            has_next_page = page_info["hasNextPage"]
+            cursor = page_info["endCursor"]
+
+        return total
+
+    def get_loc_data(self, owner_affiliation: list) -> list:
+        """Get lines of code data with caching"""
+        # Get all repository edges
+        edges = []
+        cursor = None
+        has_next_page = True
+
+        while has_next_page:
+            variables = {
+                "owner_affiliation": owner_affiliation,
+                "login": self.username,
+                "cursor": cursor,
+            }
+            data = self.simple_request(self.QUERIES["loc_query"], variables)
+            repos = data["data"]["user"]["repositories"]
+            edges.extend(repos["edges"])
+            page_info = repos["pageInfo"]
+            has_next_page = page_info["hasNextPage"]
+            cursor = page_info["endCursor"]
+
+        # Process cache
+        return self.process_cache(edges)
+
+    def process_cache(self, edges: list) -> list:
+        """Process cache and compute LOC totals"""
+        # Load existing cache
+        try:
+            with open(self.cache_file, "r") as f:
+                cache = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            cache = {}
+
+        loc_add = 0
+        loc_del = 0
+        cached = True
+
+        # Process each repository
+        for edge in edges:
+            repo = edge["node"]
+            repo_name = repo["nameWithOwner"]
+            repo_hash = sha256(repo_name.encode()).hexdigest()
+
+            # Get current commit count
+            try:
+                current_commits = repo["defaultBranchRef"]["target"]["history"][
+                    "totalCount"
+                ]
+            except TypeError:
+                current_commits = 0  # Empty repository
+
+            # Check if cache needs update
+            if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
+                cached = False
+                if current_commits > 0:
+                    owner, name = repo_name.split("/")
+                    additions, deletions, _ = self.calculate_repo_loc(owner, name)
+                else:
+                    additions, deletions = 0, 0
+
+                cache[repo_hash] = {
+                    "name": repo_name,
+                    "commits": current_commits,
+                    "additions": additions,
+                    "deletions": deletions,
+                }
+
+            # Add to totals
+            loc_add += cache[repo_hash]["additions"]
+            loc_del += cache[repo_hash]["deletions"]
+
+        # Save updated cache
+        try:
+            with open(self.cache_file, "w") as f:
+                json.dump(cache, f, indent=2)
+        except IOError as e:
+            raise CacheError(f"Failed to write cache: {str(e)}") from e
+
+        return [loc_add, loc_del, loc_add - loc_del, cached]
+
+    def calculate_repo_loc(self, owner: str, repo_name: str) -> tuple:
+        """Calculate LOC for a single repository"""
+        additions = 0
+        deletions = 0
+        commit_count = 0
+        cursor = None
+        has_next = True
+
+        while has_next:
+            variables = {"owner": owner, "repo_name": repo_name, "cursor": cursor}
+            data = self.simple_request(self.QUERIES["repo_history"], variables)
+
+            # Handle empty repositories
+            if data["data"]["repository"]["defaultBranchRef"] is None:
+                break
+
+            history = data["data"]["repository"]["defaultBranchRef"]["target"]["history"]
+
+            # Process commits
+            for edge in history["edges"]:
+                commit = edge["node"]
+                if (
+                    commit["author"]["user"]
+                    and commit["author"]["user"]["id"] == self.user_id
+                ):
+                    commit_count += 1
+                    additions += commit["additions"]
+                    deletions += commit["deletions"]
+
+            # Handle pagination
+            page_info = history["pageInfo"]
+            has_next = page_info["hasNextPage"]
+            cursor = page_info["endCursor"]
+
+        return additions, deletions, commit_count
+
+    def get_commit_count(self) -> int:
+        """Get total commit count from cache"""
+        try:
+            with open(self.cache_file, "r") as f:
+                cache = json.load(f)
+            return sum(repo["commits"] for repo in cache.values())
+        except (FileNotFoundError, json.JSONDecodeError, KeyError):
             return 0
 
-    # saves what is currently in the file before this program crashes
-    force_close_file(data, cache_comment)
-    if request.status_code == 403:
-        raise Exception(
-            "Too many requests in a short amount of time!\n"
-            + "You've hit the non-documented anti-abuse limit!"
-        )
+    def update_svg(
+        self,
+        svg_name: str,
+        age: str,
+        commits: int,
+        stars: int,
+        repos: int,
+        loc_data: list,
+    ):
+        """Update SVG file with new statistics"""
+        svg_path = self.SVG_DIR / svg_name
 
-    raise Exception(
-        "recursive_loc() has failed with a",
-        request.status_code,
-        request.text,
-    )
+        try:
+            tree = etree.parse(svg_path)
+            root = tree.getroot()
 
+            # Update elements
+            self.update_svg_element(root, "commit_data", commits, 22)
+            self.update_svg_element(root, "star_data", stars, 14)
+            self.update_svg_element(root, "repo_data", repos, 6)
+            self.update_svg_element(root, "loc_data", loc_data[2], 9)
+            self.update_svg_element(root, "loc_add", loc_data[0])
+            self.update_svg_element(root, "loc_del", loc_data[1], 7)
 
-def loc_counter_one_repo(
-    owner,
-    repo_name,
-    data,
-    cache_comment,
-    history,
-    addition_total,
-    deletion_total,
-    my_commits,
-):
-    """
-    Recursively call recursive_loc().
-    Only adds the LOC value of commits authored by the user.
-    """
+            # Write back to file
+            tree.write(svg_path, encoding="utf-8", xml_declaration=True)
+        except (IOError, etree.ParseError) as e:
+            raise CacheError(f"SVG update failed: {str(e)}") from e
 
-    for node in history["edges"]:
-        if node["node"]["author"]["user"] == user_getter(USER_NAME)[0]["id"]:
-            my_commits += 1
-            addition_total += node["node"]["additions"]
-            deletion_total += node["node"]["deletions"]
+    def update_svg_element(self, root, element_id: str, value: int, dots_length: int = 0):
+        """Update single SVG element with value and dots"""
+        # Format numeric values
+        if isinstance(value, int):
+            value_str = f"{value:,}"
+        else:
+            value_str = str(value)
 
-    if history["edges"] == [] or not history["pageInfo"]["hasNextPage"]:
-        return addition_total, deletion_total, my_commits
-    else:
-        return recursive_loc(
-            owner,
-            repo_name,
-            data,
-            cache_comment,
-            addition_total,
-            deletion_total,
-            my_commits,
-            history["pageInfo"]["endCursor"],
-        )
+        # Update value element
+        value_element = root.find(f".//*[@id='{element_id}']")
+        if value_element is not None:
+            value_element.text = value_str
 
+        # Update dots element if needed
+        if dots_length > 0:
+            dots_id = f"{element_id}_dots"
+            dots_element = root.find(f".//*[@id='{dots_id}']")
+            if dots_element is not None:
+                num_dots = max(0, dots_length - len(value_str))
+                dots_element.text = self.generate_dots(num_dots)
 
-def loc_query(
-    owner_affiliation, comment_size=0, force_cache=False, cursor=None, edges=[]
-):
-    """
-    Queries all the repositories the user has access to (with respect to owner_affiliation).
-    Queries 60 repos at a time, since larger queries give a 502 timeout error,
-    and smaller queries send too many requests and also give a 502 error.
-    Returns the total number of lines of code in all repositories.
-    """
-
-    query = """
-    query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
-        user(login: $login) {
-            repositories(first: 60, after: $cursor, ownerAffiliations: $owner_affiliation) {
-            edges {
-                node {
-                    ... on Repository {
-                        nameWithOwner
-                        defaultBranchRef {
-                            target {
-                                ... on Commit {
-                                    history {
-                                        totalCount
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                pageInfo {
-                    endCursor
-                    hasNextPage
-                }
-            }
-        }
-    }"""
-
-    variables = {
-        "owner_affiliation": owner_affiliation,
-        "login": USER_NAME,
-        "cursor": cursor,
-    }
-
-    request = simple_request(loc_query.__name__, query, variables)
-
-    # If repository data has another page
-    if request.json()["data"]["user"]["repositories"]["pageInfo"]["hasNextPage"]:
-        # Add on to the LoC count
-        edges += request.json()["data"]["user"]["repositories"]["edges"]
-        return loc_query(
-            owner_affiliation,
-            comment_size,
-            force_cache,
-            request.json()["data"]["user"]["repositories"]["pageInfo"]["endCursor"],
-            edges,
-        )
-    else:
-        return cache_builder(
-            edges + request.json()["data"]["user"]["repositories"]["edges"],
-            comment_size,
-            force_cache,
-        )
-
-
-def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
-    """
-    Checks each repository in 'edges' to see if it's changed since it's last cache.
-    If it has, run recursive_loc() on that repository to update the LOC count.
-    """
-
-    # Assume all repositories are cached
-    cached = True
-
-    if not path.exists("cache"):
-        mkdir("cache")
-
-    # Create a unique filename for each user
-    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
-
-    try:
-        with open(filename, "r") as f:
-            data = f.readlines()
-    except FileNotFoundError:
-        # create cache file if it doesn't exist
-        data = []
-        if comment_size > 0:
-            for _ in range(comment_size):
-                data.append(
-                    "This line is a comment block. Write whatever you want here.\n"
-                )
-        with open(filename, "x") as f:
-            f.writelines(data)
-
-    # If the number of repos has changed, or force_cache is True
-    if len(data) - comment_size != len(edges) or force_cache:
-        cached = False
-        flush_cache(edges, filename, comment_size)
-        with open(filename, "r") as f:
-            data = f.readlines()
-
-    cache_comment = data[:comment_size]  # save the comment block
-    data = data[comment_size:]  # remove those lines
-
-    for index in range(len(edges)):
-        repo_hash, commit_count, *__ = data[index].split()
-        if (
-            repo_hash
-            == sha256(edges[index]["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
-        ):
-            try:
-                if (
-                    int(commit_count)
-                    != edges[index]["node"]["defaultBranchRef"]["target"]["history"][
-                        "totalCount"
-                    ]
-                ):
-                    # if commit count has changed, update loc for that repo
-                    owner, repo_name = edges[index]["node"]["nameWithOwner"].split("/")
-                    loc = recursive_loc(owner, repo_name, data, cache_comment)
-                    data[index] = (
-                        repo_hash
-                        + " "
-                        + str(
-                            edges[index]["node"]["defaultBranchRef"]["target"]["history"][
-                                "totalCount"
-                            ]
-                        )
-                        + " "
-                        + str(loc[2])
-                        + " "
-                        + str(loc[0])
-                        + " "
-                        + str(loc[1])
-                        + "\n"
-                    )
-            except TypeError:
-                # If the repo is empty
-                data[index] = repo_hash + " 0 0 0 0\n"
-    with open(filename, "w") as f:
-        f.writelines(cache_comment)
-        f.writelines(data)
-    for line in data:
-        loc = line.split()
-        loc_add += int(loc[3])
-        loc_del += int(loc[4])
-    return [loc_add, loc_del, loc_add - loc_del, cached]
-
-
-def flush_cache(edges, filename, comment_size):
-    """
-    Wipes the cache file.
-    """
-
-    with open(filename, "r") as f:
-        data = []
-        if comment_size > 0:
-            # only save the comment
-            data = f.readlines()[:comment_size]
-
-    with open(filename, "w") as f:
-        f.writelines(data)
-        for node in edges:
-            f.write(
-                sha256(node["node"]["nameWithOwner"].encode("utf-8")).hexdigest()
-                + " 0 0 0 0\n"
-            )
-
-
-def force_close_file(data, cache_comment):
-    """
-    Forces the file to close, preserving whatever data was written to it.
-    """
-
-    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
-    with open(filename, "w") as f:
-        f.writelines(cache_comment)
-        f.writelines(data)
-    print(
-        "There was an error while writing to the cache file. The file,",
-        filename,
-        "has had the partial data saved and closed.",
-    )
-
-
-def stars_counter(data):
-    """
-    Count total stars in user's repositories.
-    """
-
-    return sum(node["node"]["stargazers"]["totalCount"] for node in data)
-
-
-def svg_overwrite(
-    filename,
-    age_data,
-    commit_data,
-    star_data,
-    repo_data,
-    loc_data,
-):
-    """
-    Parse SVG files and update elements with the newly retrieved Github data.
-    """
-
-    tree = etree.parse(filename)
-    root = tree.getroot()
-    justify_format(root, "commit_data", commit_data, 22)
-    justify_format(root, "star_data", star_data, 14)
-    justify_format(root, "repo_data", repo_data, 6)
-    justify_format(root, "loc_data", loc_data[2], 9)
-    justify_format(root, "loc_add", loc_data[0])
-    justify_format(root, "loc_del", loc_data[1], 7)
-    tree.write(filename, encoding="utf-8", xml_declaration=True)
-
-
-def justify_format(root, element_id, new_text, length=0):
-    """
-    Updates and formats the text of the element,
-    and modifes the amount of dots in the previous element,
-    in order to justify the new text in the SVG.
-    """
-
-    if isinstance(new_text, int):
-        new_text = f"{new_text:,}"
-    new_text = str(new_text)
-
-    find_and_replace(root, element_id, new_text)
-
-    just_len = max(0, length - len(new_text))
-    if just_len <= 2:
-        dot_map = {0: "", 1: " ", 2: ". "}
-        dot_string = dot_map[just_len]
-    else:
-        dot_string = " " + ("." * just_len) + " "
-
-    find_and_replace(root, f"{element_id}_dots", dot_string)
-
-
-def find_and_replace(root, element_id, new_text):
-    """
-    Finds the element in the SVG file and replaces its text with a new value
-    """
-
-    element = root.find(f".//*[@id='{element_id}']")
-    if element is not None:
-        element.text = new_text
-
-
-def commit_counter(comment_size):
-    """
-    Counts up user's total commits, using the cache file created by cache_builder.
-    """
-
-    total_commits = 0
-
-    # Use the same filename as cache_builder
-    filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
-
-    with open(filename, "r") as f:
-        data = f.readlines()
-
-    data = data[comment_size:]  # remove those lines
-    for line in data:
-        total_commits += int(line.split()[2])
-
-    return total_commits
-
-
-def user_getter(username):
-    """
-    Returns the account ID and creation time of the user
-    """
-
-    query = """
-    query($login: String!){
-        user(login: $login) {
-            id
-            createdAt
-        }
-    }"""
-
-    variables = {"login": username}
-    request = simple_request(user_getter.__name__, query, variables)
-    return {"id": request.json()["data"]["user"]["id"]}, request.json()["data"]["user"][
-        "createdAt"
-    ]
+    def generate_dots(self, count: int) -> str:
+        """Generate dot string for justification"""
+        if count <= 2:
+            return {0: "", 1: " ", 2: ". "}.get(count, "")
+        return " " + ("." * count) + " "
 
 
 def main():
-    age_data = calculate_age(BIRTHDAY)
-    total_loc = loc_query(["OWNER"], 7)
-    commit_data = commit_counter(7)
-    star_data = graph_repos_stars("stars", ["OWNER"])
-    repo_data = graph_repos_stars("repos", ["OWNER"])
+    """Main execution function"""
+    try:
+        # Load configuration from environment
+        username = os.environ["USER_NAME"]
+        access_token = os.environ["GH_TOKEN"]
+        birthday = datetime(2005, 7, 7)
 
-    svg_overwrite(
-        DARK_SVG,
-        age_data,
-        commit_data,
-        star_data,
-        repo_data,
-        total_loc[:-1],
-    )
+        # Initialize stats processor
+        stats = GitHubStats(username, access_token, birthday)
+        stats.initialize()
+
+        # Fetch statistics
+        age = stats.calculate_age()
+        loc_data = stats.get_loc_data(["OWNER"])
+        commits = stats.get_commit_count()
+        stars = stats.get_repos(["OWNER"], "stars")
+        repos = stats.get_repos(["OWNER"], "repos")
+
+        # Update SVG
+        stats.update_svg("dark_mode.svg", age, commits, stars, repos, loc_data[:3])
+
+    except KeyError as e:
+        print(f"Missing environment variable: {str(e)}", file=sys.stderr)
+        sys.exit(1)
+    except (GitHubAPIError, CacheError) as e:
+        print(f"Error: {str(e)}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from hashlib import sha256
 from os import environ
 
 import requests
-from dateutil import relativedelta
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 
 BIRTHDAY = datetime(2005, 7, 7)

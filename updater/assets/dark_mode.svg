@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg
-    xmlns="http://www.w3.org/2000/svg"
-    font-family="'MesloLGM Nerd Font Mono', monospace"
-    width="1600px"
-    height="1000px"
->
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', monospace" width="1600px" height="1000px">
     <style>
         .title     { fill: #f28b0d; font-weight: bold; }
         .pic       { fill: #ffffff; }
@@ -16,10 +11,10 @@
     </style>
     <rect width="100%" height="100%" fill="#1f2938" rx="40"/>
 
-    <text      x="30" y="55" class="pic" font-size="14px">
-        <tspan x="30" y="55" >╭──────────────────────────────────────────────────────────────────────────────╮</tspan>
-        <tspan x="30" y="75" >│ ⣿⢽⣳⢿⢽⡺⣎⠗⠑⢁⠀⠠⠀⠂⠐⠀⠀⠁⠀⠈⠀⠀⠄⠀⠄⠀⠠⠀⠠⠐⠈⢀⠈⠠⠐⠀⡀⠁⡀⠂⠈⢀⠀⠀⠀⠀⠁⠀⠀⠁⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠄  </tspan>
-        <tspan x="30" y="95" >│ ⣯⣻⢺⠝⠕⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠐⠀⠐⠀⠈⠀⠀⠀⠀⠀⠀⠄⠀⠄⠐⠀⠐⠀⠂⠠⠀⠄⠀⠐⠈⢀⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠂⠀⠀  </tspan>
+    <text x="30" y="55" class="pic" font-size="14px">
+        <tspan x="30" y="55">╭──────────────────────────────────────────────────────────────────────────────╮</tspan>
+        <tspan x="30" y="75">│ ⣿⢽⣳⢿⢽⡺⣎⠗⠑⢁⠀⠠⠀⠂⠐⠀⠀⠁⠀⠈⠀⠀⠄⠀⠄⠀⠠⠀⠠⠐⠈⢀⠈⠠⠐⠀⡀⠁⡀⠂⠈⢀⠀⠀⠀⠀⠁⠀⠀⠁⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠄  </tspan>
+        <tspan x="30" y="95">│ ⣯⣻⢺⠝⠕⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠐⠀⠐⠀⠈⠀⠀⠀⠀⠀⠀⠄⠀⠄⠐⠀⠐⠀⠂⠠⠀⠄⠀⠐⠈⢀⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠂⠀⠀  </tspan>
         <tspan x="30" y="115">│ ⢐⠈⠀⠀⠀⠀⠈⠀⠀⠁⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠄⠂⠀⠀⠀⠀⠀⠂⠀⠁⠀⠐⠀⠐⠈⡀⠈⡀⠐⠈⢀⠐⠈⠀⠀⠐⠀⠀⠠⠀⠀⠀⢀⠠⠀⠀⠀⠀  </tspan>
         <tspan x="30" y="135">│ ⠀⠀⠀⠐⠀⠀⠀⡀⠀⠀⠀⠀⠄⠀⠀⢀⠀⠀⠠⠀⠀⠁⠀⠀⠀⠀⠀⠠⠈⠀⠐⠀⠀⠀⠁⠐⠈⠀⠀⡀⠄⠠⠈⠠⠀⠐⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀  </tspan>
         <tspan x="30" y="155">│ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠄⠀⠀⠀⠀⡀⠐⠀⠀⠄⠀⡀⠁⡀⠄⠐⠀⠂⠈⡀⠡⠀⠀⢀⠀⠂⠀⠀⠈⠀⠀⠀⠀⠀⠀⠄  </tspan>
@@ -64,7 +59,7 @@
         <tspan x="30" y="935">│ ⠀⠄⠀⠀⠀⠀⠀⡀⠁⠀⠀⠌⠔⢌⠊⢔⠡⡡⠡⠂⠄⠐⠀⠀⠄⠀⠀⠁⠀⠈⠐⠨⡈⡐⡐⠄⠅⠅⠂⠐⠀⠀⠀⠀⠐⠠⢈⠢⡱⡸⡀⠀⠠⠀⠅⠀⠀⠈⢈⠐⡈⢐  </tspan>
         <tspan x="30" y="955">╰──────────────────────────────────────────────────────────────────────────────╯</tspan>
     </text>
-    <text      x="735" y="150" class="border" font-size="20">
+    <text x="735" y="150" class="border" font-size="20">
         <tspan x="735" y="150">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan> ─────────────────────────────────────────╮
         <tspan x="735" y="190">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan id="age_data_dots"> ............................ </tspan><tspan class="value" id="age_data">19 years, 11 months, 7 days</tspan> │
         <tspan x="735" y="220">│ ‣ </tspan><tspan class="key">OS</tspan> ............................................ <tspan class="value">Linux Mint 22.1</tspan> │
@@ -82,10 +77,10 @@
         <tspan x="735" y="620">│ ‣ </tspan><tspan class="key">Discord</tspan> ............................................. <tspan class="value">jp_zuniga</tspan> │
         <tspan x="735" y="650">│ ‣ </tspan><tspan class="key">Instagram</tspan> ........................................ <tspan class="value">@framesbyjaq</tspan> │
         <tspan x="735" y="690">├── </tspan><tspan class="title">User.Git</tspan> ───────────────────────────────────────────────────────┤
-        <tspan x="735" y="730">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan id="star_data_dots"> ..................................................... </tspan><tspan class="value" id="star_data">342</tspan> │
-        <tspan x="735" y="760">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan id="repo_data_dots"> ...................................................... </tspan><tspan class="value" id="repo_data">95</tspan> │
-        <tspan x="735" y="790">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan id="commit_data_dots"> ................................................. </tspan><tspan class="value" id="commit_data">2,116</tspan> │
-        <tspan x="735" y="820">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan id="loc_data_dots"> .................... </tspan><tspan class="value" id="loc_data">446,276 </tspan>,<tspan class="add_color" id="loc_add"> +523,178 </tspan>,<tspan id="loc_del_dots"> </tspan><tspan class="del_color" id="loc_del">-76,902</tspan> │
+        <tspan x="735" y="730">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan id="star_data_dots"> ............. </tspan><tspan class="value" id="star_data">2</tspan> │
+        <tspan x="735" y="760">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan id="repo_data_dots"> ..... </tspan><tspan class="value" id="repo_data">7</tspan> │
+        <tspan x="735" y="790">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan id="commit_data_dots"> ..................... </tspan><tspan class="value" id="commit_data">0</tspan> │
+        <tspan x="735" y="820">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan id="loc_data_dots"> ........ </tspan><tspan class="value" id="loc_data">0</tspan>,<tspan class="add_color" id="loc_add">0</tspan>,<tspan id="loc_del_dots"> ...... </tspan><tspan class="del_color" id="loc_del">0</tspan> │
         <tspan x="735" y="850">╰───────────────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

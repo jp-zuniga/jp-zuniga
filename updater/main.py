@@ -1,6 +1,6 @@
 from datetime import datetime
 from hashlib import sha256
-from os import environ, path
+from os import environ, mkdir, path
 
 import requests
 from dateutil.relativedelta import relativedelta
@@ -21,8 +21,8 @@ def calculate_age(birthday: datetime) -> str:
     return (
         f"{'🎂 ' if diff.months == 0 and diff.days == 0 else ''}"
         + f"{diff.years} years"
-        + f"{f', {diff.months}' if diff.months != 0 else ''}{' month' + 's' if diff.months != 1 else ''}"
-        + f"{f', {diff.days}' if diff.days != 0 else ''}{' month' + 's' if diff.days != 1 else ''}"
+        + f"{f', {diff.months}' if diff.months != 0 else ''}{' month' + 's' if diff.months > 1 else ''}"
+        + f"{f', {diff.days}' if diff.days != 0 else ''}{' month' + 's' if diff.days > 1 else ''}"
     )
 
 
@@ -214,7 +214,7 @@ def loc_counter_one_repo(
     """
 
     for node in history["edges"]:
-        if node["node"]["author"]["user"] == OWNER_ID:
+        if node["node"]["author"]["user"] == user_getter(USER_NAME)[0]["id"]:
             my_commits += 1
             addition_total += node["node"]["additions"]
             deletion_total += node["node"]["deletions"]
@@ -310,6 +310,9 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
 
     # Create a unique filename for each user
     filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
+
+    if not path.exists(filename):
+        mkdir(filename, exists_ok=True)
 
     try:
         with open(filename, "r") as f:
@@ -521,10 +524,8 @@ def user_getter(username):
 
 
 def main():
-    global OWNER_ID
-    OWNER_ID, _ = user_getter(USER_NAME)
-
     age_data = calculate_age(BIRTHDAY)
+    print(age_data)
     total_loc = loc_query(["OWNER"], 7)
     commit_data = commit_counter(7)
     star_data = graph_repos_stars("stars", ["OWNER"])

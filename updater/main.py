@@ -308,11 +308,11 @@ def cache_builder(edges, comment_size, force_cache, loc_add=0, loc_del=0):
     # Assume all repositories are cached
     cached = True
 
+    if not path.exists("cache"):
+        mkdir("cache")
+
     # Create a unique filename for each user
     filename = "cache/" + sha256(USER_NAME.encode("utf-8")).hexdigest() + ".txt"
-
-    if not path.exists(filename):
-        mkdir(filename)
 
     try:
         with open(filename, "r") as f:

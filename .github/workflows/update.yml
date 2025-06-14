@@ -32,7 +32,7 @@ jobs:
       - name: Setup environment and run script
         working-directory: ./updater
         env:
-          USER_NAME: ${{ secrets.repository_owner }}
+          USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv venv --python $(cat .python-version)

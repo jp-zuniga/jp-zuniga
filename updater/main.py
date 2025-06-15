@@ -1,36 +1,43 @@
-import json
 from datetime import datetime
 from hashlib import sha256
+from json import JSONDecodeError, dump, load
+from os import environ
 from pathlib import Path
-import os
-import sys
+from sys import exit, stderr
+from typing import Any, Optional, Union
 
-import requests
 from dateutil.relativedelta import relativedelta
-from lxml import etree
+from lxml import ParseError, etree
+from requests import RequestException, Response, post
 
 
 class GitHubAPIError(Exception):
-    """Custom exception for GitHub API errors"""
+    """
+    Custom exception for GitHub API errors.
+    """
 
     pass
 
 
 class CacheError(Exception):
-    """Custom exception for cache handling errors"""
+    """
+    Custom exception for cache handling errors.
+    """
 
     pass
 
 
-class GitHubStats:
-    """Main class for fetching and processing GitHub statistics"""
+class StatProcessor:
+    """
+    Main class for fetching and processing GitHub statistics.
+    """
 
-    GRAPHQL_ENDPOINT = "https://api.github.com/graphql"
+    GRAPHQL_ENDPOINT: str = "https://api.github.com/graphql"
     CACHE_DIR = Path("cache")
     SVG_DIR = Path("assets")
 
     # Centralized GraphQL queries
-    QUERIES = {
+    QUERIES: dict[str, str] = {
         "user": """
             query($login: String!){
                 user(login: $login) {
@@ -124,64 +131,84 @@ class GitHubStats:
         """,
     }
 
-    def __init__(self, username: str, access_token: str, birthday: datetime):
+    def __init__(self, username: str, access_token: str, birthday: datetime) -> None:
+        """
+        Initialize all necessary data.
+        """
+
         self.username = username
         self.access_token = access_token
         self.birthday = birthday
-        self.user_id = None
-        self.cache_file = self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
-        self.headers = {"authorization": f"token {access_token}"}
+        self.user_id = self.get_user_id()
+
         self.CACHE_DIR.mkdir(exist_ok=True)
         self.SVG_DIR.mkdir(exist_ok=True)
 
-    def initialize(self):
-        """Initialize user data and cache"""
-        self.user_id = self.get_user_id()
+        self.cache_file: Path = (
+            self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
+        )
+
+        self.headers: dict[str, str] = {"authorization": f"token {access_token}"}
 
     def get_user_id(self) -> str:
-        """Get GitHub user ID"""
-        query = self.QUERIES["user"]
-        variables = {"login": self.username}
-        data = self.simple_request(query, variables)
+        """
+        Fetch self.username's Github user ID.
+        """
+
+        query: str = self.QUERIES["user"]
+        variables: dict[str, str] = {"login": self.username}
+        data: dict = self.send_request(query, variables)
+
         return data["data"]["user"]["id"]
 
-    def simple_request(self, query: str, variables: dict) -> dict:
-        """Make GraphQL request with error handling"""
+    def calculate_age(self) -> str:
+        """
+        Calculate time since self.birthday.
+        """
+
+        diff = relativedelta(datetime.today(), self.birthday)
+        return (
+            f"{'🎂 ' if (diff.months == 0 and diff.days == 0) else ''}"
+            f"{diff.years} year{'s' if diff.years != 1 else ''}, "
+            f"{diff.months} month{'s' if diff.months != 1 else ''}, "
+            f"{diff.days} day{'s' if diff.days != 1 else ''}"
+        )
+
+    def send_request(self, query: str, variables: dict[str, str]) -> dict[str, Any]:
+        """
+        Make a GraphQL request and raise exceptions if necessary.
+        """
+
         try:
-            response = requests.post(
+            response: Response = post(
                 self.GRAPHQL_ENDPOINT,
                 json={"query": query, "variables": variables},
                 headers=self.headers,
                 timeout=10,
             )
+
             response.raise_for_status()
             return response.json()
-        except requests.RequestException as e:
+        except RequestException as e:
             raise GitHubAPIError(f"Request failed: {str(e)}") from e
 
-    def calculate_age(self) -> str:
-        """Calculate age since birthday"""
-        diff = relativedelta(datetime.today(), self.birthday)
-        return (
-            f"{diff.years} year{'s' if diff.years != 1 else ''}, "
-            f"{diff.months} month{'s' if diff.months != 1 else ''}, "
-            f"{diff.days} day{'s' if diff.days != 1 else ''}"
-            f"{' 🎂' if (diff.months == 0 and diff.days == 0) else ''}"
-        )
+    def get_repos_or_stars(self, owner_affiliation: list[str], count_type: str) -> int:
+        """
+        Get repository count or star count with pagination.
+        """
 
-    def get_repos(self, owner_affiliation: list, count_type: str) -> int:
-        """Get repository count or star count with pagination"""
         total = 0
-        cursor = None
+        cursor: Optional[str] = None
         has_next_page = True
 
         while has_next_page:
-            variables = {
+            variables: dict[str, str] = {
                 "owner_affiliation": owner_affiliation,
                 "login": self.username,
                 "cursor": cursor,
             }
-            data = self.simple_request(self.QUERIES["repos"], variables)
+
+            data = self.send_request(self.QUERIES["repos"], variables)
             repos = data["data"]["user"]["repositories"]
 
             if count_type == "repos":
@@ -197,22 +224,27 @@ class GitHubStats:
 
         return total
 
-    def get_loc_data(self, owner_affiliation: list) -> list:
-        """Get lines of code data with caching"""
-        # Get all repository edges
-        edges = []
-        cursor = None
+    def get_loc_data(self, owner_affiliation: list[str]) -> tuple[int, int, int]:
+        """
+        Get lines of code data with caching.
+        """
+
+        edges: list[Any] = []
+        cursor: Optional[str] = None
         has_next_page = True
 
         while has_next_page:
-            variables = {
+            variables: dict[str, str] = {
                 "owner_affiliation": owner_affiliation,
                 "login": self.username,
                 "cursor": cursor,
             }
-            data = self.simple_request(self.QUERIES["loc_query"], variables)
+
+            data = self.send_request(self.QUERIES["loc_query"], variables)
             repos = data["data"]["user"]["repositories"]
+
             edges.extend(repos["edges"])
+
             page_info = repos["pageInfo"]
             has_next_page = page_info["hasNextPage"]
             cursor = page_info["endCursor"]
@@ -220,18 +252,20 @@ class GitHubStats:
         # Process cache
         return self.process_cache(edges)
 
-    def process_cache(self, edges: list) -> list:
-        """Process cache and compute LOC totals"""
+    def process_cache(self, edges: list[dict[str, Any]]) -> tuple[int, int, int]:
+        """
+        Process cache and compute LOC totals.
+        """
+
         # Load existing cache
         try:
             with open(self.cache_file, "r") as f:
-                cache = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            cache = {}
+                cache: dict[str, dict[str, Union[int, str]]] = load(f)
+        except (FileNotFoundError, JSONDecodeError):
+            cache: dict[str, dict[str, Union[int, str]]] = {}
 
         loc_add = 0
         loc_del = 0
-        cached = True
 
         # Process each repository
         for edge in edges:
@@ -245,14 +279,14 @@ class GitHubStats:
                     "totalCount"
                 ]
             except TypeError:
-                current_commits = 0  # Empty repository
+                # Empty repository
+                current_commits = 0
 
             # Check if cache needs update
             if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
-                cached = False
                 if current_commits > 0:
                     owner, name = repo_name.split("/")
-                    additions, deletions, _ = self.calculate_repo_loc(owner, name)
+                    additions, deletions = self.calculate_repo_loc(owner, name)
                 else:
                     additions, deletions = 0, 0
 
@@ -263,36 +297,45 @@ class GitHubStats:
                     "deletions": deletions,
                 }
 
-            # Add to totals
+            # Update totals
             loc_add += cache[repo_hash]["additions"]
             loc_del += cache[repo_hash]["deletions"]
 
         # Save updated cache
         try:
             with open(self.cache_file, "w") as f:
-                json.dump(cache, f, indent=2)
+                dump(cache, f, indent=4)
         except IOError as e:
             raise CacheError(f"Failed to write cache: {str(e)}") from e
 
-        return [loc_add, loc_del, loc_add - loc_del, cached]
+        return (loc_add - loc_del, loc_add, loc_del)
 
-    def calculate_repo_loc(self, owner: str, repo_name: str) -> tuple:
-        """Calculate LOC for a single repository"""
+    def calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int]:
+        """
+        Calculate LOC for a single repository.
+        """
+
         additions = 0
         deletions = 0
-        commit_count = 0
         cursor = None
         has_next = True
 
         while has_next:
-            variables = {"owner": owner, "repo_name": repo_name, "cursor": cursor}
-            data = self.simple_request(self.QUERIES["repo_history"], variables)
+            variables: dict[str, str] = {
+                "owner": owner,
+                "repo_name": repo_name,
+                "cursor": cursor,
+            }
+
+            data = self.send_request(self.QUERIES["repo_history"], variables)
 
             # Handle empty repositories
             if data["data"]["repository"]["defaultBranchRef"] is None:
                 break
 
-            history = data["data"]["repository"]["defaultBranchRef"]["target"]["history"]
+            history = data["data"]["repository"]["defaultBranchRef"]["target"][
+                "history"
+            ]
 
             # Process commits
             for edge in history["edges"]:
@@ -301,7 +344,6 @@ class GitHubStats:
                     commit["author"]["user"]
                     and commit["author"]["user"]["id"] == self.user_id
                 ):
-                    commit_count += 1
                     additions += commit["additions"]
                     deletions += commit["deletions"]
 
@@ -310,15 +352,18 @@ class GitHubStats:
             has_next = page_info["hasNextPage"]
             cursor = page_info["endCursor"]
 
-        return additions, deletions, commit_count
+        return additions, deletions
 
     def get_commit_count(self) -> int:
-        """Get total commit count from cache"""
+        """
+        Get total commit count from cache.
+        """
+
         try:
             with open(self.cache_file, "r") as f:
-                cache = json.load(f)
+                cache: dict[str, dict[str, Union[int, str]]] = load(f)
             return sum(repo["commits"] for repo in cache.values())
-        except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        except (FileNotFoundError, JSONDecodeError, KeyError):
             return 0
 
     def update_svg(
@@ -328,10 +373,15 @@ class GitHubStats:
         commits: int,
         stars: int,
         repos: int,
-        loc_data: list,
+        loc_total: int,
+        loc_add: int,
+        loc_del: int,
     ):
-        """Update SVG file with new statistics"""
-        svg_path = self.SVG_DIR / svg_name
+        """
+        Update SVG file with the new data.
+        """
+
+        svg_path: Path = self.SVG_DIR / svg_name
 
         try:
             tree = etree.parse(svg_path)
@@ -341,17 +391,22 @@ class GitHubStats:
             self.update_svg_element(root, "commit_data", commits, 22)
             self.update_svg_element(root, "star_data", stars, 14)
             self.update_svg_element(root, "repo_data", repos, 6)
-            self.update_svg_element(root, "loc_data", loc_data[2], 9)
-            self.update_svg_element(root, "loc_add", loc_data[0])
-            self.update_svg_element(root, "loc_del", loc_data[1], 7)
+            self.update_svg_element(root, "loc_data", loc_total)
+            self.update_svg_element(root, "loc_add", loc_add)
+            self.update_svg_element(root, "loc_del", loc_del)
 
-            # Write back to file
+            # Update file contents
             tree.write(svg_path, encoding="utf-8", xml_declaration=True)
-        except (IOError, etree.ParseError) as e:
+        except (IOError, ParseError) as e:
             raise CacheError(f"SVG update failed: {str(e)}") from e
 
-    def update_svg_element(self, root, element_id: str, value: int, dots_length: int = 0):
-        """Update single SVG element with value and dots"""
+    def update_svg_element(
+        self, root, element_id: str, value: int, dots_length: int = 0
+    ):
+        """
+        Update single SVG element with value and dots.
+        """
+
         # Format numeric values
         if isinstance(value, int):
             value_str = f"{value:,}"
@@ -372,40 +427,46 @@ class GitHubStats:
                 dots_element.text = self.generate_dots(num_dots)
 
     def generate_dots(self, count: int) -> str:
-        """Generate dot string for justification"""
+        """
+        Generate dot string for justification.
+        """
+
         if count <= 2:
             return {0: "", 1: " ", 2: ". "}.get(count, "")
         return " " + ("." * count) + " "
 
 
 def main():
-    """Main execution function"""
+    """
+    Fetch personal user data from Github's GraphQL4 API,
+    and update the README's SVG image with the new data.
+    """
+
     try:
         # Load configuration from environment
-        username = os.environ["USER_NAME"]
-        access_token = os.environ["GH_TOKEN"]
+        username = environ["USER_NAME"]
+        access_token = environ["GH_TOKEN"]
         birthday = datetime(2005, 7, 7)
 
         # Initialize stats processor
-        stats = GitHubStats(username, access_token, birthday)
-        stats.initialize()
+        stats = StatProcessor(username, access_token, birthday)
 
         # Fetch statistics
         age = stats.calculate_age()
-        loc_data = stats.get_loc_data(["OWNER"])
+        stars = stats.get_repos_or_stars(["OWNER"], "stars")
+        repos = stats.get_repos_or_stars(["OWNER"], "repos")
         commits = stats.get_commit_count()
-        stars = stats.get_repos(["OWNER"], "stars")
-        repos = stats.get_repos(["OWNER"], "repos")
+        loc_data = stats.get_loc_data(["OWNER"])
 
         # Update SVG
-        stats.update_svg("dark_mode.svg", age, commits, stars, repos, loc_data[:3])
+        stats.update_svg("dark_mode.svg", age, commits, stars, repos, **loc_data)
 
     except KeyError as e:
-        print(f"Missing environment variable: {str(e)}", file=sys.stderr)
-        sys.exit(1)
+        print(f"Missing environment variable: {str(e)}", file=stderr)
+        exit(1)
     except (GitHubAPIError, CacheError) as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
-        sys.exit(1)
+        print(f"Error: {str(e)}", file=stderr)
+        exit(1)
 
 
 if __name__ == "__main__":

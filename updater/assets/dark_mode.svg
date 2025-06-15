@@ -1,15 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', monospace" width="1600px" height="1000px">
     <style>
-        .title { fill: #f28b0d; font-weight: bold; }
+        .bg { fill: #1f2938 }
         .pic { fill: #ffffff; }
         .border { fill: #708090; }
+        .title { fill: #f28b0d; font-weight: bold; }
         .key { fill: #ffa657; }
         .value { fill: #26acd9; }
         .add_color { fill: #3fb950; }
         .del_color { fill: #f85149; }
     </style>
-    <rect width="100%" height="100%" fill="#1f2938" rx="50"/>
+    <rect width="100%" height="100%" class="bg" rx="50"/>
 
     <text x="30" y="55" class="pic" font-size="14px">
         <tspan x="30" y="55">╭──────────────────────────────────────────────────────────────────────────────╮</tspan>
@@ -80,7 +81,7 @@
         <tspan x="735" y="730">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan id="star_data_dots"> ....................................................... </tspan><tspan class="value" id="star_data">2</tspan> │
         <tspan x="735" y="760">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan id="repo_data_dots"> ....................................................... </tspan><tspan class="value" id="repo_data">7</tspan> │
         <tspan x="735" y="790">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan id="commit_data_dots"> ................................................... </tspan><tspan class="value" id="commit_data">333</tspan> │
-        <tspan x="735" y="820">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan id="loc_data_dots"> ..................... </tspan><tspan class="value" id="loc_total">48,075</tspan> , <tspan class="add_color" id="loc_add">+103,831</tspan> , <tspan class="del_color" id="loc_del">-55,756</tspan> │
+        <tspan x="735" y="820">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan id="loc_total_dots"> ..................... </tspan><tspan class="value" id="loc_total">48,075</tspan> , <tspan class="add_color" id="loc_add">+103,831</tspan> , <tspan class="del_color" id="loc_del">-55,756</tspan> │
         <tspan x="735" y="850">╰───────────────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

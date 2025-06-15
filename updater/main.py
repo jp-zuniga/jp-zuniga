@@ -7,7 +7,7 @@ from sys import exit, stderr
 from typing import Any, Optional, Union
 
 from dateutil.relativedelta import relativedelta
-from lxml import ParseError
+from lxml.etree import ParseError
 from lxml.etree import _Element as lxml_elem
 from lxml.etree import _ElementTree as lxml_tree
 from lxml.etree import parse as lxml_parse

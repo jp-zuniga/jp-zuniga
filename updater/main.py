@@ -153,9 +153,10 @@ class StatProcessor:
         self.access_token = access_token
         self.username = username
         self.birthday = birthday
-        self.user_id = self._get_user_id()
 
         self.headers: dict[str, str] = {"authorization": f"token {access_token}"}
+        self.user_id = self._get_user_id()
+
         self.cache_file: Path = (
             self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
         )
@@ -467,8 +468,8 @@ def main() -> None:
 
     try:
         # Define config
-        access_token = environ["GH_TOKEN"]
-        username = "jp-zuniga"
+        access_token: str = environ["GH_TOKEN"]
+        username: str = "jp-zuniga"
         birthday = datetime(2005, 7, 7)
 
         # Initialize stats processor

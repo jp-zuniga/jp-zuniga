@@ -466,30 +466,30 @@ def main() -> None:
     and update the README's SVG image with the new data.
     """
 
-    # try:
-    # Define config
-    access_token: str = environ["GH_TOKEN"]
-    username: str = "jp-zuniga"
-    birthday = datetime(2005, 7, 7)
+    try:
+        # Define config
+        access_token: str = environ["GH_TOKEN"]
+        username: str = "jp-zuniga"
+        birthday = datetime(2005, 7, 7)
 
-    # Initialize stats processor
-    stats = StatProcessor(username, access_token, birthday)
+        # Initialize stats processor
+        stats = StatProcessor(access_token, username, birthday)
 
-    # Fetch statistics
-    stats.get_repos_or_stars(["OWNER"], "stars")
-    stats.get_repos_or_stars(["OWNER"], "repos")
-    stats.get_commit_count()
-    stats.get_loc_data(["OWNER"])
+        # Fetch statistics
+        stats.get_repos_or_stars(["OWNER"], "stars")
+        stats.get_repos_or_stars(["OWNER"], "repos")
+        stats.get_commit_count()
+        stats.get_loc_data(["OWNER"])
 
-    # Update SVG
-    stats.update_svg("dark_mode.svg")
+        # Update SVG
+        stats.update_svg("dark_mode.svg")
 
-    # except KeyError as e:
-    #     print(f"Missing environment variable: {str(e)}", file=stderr)
-    #     exit(1)
-    # except (GitHubAPIError, CacheError) as e:
-    #     print(f"Error: {str(e)}", file=stderr)
-    #     exit(1)
+    except KeyError as e:
+        print(f"Missing environment variable: {str(e)}", file=stderr)
+        exit(1)
+    except (GitHubAPIError, CacheError) as e:
+        print(f"Error: {str(e)}", file=stderr)
+        exit(1)
 
 
 if __name__ == "__main__":

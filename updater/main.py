@@ -7,7 +7,10 @@ from sys import exit, stderr
 from typing import Any, Optional, Union
 
 from dateutil.relativedelta import relativedelta
-from lxml import ParseError, etree
+from lxml import ParseError
+from lxml.etree import _Element as lxml_elem
+from lxml.etree import _ElementTree as lxml_tree
+from lxml.etree import parse as lxml_parse
 from requests import RequestException, Response, post
 
 
@@ -32,9 +35,17 @@ class StatProcessor:
     Main class for fetching and processing GitHub statistics.
     """
 
-    GRAPHQL_ENDPOINT: str = "https://api.github.com/graphql"
+    API_ENDPOINT: str = "https://api.github.com/graphql"
     CACHE_DIR = Path("cache")
     SVG_DIR = Path("assets")
+
+    DOTS_LENGTHS: dict[str, int] = {
+        "age_data_dots": 57,
+        "star_data_dots": 58,
+        "repo_data_dots": 58,
+        "commit_data_dots": 56,
+        "loc_data_dots": 50,
+    }
 
     # Centralized GraphQL queries
     QUERIES: dict[str, str] = {
@@ -131,37 +142,43 @@ class StatProcessor:
         """,
     }
 
-    def __init__(self, username: str, access_token: str, birthday: datetime) -> None:
+    def __init__(self, access_token: str, username: str, birthday: datetime) -> None:
         """
         Initialize all necessary data.
         """
 
-        self.username = username
-        self.access_token = access_token
-        self.birthday = birthday
-        self.user_id = self.get_user_id()
-
         self.CACHE_DIR.mkdir(exist_ok=True)
         self.SVG_DIR.mkdir(exist_ok=True)
 
+        self.access_token = access_token
+        self.username = username
+        self.birthday = birthday
+        self.user_id = self._get_user_id()
+
+        self.headers: dict[str, str] = {"authorization": f"token {access_token}"}
         self.cache_file: Path = (
             self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
         )
 
-        self.headers: dict[str, str] = {"authorization": f"token {access_token}"}
+        self.stars = 0
+        self.repos = 0
+        self.commits = 0
+        self.loc_total = 0
+        self.loc_add = 0
+        self.loc_del = 0
 
-    def get_user_id(self) -> str:
+    def _get_user_id(self) -> str:
         """
         Fetch self.username's Github user ID.
         """
 
         query: str = self.QUERIES["user"]
         variables: dict[str, str] = {"login": self.username}
-        data: dict = self.send_request(query, variables)
+        data: dict = self._send_request(query, variables)
 
         return data["data"]["user"]["id"]
 
-    def calculate_age(self) -> str:
+    def _calculate_age(self) -> str:
         """
         Calculate time since self.birthday.
         """
@@ -174,14 +191,14 @@ class StatProcessor:
             f"{diff.days} day{'s' if diff.days != 1 else ''}"
         )
 
-    def send_request(self, query: str, variables: dict[str, str]) -> dict[str, Any]:
+    def _send_request(self, query: str, variables: dict[str, str]) -> dict[str, Any]:
         """
         Make a GraphQL request and raise exceptions if necessary.
         """
 
         try:
             response: Response = post(
-                self.GRAPHQL_ENDPOINT,
+                self.API_ENDPOINT,
                 json={"query": query, "variables": variables},
                 headers=self.headers,
                 timeout=10,
@@ -192,9 +209,9 @@ class StatProcessor:
         except RequestException as e:
             raise GitHubAPIError(f"Request failed: {str(e)}") from e
 
-    def get_repos_or_stars(self, owner_affiliation: list[str], count_type: str) -> int:
+    def get_repos_or_stars(self, owner_affiliation: list[str], count_type: str) -> None:
         """
-        Get repository count or star count with pagination.
+        Get repository count or total star count with pagination.
         """
 
         total = 0
@@ -208,11 +225,12 @@ class StatProcessor:
                 "cursor": cursor,
             }
 
-            data = self.send_request(self.QUERIES["repos"], variables)
+            data = self._send_request(self.QUERIES["repos"], variables)
             repos = data["data"]["user"]["repositories"]
 
             if count_type == "repos":
-                return repos["totalCount"]
+                self.repos = repos["totalCount"]
+                return
             elif count_type == "stars":
                 total += sum(
                     edge["node"]["stargazers"]["totalCount"] for edge in repos["edges"]
@@ -222,9 +240,9 @@ class StatProcessor:
             has_next_page = page_info["hasNextPage"]
             cursor = page_info["endCursor"]
 
-        return total
+        self.stars = total
 
-    def get_loc_data(self, owner_affiliation: list[str]) -> tuple[int, int, int]:
+    def get_loc_data(self, owner_affiliation: list[str]) -> None:
         """
         Get lines of code data with caching.
         """
@@ -240,7 +258,7 @@ class StatProcessor:
                 "cursor": cursor,
             }
 
-            data = self.send_request(self.QUERIES["loc_query"], variables)
+            data = self._send_request(self.QUERIES["loc_query"], variables)
             repos = data["data"]["user"]["repositories"]
 
             edges.extend(repos["edges"])
@@ -249,10 +267,10 @@ class StatProcessor:
             has_next_page = page_info["hasNextPage"]
             cursor = page_info["endCursor"]
 
-        # Process cache
-        return self.process_cache(edges)
+        # Process cache and save data
+        self.loc_total, self.loc_add, self.loc_del = self._process_cache(edges)
 
-    def process_cache(self, edges: list[dict[str, Any]]) -> tuple[int, int, int]:
+    def _process_cache(self, edges: list[dict[str, Any]]) -> tuple[int, int, int]:
         """
         Process cache and compute LOC totals.
         """
@@ -286,7 +304,7 @@ class StatProcessor:
             if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
                 if current_commits > 0:
                     owner, name = repo_name.split("/")
-                    additions, deletions = self.calculate_repo_loc(owner, name)
+                    additions, deletions = self._calculate_repo_loc(owner, name)
                 else:
                     additions, deletions = 0, 0
 
@@ -310,7 +328,7 @@ class StatProcessor:
 
         return (loc_add - loc_del, loc_add, loc_del)
 
-    def calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int]:
+    def _calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int]:
         """
         Calculate LOC for a single repository.
         """
@@ -327,7 +345,7 @@ class StatProcessor:
                 "cursor": cursor,
             }
 
-            data = self.send_request(self.QUERIES["repo_history"], variables)
+            data = self._send_request(self.QUERIES["repo_history"], variables)
 
             # Handle empty repositories
             if data["data"]["repository"]["defaultBranchRef"] is None:
@@ -354,29 +372,21 @@ class StatProcessor:
 
         return additions, deletions
 
-    def get_commit_count(self) -> int:
+    def get_commit_count(self) -> None:
         """
         Get total commit count from cache.
+        Depends on the cache being up-to-date,
+        so this must be called *after* self.get_loc_data()!
         """
 
         try:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
-            return sum(repo["commits"] for repo in cache.values())
+            self.commits = sum(repo["commits"] for repo in cache.values())
         except (FileNotFoundError, JSONDecodeError, KeyError):
-            return 0
+            self.commits = 0
 
-    def update_svg(
-        self,
-        svg_name: str,
-        age: str,
-        commits: int,
-        stars: int,
-        repos: int,
-        loc_total: int,
-        loc_add: int,
-        loc_del: int,
-    ):
+    def update_svg(self, svg_name: str) -> None:
         """
         Update SVG file with the new data.
         """
@@ -384,25 +394,26 @@ class StatProcessor:
         svg_path: Path = self.SVG_DIR / svg_name
 
         try:
-            tree = etree.parse(svg_path)
-            root = tree.getroot()
+            tree: lxml_tree = lxml_parse(svg_path)
+            root: lxml_elem = tree.getroot()
 
             # Update elements
-            self.update_svg_element(root, "commit_data", commits, 22)
-            self.update_svg_element(root, "star_data", stars, 14)
-            self.update_svg_element(root, "repo_data", repos, 6)
-            self.update_svg_element(root, "loc_data", loc_total)
-            self.update_svg_element(root, "loc_add", loc_add)
-            self.update_svg_element(root, "loc_del", loc_del)
+            self._update_svg_element(root, "age_data", self._calculate_age())
+            self._update_svg_element(root, "star_data", self.stars)
+            self._update_svg_element(root, "repo_data", self.repos)
+            self._update_svg_element(root, "commit_data", self.commits)
+            self._update_svg_element(root, "loc_total", self.loc_total)
+            self._update_svg_element(root, "loc_add", self.loc_add)
+            self._update_svg_element(root, "loc_del", self.loc_del)
 
             # Update file contents
             tree.write(svg_path, encoding="utf-8", xml_declaration=True)
         except (IOError, ParseError) as e:
             raise CacheError(f"SVG update failed: {str(e)}") from e
 
-    def update_svg_element(
-        self, root, element_id: str, value: int, dots_length: int = 0
-    ):
+    def _update_svg_element(
+        self, root: lxml_elem, element_id: str, value: Union[int, str]
+    ) -> None:
         """
         Update single SVG element with value and dots.
         """
@@ -413,53 +424,64 @@ class StatProcessor:
         else:
             value_str = str(value)
 
+        if element_id == "loc_add":
+            value_str = f"+{value_str}"
+        elif element_id == "loc_del":
+            value_str = f"-{value_str}"
+
         # Update value element
         value_element = root.find(f".//*[@id='{element_id}']")
         if value_element is not None:
             value_element.text = value_str
 
-        # Update dots element if needed
-        if dots_length > 0:
-            dots_id = f"{element_id}_dots"
-            dots_element = root.find(f".//*[@id='{dots_id}']")
-            if dots_element is not None:
-                num_dots = max(0, dots_length - len(value_str))
-                dots_element.text = self.generate_dots(num_dots)
+        if element_id in ("loc_add", "loc_del"):
+            return
 
-    def generate_dots(self, count: int) -> str:
+        # Update dots element
+        dots_id = f"{element_id}_dots"
+        dots_element = root.find(f".//*[@id='{dots_id}']")
+
+        if dots_element is not None:
+            if element_id == "loc_total":
+                num_dots = self.DOTS_LENGTHS[dots_id] - len(
+                    f"{value_str} , {self.loc_add} , {self.loc_del}"
+                )
+            else:
+                num_dots = self.DOTS_LENGTHS[dots_id] - len(value_str)
+
+            dots_element.text = self._generate_dots(num_dots)
+
+    def _generate_dots(self, dot_count: int, for_loc: bool = False) -> str:
         """
-        Generate dot string for justification.
+        Generate dots string for justification.
         """
 
-        if count <= 2:
-            return {0: "", 1: " ", 2: ". "}.get(count, "")
-        return " " + ("." * count) + " "
+        return f" {('.' * dot_count)} "
 
 
-def main():
+def main() -> None:
     """
     Fetch personal user data from Github's GraphQL4 API,
     and update the README's SVG image with the new data.
     """
 
     try:
-        # Load configuration from environment
-        username = environ["USER_NAME"]
+        # Define config
         access_token = environ["GH_TOKEN"]
+        username = "jp-zuniga"
         birthday = datetime(2005, 7, 7)
 
         # Initialize stats processor
         stats = StatProcessor(username, access_token, birthday)
 
         # Fetch statistics
-        age = stats.calculate_age()
-        stars = stats.get_repos_or_stars(["OWNER"], "stars")
-        repos = stats.get_repos_or_stars(["OWNER"], "repos")
-        commits = stats.get_commit_count()
-        loc_data = stats.get_loc_data(["OWNER"])
+        stats.get_repos_or_stars(["OWNER"], "stars")
+        stats.get_repos_or_stars(["OWNER"], "repos")
+        stats.get_commit_count()
+        stats.get_loc_data(["OWNER"])
 
         # Update SVG
-        stats.update_svg("dark_mode.svg", age, commits, stars, repos, **loc_data)
+        stats.update_svg("dark_mode.svg")
 
     except KeyError as e:
         print(f"Missing environment variable: {str(e)}", file=stderr)

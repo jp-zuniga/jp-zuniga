@@ -40,11 +40,11 @@ class StatProcessor:
     SVG_DIR = Path("assets")
 
     DOTS_LENGTHS: dict[str, int] = {
-        "age_data_dots": 57,
-        "star_data_dots": 58,
-        "repo_data_dots": 58,
-        "commit_data_dots": 56,
-        "loc_total_dots": 50,
+        "age_data_dots": 55,
+        "star_data_dots": 56,
+        "repo_data_dots": 56,
+        "commit_data_dots": 54,
+        "loc_total_dots": 48,
     }
 
     # Centralized GraphQL queries
@@ -416,7 +416,7 @@ class StatProcessor:
         self, root: lxml_elem, element_id: str, value: Union[int, str]
     ) -> None:
         """
-        Update single SVG element with value and dots.
+        Update an SVG element and its corresponding justification dots.
         """
 
         # Format numeric values
@@ -445,19 +445,19 @@ class StatProcessor:
         if dots_element is not None:
             if element_id == "loc_total":
                 num_dots = self.DOTS_LENGTHS[dots_id] - len(
-                    f"{value_str} , {self.loc_add} , {self.loc_del}"
+                    f"{value_str} , +{self.loc_add} , -{self.loc_del}"
                 )
             else:
                 num_dots = self.DOTS_LENGTHS[dots_id] - len(value_str)
 
             dots_element.text = self._generate_dots(num_dots)
 
-    def _generate_dots(self, dot_count: int, for_loc: bool = False) -> str:
+    def _generate_dots(self, dot_count: int) -> str:
         """
         Generate dots string for justification.
         """
 
-        return f" {('.' * dot_count)} "
+        return f" {'.' * dot_count} "
 
 
 def main() -> None:

@@ -44,7 +44,7 @@ class StatProcessor:
         "star_data_dots": 58,
         "repo_data_dots": 58,
         "commit_data_dots": 56,
-        "loc_data_dots": 50,
+        "loc_total_dots": 50,
     }
 
     # Centralized GraphQL queries

@@ -1,5 +1,2 @@
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./updater/assets/dark_mode.svg">
-    <source media="(prefers-color-scheme: light)" srcset="./updater/assets/light_mode.svg">
-    <img src="./updater/assets/light_mode.svg" alt="Joaquín Zúñiga's Personal README.md">
-</picture>
+![README.md](./updater/assets/dark_mode.svg#gh-dark-mode-only "Joaquín Zúñiga's Personal README.md")
+![README.md](./updater/assets/light_mode.svg#gh-light-mode-only "Joaquín Zúñiga's Personal README.md")

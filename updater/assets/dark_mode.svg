@@ -1,6 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', 'Consolas', monospace" width="1600px" height="1000px">
+<svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', monospace" width="1600px" height="1000px">
     <style>
+        @font-face {
+            font-family: 'MesloLGM Nerd Font Mono';
+            src: url('MesloLGMNerdFontMono-Regular.woff2'),
+            font-weight: normal;
+            font-style: normal;
+        }
         .bg { fill: #1f2938 }
         .pic { fill: #ffffff; }
         .border { fill: #56719a; }

@@ -483,6 +483,7 @@ def main() -> None:
 
         # Update SVG
         stats.update_svg("dark_mode.svg")
+        stats.update_svg("light_mode.svg")
 
     except KeyError as e:
         print(f"Missing environment variable: {str(e)}", file=stderr)

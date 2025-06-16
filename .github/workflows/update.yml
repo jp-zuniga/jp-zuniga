@@ -1,54 +1,54 @@
 name: Update README.md
 
 on:
-    schedule:
-        - cron: "0 0 * * *"
-    workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
-    update:
-        runs-on: ubuntu-latest
-        permissions:
-        contents: write
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-        steps:
-            - name: Checkout repository
-                uses: actions/checkout@v4
-                with:
-                    fetch-depth: 1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-            - name: Set up uv
-                run: |
-                    curl -LsSf https://astral.sh/uv/install.sh | sh
-                    echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      - name: Set up uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-            - name: Cache dependencies
-                uses: actions/cache@v3
-                with:
-                path: |
-                    ~/.cache/uv
-                    ./updater/.venv
-                key: ${{ runner.os }}-uv-${{ hashFiles('./updater/pyproject.toml') }}
-                restore-keys: ${{ runner.os }}-uv-
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/uv
+            ./updater/.venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('./updater/pyproject.toml') }}
+          restore-keys: ${{ runner.os }}-uv-
 
-            - name: Set up environment
-                run: |
-                    cd updater
-                    uv venv --python $(cat .python-version)
-                    uv sync
+      - name: Set up environment
+        run: |
+          cd updater
+          uv venv --python $(cat .python-version)
+          uv sync
 
-            - name: Run script
-                env:
-                    USER_NAME: ${{ secrets.USER_NAME }}
-                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                run: |
-                    cd updater
-                    uv run main.py
+      - name: Run script
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd updater
+          uv run main.py
 
-            - name: Commit changes
-                run: |
-                    git config --global user.name "${{ secrets.USER_NAME }}"
-                    git config --global user.email "${{ secrets.USER_EMAIL }}"
-                    git add .
-                    git commit -m "Update README.md"
-                    git push
+      - name: Commit changes
+        run: |
+          git config --global user.name "${{ secrets.USER_NAME }}"
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
+          git add .
+          git commit -m "Update README.md"
+          git push

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" font-family="'MesloLGM Nerd Font Mono', monospace" width="1600px" height="1000px">
     <style>
-        .bg { fill: #d5dee8 }
+        .bg { fill: #eef2f5 }
         .pic { fill: #000000; }
-        .border { fill: #7290b2; }
+        .border { fill: #6e90a9; }
         .title { fill: #e67e00; font-weight: bold; }
         .key { fill: #ff8c00; }
         .value { fill: #0086b3; }

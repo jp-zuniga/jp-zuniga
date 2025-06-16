@@ -3,15 +3,14 @@
     <style>
         .bg { fill: #1f2938 }
         .pic { fill: #ffffff; }
-        .border { fill: #708090; }
-        .title { fill: #f28b0d; font-weight: bold; }
+        .border { fill: #56719a; }
+        .title { fill: #ff8c00; font-weight: bold; }
         .key { fill: #ffa657; }
         .value { fill: #26acd9; }
         .add_color { fill: #3fb950; }
         .del_color { fill: #f85149; }
     </style>
     <rect width="100%" height="100%" class="bg" rx="50"/>
-
     <text x="30" y="55" class="pic" font-size="14px">
         <tspan x="30" y="55">╭──────────────────────────────────────────────────────────────────────────────╮</tspan>
         <tspan x="30" y="75">│ ⣿⢽⣳⢿⢽⡺⣎⠗⠑⢁⠀⠠⠀⠂⠐⠀⠀⠁⠀⠈⠀⠀⠄⠀⠄⠀⠠⠀⠠⠐⠈⢀⠈⠠⠐⠀⡀⠁⡀⠂⠈⢀⠀⠀⠀⠀⠁⠀⠀⠁⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠄</tspan>

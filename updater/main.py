@@ -469,7 +469,7 @@ def main() -> None:
     try:
         # Define config
         access_token: str = environ["GH_TOKEN"]
-        username: str = "jp-zuniga"
+        username: str = environ["USER_NAME"]
         birthday = datetime(2005, 7, 7)
 
         # Initialize stats processor

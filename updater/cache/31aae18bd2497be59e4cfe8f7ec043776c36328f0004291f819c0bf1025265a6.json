@@ -1,15 +1,15 @@
 {
     "ca4ecda7309ec5ae31b806b5fb5d42e2ee2b0f4780ae611e824a86b662699cd8": {
         "name": "jp-zuniga/Project-Euler",
-        "commits": 78,
-        "additions": 8024,
-        "deletions": 5301
+        "commits": 79,
+        "additions": 8521,
+        "deletions": 5526
     },
     "91063da024705c2554f58439f36b8225810ab9c2c4e1d37033ca9e8154c33704": {
         "name": "jp-zuniga/GaussBot",
-        "commits": 203,
-        "additions": 81447,
-        "deletions": 49430
+        "commits": 208,
+        "additions": 83613,
+        "deletions": 54339
     },
     "68bed0ee8b9197ea34d2f16271526fdc51c5d37449dd99116021507c56ac859c": {
         "name": "jp-zuniga/reforzamientos-python-basico",
@@ -37,9 +37,9 @@
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
         "name": "jp-zuniga/jp-zuniga",
-        "commits": 45,
-        "additions": 2069,
-        "deletions": 1315
+        "commits": 53,
+        "additions": 2190,
+        "deletions": 1380
     },
     "aae7110a2b0f2ee0a928919541e766cb4c01b04a0789955254fa72b472729f0c": {
         "name": "jp-zuniga/algo-structs",
@@ -55,9 +55,9 @@
     },
     "f6fc626d9e6a8fb8ccf7a99a309aa97daa1ace097098dfa14ab27db0491388a0": {
         "name": "jp-zuniga/dots",
-        "commits": 12,
-        "additions": 1213,
-        "deletions": 682
+        "commits": 15,
+        "additions": 1303,
+        "deletions": 764
     },
     "c20fc805a5d21366d4f810e616b4769a64326b66ab0773fcbac72bb9f04b9272": {
         "name": "jp-zuniga/alli",

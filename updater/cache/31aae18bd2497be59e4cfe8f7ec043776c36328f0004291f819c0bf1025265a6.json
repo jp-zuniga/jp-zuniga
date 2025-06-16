@@ -37,9 +37,9 @@
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
         "name": "jp-zuniga/jp-zuniga",
-        "commits": 45,
-        "additions": 2069,
-        "deletions": 1315
+        "commits": 50,
+        "additions": 2153,
+        "deletions": 1343
     },
     "aae7110a2b0f2ee0a928919541e766cb4c01b04a0789955254fa72b472729f0c": {
         "name": "jp-zuniga/algo-structs",
@@ -55,9 +55,9 @@
     },
     "f6fc626d9e6a8fb8ccf7a99a309aa97daa1ace097098dfa14ab27db0491388a0": {
         "name": "jp-zuniga/dots",
-        "commits": 12,
-        "additions": 1213,
-        "deletions": 682
+        "commits": 13,
+        "additions": 1217,
+        "deletions": 696
     },
     "c20fc805a5d21366d4f810e616b4769a64326b66ab0773fcbac72bb9f04b9272": {
         "name": "jp-zuniga/alli",

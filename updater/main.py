@@ -450,14 +450,7 @@ class StatProcessor:
             else:
                 num_dots = self.DOTS_LENGTHS[dots_id] - len(value_str)
 
-            dots_element.text = self._generate_dots(num_dots)
-
-    def _generate_dots(self, dot_count: int) -> str:
-        """
-        Generate dots string for justification.
-        """
-
-        return f" {'.' * dot_count} "
+            dots_element.text = f" {'.' * num_dots} "
 
 
 def main() -> None:

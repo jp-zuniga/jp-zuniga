@@ -7,9 +7,9 @@
     },
     "91063da024705c2554f58439f36b8225810ab9c2c4e1d37033ca9e8154c33704": {
         "name": "jp-zuniga/GaussBot",
-        "commits": 210,
-        "additions": 84480,
-        "deletions": 55171
+        "commits": 215,
+        "additions": 84599,
+        "deletions": 55465
     },
     "68bed0ee8b9197ea34d2f16271526fdc51c5d37449dd99116021507c56ac859c": {
         "name": "jp-zuniga/reforzamientos-python-basico",
@@ -19,9 +19,9 @@
     },
     "304a81f87e2680013b73f5df728a0fc4ae01f6769fb4b477335ed1f8f69f3050": {
         "name": "jp-zuniga/sistema-contable",
-        "commits": 2,
-        "additions": 4380,
-        "deletions": 16
+        "commits": 5,
+        "additions": 4398,
+        "deletions": 34
     },
     "664f6458d9f7b627a6d692a6748e0e8fa1ed88d7be0ce80562ec3604b3e5e909": {
         "name": "jp-zuniga/rust-learning",
@@ -37,9 +37,9 @@
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
         "name": "jp-zuniga/jp-zuniga",
-        "commits": 57,
-        "additions": 2214,
-        "deletions": 1409
+        "commits": 61,
+        "additions": 2228,
+        "deletions": 1421
     },
     "aae7110a2b0f2ee0a928919541e766cb4c01b04a0789955254fa72b472729f0c": {
         "name": "jp-zuniga/algo-structs",

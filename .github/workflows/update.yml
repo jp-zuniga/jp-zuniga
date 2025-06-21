@@ -28,18 +28,13 @@ jobs:
             **/uv.lock
           ignore-nothing-to-cache: true
 
-      - name: Environment setup
-        run: |
-          cd updater
-          uv venv --python $(cat .python-version)
-          uv sync
-
       - name: Run script
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd updater
+          uv venv --python $(cat .python-version)
           uv run main.py
 
       - name: Commit and push changes

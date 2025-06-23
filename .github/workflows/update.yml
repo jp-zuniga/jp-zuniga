@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 1
 
       - name: uv setup
-        uses: astral-sh/setup-uv@v6.2.1
+        uses: astral-sh/setup-uv@v6.3.0
         with:
           version: "latest"
           working-directory: ./updater/
@@ -29,18 +29,18 @@ jobs:
           ignore-nothing-to-cache: true
 
       - name: Run script
+        working-directory: ./updater/
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd updater
-          uv venv --python $(cat .python-version)
+          uv venv
           uv run main.py
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "${{ secrets.USER_NAME }}[bot]"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "${{ secrets.USER_NAME }}"
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
           git add .
           git commit -m "Update README.md"
           git push

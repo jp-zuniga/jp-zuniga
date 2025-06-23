@@ -7,9 +7,9 @@
     },
     "91063da024705c2554f58439f36b8225810ab9c2c4e1d37033ca9e8154c33704": {
         "name": "jp-zuniga/GaussBot",
-        "commits": 222,
-        "additions": 85635,
-        "deletions": 56309
+        "commits": 253,
+        "additions": 87403,
+        "deletions": 57715
     },
     "68bed0ee8b9197ea34d2f16271526fdc51c5d37449dd99116021507c56ac859c": {
         "name": "jp-zuniga/reforzamientos-python-basico",
@@ -37,9 +37,9 @@
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
         "name": "jp-zuniga/jp-zuniga",
-        "commits": 63,
-        "additions": 2229,
-        "deletions": 1427
+        "commits": 69,
+        "additions": 2272,
+        "deletions": 1471
     },
     "aae7110a2b0f2ee0a928919541e766cb4c01b04a0789955254fa72b472729f0c": {
         "name": "jp-zuniga/algo-structs",

@@ -290,36 +290,39 @@ class StatProcessor:
         loc_del: int = 0
 
         for edge in edges:
-            repo: Any = edge["node"]
-            repo_name: Any = repo["nameWithOwner"]
+            repo: Any = edge.get("node", {})
+            repo_name: Any = repo.get("nameWithOwner")
+            if not repo_name:
+                continue
+
             repo_hash: str = sha256(repo_name.encode()).hexdigest()
+            default_branch: Any = repo.get("defaultBranchRef", {})
+            target: Any = default_branch.get("target", {}) if default_branch else {}
+            history: Any = target.get("history", {}) if target else {}
+            current_commits: Any = history.get("totalCount", 0)
 
-            try:
-                current_commits: Any = repo["defaultBranchRef"]["target"]["history"][
-                    "totalCount"
-                ]
-            except TypeError:
-                current_commits: Any = 0
-
-            if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
-                if current_commits > 0:
-                    owner, name = repo_name.split("/")
+            if current_commits > 0:
+                owner, name = repo_name.split("/")
+                try:
                     additions, deletions, user_commits = self._calculate_repo_loc(
                         owner, name
                     )
-                else:
+                except Exception as e:
+                    print(f"Error processing {repo_name}: {str(e)}")
                     additions, deletions, user_commits = 0, 0, 0
+            else:
+                additions, deletions, user_commits = 0, 0, 0
 
-                cache[repo_hash] = {
-                    "name": repo_name,
-                    "commits": current_commits,
-                    "user_commits": user_commits,
-                    "additions": additions,
-                    "deletions": deletions,
-                }
+            cache[repo_hash] = {
+                "name": repo_name,
+                "commits": current_commits,
+                "user_commits": user_commits,
+                "additions": additions,
+                "deletions": deletions,
+            }
 
-            loc_add += int(cache[repo_hash]["additions"])
-            loc_del += int(cache[repo_hash]["deletions"])
+            loc_add += additions
+            loc_del += deletions
 
         try:
             with open(self.cache_file, "w") as f:
@@ -347,30 +350,36 @@ class StatProcessor:
                 "cursor": cursor,
             }
 
-            data: dict[str, Any] = self._send_request(
-                self.QUERIES["repo_history"], variables
-            )
-
-            if data["data"]["repository"]["defaultBranchRef"] is None:
+            try:
+                data: dict[str, Any] = self._send_request(
+                    self.QUERIES["repo_history"], variables
+                )
+            except GitHubAPIError:
                 break
 
-            history: Any = data["data"]["repository"]["defaultBranchRef"]["target"][
-                "history"
-            ]
+            repo_data: Any = data.get("data", {}).get("repository")
+            if not repo_data or not repo_data.get("defaultBranchRef"):
+                break
 
-            for edge in history["edges"]:
-                commit: Any = edge["node"]
-                if (
-                    commit["author"]["user"]
-                    and commit["author"]["user"]["id"] == self.user_id
-                ):
-                    additions += commit["additions"]
-                    deletions += commit["deletions"]
+            history: Any = repo_data["defaultBranchRef"]["target"]["history"]
+            total_commits: Any = history["totalCount"]
+
+            for edge in history.get("edges", []):
+                commit: Any = edge.get("node", {})
+                author: Any = commit.get("author", {})
+                user: Any = author.get("user", {}) if author else {}
+
+                if user and user.get("id") == self.user_id:
+                    additions += commit.get("additions", 0)
+                    deletions += commit.get("deletions", 0)
                     user_commits += 1
 
-            page_info: Any = history["pageInfo"]
-            has_next: Any = page_info["hasNextPage"]
-            cursor: Any = page_info["endCursor"]
+            page_info: Any = history.get("pageInfo", {})
+            has_next: Any = (
+                page_info.get("hasNextPage", False) and user_commits < total_commits
+            )
+
+            cursor: Any = page_info.get("endCursor")
 
         return additions, deletions, user_commits
 

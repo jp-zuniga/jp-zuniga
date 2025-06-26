@@ -1,6 +1,6 @@
 [project]
 name = "updater"
-version = "0.1.0"
+version = "0.2.0"
 description = "Updates the repo's README.md."
 requires-python = ">=3.13"
 dependencies = [
@@ -8,3 +8,14 @@ dependencies = [
     "python-dateutil>=2.9.0.post0",
     "requests>=2.32.4",
 ]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+force-sort-within-sections = true
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+split-on-trailing-comma = false

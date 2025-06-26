@@ -7,10 +7,12 @@ from sys import exit, stderr
 from typing import Any, Optional, Union
 
 from dateutil.relativedelta import relativedelta
-from lxml.etree import ParseError
-from lxml.etree import _Element as lxml_elem
-from lxml.etree import _ElementTree as lxml_tree
-from lxml.etree import parse as lxml_parse
+from lxml.etree import (
+    ParseError,
+    _Element as lxml_elem,
+    _ElementTree as lxml_tree,
+    parse as lxml_parse,
+)
 from requests import RequestException, Response, post
 
 
@@ -47,7 +49,6 @@ class StatProcessor:
         "loc_total_dots": 46,
     }
 
-    # Centralized GraphQL queries
     QUERIES: dict[str, str] = {
         "user": """
             query($login: String!){
@@ -161,12 +162,12 @@ class StatProcessor:
             self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
         )
 
-        self.stars = 0
-        self.repos = 0
-        self.commits = 0
-        self.loc_total = 0
-        self.loc_add = 0
-        self.loc_del = 0
+        self.stars: int = 0
+        self.repos: int = 0
+        self.commits: int = 0
+        self.loc_total: int = 0
+        self.loc_add: int = 0
+        self.loc_del: int = 0
 
     def _get_user_id(self) -> str:
         """
@@ -210,24 +211,26 @@ class StatProcessor:
         except RequestException as e:
             raise GitHubAPIError(f"Request failed: {str(e)}") from e
 
-    def get_repos_or_stars(self, owner_affiliation: list[str], count_type: str) -> None:
+    def _get_repos_or_stars(
+        self, owner_affiliation: list[str], count_type: str
+    ) -> None:
         """
         Get repository count or total star count with pagination.
         """
 
-        total = 0
+        total: int = 0
         cursor: Optional[str] = None
-        has_next_page = True
+        has_next_page: bool = True
 
         while has_next_page:
-            variables: dict[str, str] = {
+            variables: dict[str, Any] = {
                 "owner_affiliation": owner_affiliation,
                 "login": self.username,
                 "cursor": cursor,
             }
 
-            data = self._send_request(self.QUERIES["repos"], variables)
-            repos = data["data"]["user"]["repositories"]
+            data: dict[str, Any] = self._send_request(self.QUERIES["repos"], variables)
+            repos: Any = data["data"]["user"]["repositories"]
 
             if count_type == "repos":
                 self.repos = repos["totalCount"]
@@ -237,38 +240,39 @@ class StatProcessor:
                     edge["node"]["stargazers"]["totalCount"] for edge in repos["edges"]
                 )
 
-            page_info = repos["pageInfo"]
-            has_next_page = page_info["hasNextPage"]
-            cursor = page_info["endCursor"]
+            page_info: Any = repos["pageInfo"]
+            has_next_page: Any = page_info["hasNextPage"]
+            cursor: Any = page_info["endCursor"]
 
         self.stars = total
 
-    def get_loc_data(self, owner_affiliation: list[str]) -> None:
+    def _get_loc_data(self, owner_affiliation: list[str]) -> None:
         """
         Get lines of code data with caching.
         """
 
         edges: list[Any] = []
         cursor: Optional[str] = None
-        has_next_page = True
+        has_next_page: bool = True
 
         while has_next_page:
-            variables: dict[str, str] = {
+            variables: dict[str, Any] = {
                 "owner_affiliation": owner_affiliation,
                 "login": self.username,
                 "cursor": cursor,
             }
 
-            data = self._send_request(self.QUERIES["loc_query"], variables)
-            repos = data["data"]["user"]["repositories"]
+            data: dict[str, Any] = self._send_request(
+                self.QUERIES["loc_query"], variables
+            )
 
+            repos = data["data"]["user"]["repositories"]
             edges.extend(repos["edges"])
 
-            page_info = repos["pageInfo"]
-            has_next_page = page_info["hasNextPage"]
-            cursor = page_info["endCursor"]
+            page_info: Any = repos["pageInfo"]
+            has_next_page: Any = page_info["hasNextPage"]
+            cursor: Any = page_info["endCursor"]
 
-        # Process cache and save data
         self.loc_total, self.loc_add, self.loc_del = self._process_cache(edges)
 
     def _process_cache(self, edges: list[dict[str, Any]]) -> tuple[int, int, int]:
@@ -276,51 +280,47 @@ class StatProcessor:
         Process cache and compute LOC totals.
         """
 
-        # Load existing cache
         try:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
         except (FileNotFoundError, JSONDecodeError):
             cache: dict[str, dict[str, Union[int, str]]] = {}
 
-        loc_add = 0
-        loc_del = 0
+        loc_add: int = 0
+        loc_del: int = 0
 
-        # Process each repository
         for edge in edges:
-            repo = edge["node"]
-            repo_name = repo["nameWithOwner"]
-            repo_hash = sha256(repo_name.encode()).hexdigest()
+            repo: Any = edge["node"]
+            repo_name: Any = repo["nameWithOwner"]
+            repo_hash: str = sha256(repo_name.encode()).hexdigest()
 
-            # Get current commit count
             try:
-                current_commits = repo["defaultBranchRef"]["target"]["history"][
+                current_commits: Any = repo["defaultBranchRef"]["target"]["history"][
                     "totalCount"
                 ]
             except TypeError:
-                # Empty repository
-                current_commits = 0
+                current_commits: int = 0
 
-            # Check if cache needs update
             if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
                 if current_commits > 0:
                     owner, name = repo_name.split("/")
-                    additions, deletions = self._calculate_repo_loc(owner, name)
+                    additions, deletions, user_commits = self._calculate_repo_loc(
+                        owner, name
+                    )
                 else:
-                    additions, deletions = 0, 0
+                    additions, deletions, user_commits = 0, 0, 0
 
                 cache[repo_hash] = {
                     "name": repo_name,
                     "commits": current_commits,
+                    "user_commits": user_commits,
                     "additions": additions,
                     "deletions": deletions,
                 }
 
-            # Update totals
             loc_add += cache[repo_hash]["additions"]
             loc_del += cache[repo_hash]["deletions"]
 
-        # Save updated cache
         try:
             with open(self.cache_file, "w") as f:
                 dump(cache, f, indent=4)
@@ -329,65 +329,64 @@ class StatProcessor:
 
         return (loc_add - loc_del, loc_add, loc_del)
 
-    def _calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int]:
+    def _calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int, int]:
         """
         Calculate LOC for a single repository.
         """
 
-        additions = 0
-        deletions = 0
-        cursor = None
-        has_next = True
+        additions: int = 0
+        deletions: int = 0
+        user_commits: int = 0
+        cursor: Optional[str] = None
+        has_next: int = True
 
         while has_next:
-            variables: dict[str, str] = {
+            variables: dict[str, Any] = {
                 "owner": owner,
                 "repo_name": repo_name,
                 "cursor": cursor,
             }
 
-            data = self._send_request(self.QUERIES["repo_history"], variables)
+            data: dict[str, Any] = self._send_request(
+                self.QUERIES["repo_history"], variables
+            )
 
-            # Handle empty repositories
             if data["data"]["repository"]["defaultBranchRef"] is None:
                 break
 
-            history = data["data"]["repository"]["defaultBranchRef"]["target"][
+            history: Any = data["data"]["repository"]["defaultBranchRef"]["target"][
                 "history"
             ]
 
-            # Process commits
             for edge in history["edges"]:
-                commit = edge["node"]
+                commit: Any = edge["node"]
                 if (
                     commit["author"]["user"]
                     and commit["author"]["user"]["id"] == self.user_id
                 ):
                     additions += commit["additions"]
                     deletions += commit["deletions"]
+                    user_commits += 1
 
-            # Handle pagination
-            page_info = history["pageInfo"]
-            has_next = page_info["hasNextPage"]
-            cursor = page_info["endCursor"]
+            page_info: Any = history["pageInfo"]
+            has_next: Any = page_info["hasNextPage"]
+            cursor: Any = page_info["endCursor"]
 
-        return additions, deletions
+        return additions, deletions, user_commits
 
-    def get_commit_count(self) -> None:
+    def _get_commit_count(self) -> None:
         """
         Get total commit count from cache.
-        Depends on the cache being up-to-date,
-        so this must be called *after* self.get_loc_data()!
         """
 
         try:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
-            self.commits = sum(repo["commits"] for repo in cache.values())
+            self.commits = sum(repo["user_commits"] for repo in cache.values())
         except (FileNotFoundError, JSONDecodeError, KeyError):
             self.commits = 0
 
-    def update_svg(self, svg_name: str) -> None:
+    def _update_svg(self, svg_name: str) -> None:
         """
         Update SVG file with the new data.
         """
@@ -398,7 +397,6 @@ class StatProcessor:
             tree: lxml_tree = lxml_parse(svg_path)
             root: lxml_elem = tree.getroot()
 
-            # Update elements
             self._update_svg_element(root, "age_data", self._calculate_age())
             self._update_svg_element(root, "star_data", self.stars)
             self._update_svg_element(root, "repo_data", self.repos)
@@ -419,7 +417,6 @@ class StatProcessor:
         Update an SVG element and its corresponding justification dots.
         """
 
-        # Format numeric values
         if isinstance(value, int):
             value_str = f"{value:,}"
         else:
@@ -430,27 +427,38 @@ class StatProcessor:
         elif element_id == "loc_del":
             value_str = f"-{value_str}"
 
-        # Update value element
-        value_element = root.find(f".//*[@id='{element_id}']")
+        value_element: Any = root.find(f".//*[@id='{element_id}']")
         if value_element is not None:
             value_element.text = value_str
 
         if element_id in ("loc_add", "loc_del"):
             return
 
-        # Update dots element
         dots_id = f"{element_id}_dots"
-        dots_element = root.find(f".//*[@id='{dots_id}']")
+        dots_element: Any = root.find(f".//*[@id='{dots_id}']")
 
         if dots_element is not None:
             if element_id == "loc_total":
-                num_dots = self.DOTS_LENGTHS[dots_id] - len(
+                num_dots: int = self.DOTS_LENGTHS[dots_id] - len(
                     f"{value_str} , +{self.loc_add} , -{self.loc_del}"
                 )
             else:
-                num_dots = self.DOTS_LENGTHS[dots_id] - len(value_str)
+                num_dots: int = self.DOTS_LENGTHS[dots_id] - len(value_str)
 
             dots_element.text = f" {'.' * num_dots} "
+
+    def calculate_stats(self) -> None:
+        """
+        Main entry point for stat calculation.
+        """
+
+        self._get_repos_or_stars(["OWNER"], "stars")
+        self._get_repos_or_stars(["OWNER"], "repos")
+        self._get_loc_data(["OWNER"])
+        self._get_commit_count()
+
+        self._update_svg("dark_mode.svg")
+        self._update_svg("light_mode.svg")
 
 
 def main() -> None:
@@ -460,24 +468,11 @@ def main() -> None:
     """
 
     try:
-        # Define config
-        access_token: str = environ["GH_TOKEN"]
-        username: str = environ["USER_NAME"]
-        birthday = datetime(2005, 7, 7)
-
-        # Initialize stats processor
-        stats = StatProcessor(access_token, username, birthday)
-
-        # Fetch statistics
-        stats.get_repos_or_stars(["OWNER"], "stars")
-        stats.get_repos_or_stars(["OWNER"], "repos")
-        stats.get_commit_count()
-        stats.get_loc_data(["OWNER"])
-
-        # Update SVG
-        stats.update_svg("dark_mode.svg")
-        stats.update_svg("light_mode.svg")
-
+        StatProcessor(
+            access_token=environ["GH_TOKEN"],
+            username=environ["USER_NAME"],
+            birthday=datetime(2005, 7, 7),
+        ).calculate_stats()
     except KeyError as e:
         print(f"Missing environment variable: {str(e)}", file=stderr)
         exit(1)

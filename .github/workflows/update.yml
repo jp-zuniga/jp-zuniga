@@ -33,9 +33,7 @@ jobs:
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          uv venv
-          uv run main.py
+        run: uv run main.py
 
       - name: Commit and push changes
         run: |

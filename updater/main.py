@@ -4,7 +4,7 @@ from json import JSONDecodeError, dump, load
 from os import environ
 from pathlib import Path
 from sys import exit, stderr
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from dateutil.relativedelta import relativedelta
 from lxml.etree import (
@@ -219,8 +219,8 @@ class StatProcessor:
         """
 
         total: int = 0
-        cursor: Optional[str] = None
-        has_next_page: bool = True
+        cursor: Any = None
+        has_next_page: Any = True
 
         while has_next_page:
             variables: dict[str, Any] = {
@@ -252,8 +252,8 @@ class StatProcessor:
         """
 
         edges: list[Any] = []
-        cursor: Optional[str] = None
-        has_next_page: bool = True
+        cursor: Any = None
+        has_next_page: Any = True
 
         while has_next_page:
             variables: dict[str, Any] = {
@@ -266,7 +266,7 @@ class StatProcessor:
                 self.QUERIES["loc_query"], variables
             )
 
-            repos = data["data"]["user"]["repositories"]
+            repos: Any = data["data"]["user"]["repositories"]
             edges.extend(repos["edges"])
 
             page_info: Any = repos["pageInfo"]
@@ -299,7 +299,7 @@ class StatProcessor:
                     "totalCount"
                 ]
             except TypeError:
-                current_commits: int = 0
+                current_commits: Any = 0
 
             if repo_hash not in cache or cache[repo_hash]["commits"] != current_commits:
                 if current_commits > 0:
@@ -318,8 +318,8 @@ class StatProcessor:
                     "deletions": deletions,
                 }
 
-            loc_add += cache[repo_hash]["additions"]
-            loc_del += cache[repo_hash]["deletions"]
+            loc_add += int(cache[repo_hash]["additions"])
+            loc_del += int(cache[repo_hash]["deletions"])
 
         try:
             with open(self.cache_file, "w") as f:
@@ -337,8 +337,8 @@ class StatProcessor:
         additions: int = 0
         deletions: int = 0
         user_commits: int = 0
-        cursor: Optional[str] = None
-        has_next: int = True
+        cursor: Any = None
+        has_next: Any = True
 
         while has_next:
             variables: dict[str, Any] = {
@@ -382,7 +382,7 @@ class StatProcessor:
         try:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
-            self.commits = sum(repo["user_commits"] for repo in cache.values())
+            self.commits = sum([int(repo["user_commits"]) for repo in cache.values()])
         except (FileNotFoundError, JSONDecodeError, KeyError):
             self.commits = 0
 
@@ -394,7 +394,7 @@ class StatProcessor:
         svg_path: Path = self.SVG_DIR / svg_name
 
         try:
-            tree: lxml_tree = lxml_parse(svg_path)
+            tree: lxml_tree = lxml_parse(svg_path, parser=None)
             root: lxml_elem = tree.getroot()
 
             self._update_svg_element(root, "age_data", self._calculate_age())
@@ -405,8 +405,7 @@ class StatProcessor:
             self._update_svg_element(root, "loc_add", self.loc_add)
             self._update_svg_element(root, "loc_del", self.loc_del)
 
-            # Update file contents
-            tree.write(svg_path, encoding="utf-8", xml_declaration=True)
+            tree.write(svg_path, encoding="utf-8", xml_declaration=True)  # type: ignore
         except (IOError, ParseError) as e:
             raise CacheError(f"SVG update failed: {str(e)}") from e
 
@@ -427,7 +426,10 @@ class StatProcessor:
         elif element_id == "loc_del":
             value_str = f"-{value_str}"
 
-        value_element: Any = root.find(f".//*[@id='{element_id}']")
+        value_element: Any = root.find(
+            path=f".//*[@id='{element_id}']", namespaces=None
+        )
+
         if value_element is not None:
             value_element.text = value_str
 
@@ -435,7 +437,7 @@ class StatProcessor:
             return
 
         dots_id = f"{element_id}_dots"
-        dots_element: Any = root.find(f".//*[@id='{dots_id}']")
+        dots_element: Any = root.find(path=f".//*[@id='{dots_id}']", namespaces=None)
 
         if dots_element is not None:
             if element_id == "loc_total":

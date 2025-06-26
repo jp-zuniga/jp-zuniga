@@ -7,13 +7,15 @@ from sys import exit, stderr
 from typing import Any, Union
 
 from dateutil.relativedelta import relativedelta
+from github import Github, GithubException
+from github.Commit import Commit
+from github.Repository import Repository
 from lxml.etree import (
     ParseError,
     _Element as lxml_elem,
     _ElementTree as lxml_tree,
     parse as lxml_parse,
 )
-from requests import RequestException, Response, post
 
 
 class GitHubAPIError(Exception):
@@ -37,129 +39,35 @@ class StatProcessor:
     Main class for fetching and processing GitHub statistics.
     """
 
-    API_ENDPOINT: str = "https://api.github.com/graphql"
-    CACHE_DIR = Path("cache")
-    SVG_DIR = Path("assets")
-
-    DOTS_LENGTHS: dict[str, int] = {
-        "age_data_dots": 55,
-        "star_data_dots": 56,
-        "repo_data_dots": 56,
-        "commit_data_dots": 54,
-        "loc_total_dots": 46,
-    }
-
-    QUERIES: dict[str, str] = {
-        "user": """
-            query($login: String!){
-                user(login: $login) {
-                    id
-                    createdAt
-                }
-            }
-        """,
-        "repos": """
-            query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
-                user(login: $login) {
-                    repositories(first: 100, after: $cursor, ownerAffiliations: $owner_affiliation) {
-                        totalCount
-                        edges {
-                            node {
-                                ... on Repository {
-                                    nameWithOwner
-                                    stargazers {
-                                        totalCount
-                                    }
-                                }
-                            }
-                        }
-                        pageInfo {
-                            endCursor
-                            hasNextPage
-                        }
-                    }
-                }
-            }
-        """,
-        "repo_history": """
-            query ($repo_name: String!, $owner: String!, $cursor: String) {
-                repository(name: $repo_name, owner: $owner) {
-                    defaultBranchRef {
-                        target {
-                            ... on Commit {
-                                history(first: 100, after: $cursor) {
-                                    totalCount
-                                    edges {
-                                        node {
-                                            ... on Commit {
-                                                author {
-                                                    user {
-                                                        id
-                                                    }
-                                                }
-                                                deletions
-                                                additions
-                                            }
-                                        }
-                                    }
-                                    pageInfo {
-                                        endCursor
-                                        hasNextPage
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        """,
-        "loc_query": """
-            query ($owner_affiliation: [RepositoryAffiliation], $login: String!, $cursor: String) {
-                user(login: $login) {
-                    repositories(first: 60, after: $cursor, ownerAffiliations: $owner_affiliation) {
-                        edges {
-                            node {
-                                ... on Repository {
-                                    nameWithOwner
-                                    defaultBranchRef {
-                                        target {
-                                            ... on Commit {
-                                                history {
-                                                    totalCount
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        pageInfo {
-                            endCursor
-                            hasNextPage
-                        }
-                    }
-                }
-            }
-        """,
-    }
-
     def __init__(self, access_token: str, username: str, birthday: datetime) -> None:
         """
         Initialize all necessary data.
         """
 
-        self.CACHE_DIR.mkdir(exist_ok=True)
-        self.SVG_DIR.mkdir(exist_ok=True)
+        self.just_lengths: dict[str, int] = {
+            "age_data_dots": 55,
+            "star_data_dots": 56,
+            "repo_data_dots": 56,
+            "commit_data_dots": 54,
+            "loc_total_dots": 46,
+        }
+
+        self.cache_dir = Path("cache")
+        self.svg_dir = Path("assets")
+
+        self.cache_dir.mkdir(exist_ok=True)
+        self.svg_dir.mkdir(exist_ok=True)
 
         self.access_token = access_token
         self.username = username
         self.birthday = birthday
 
-        self.headers: dict[str, str] = {"authorization": f"token {access_token}"}
-        self.user_id = self._get_user_id()
+        self.gh = Github(access_token)
+        self.user = self.gh.get_user(username)
+        self.user_id = self.user.id
 
         self.cache_file: Path = (
-            self.CACHE_DIR / f"{sha256(username.encode()).hexdigest()}.json"
+            self.cache_dir / f"{sha256(username.encode()).hexdigest()}.json"
         )
 
         self.stars: int = 0
@@ -168,17 +76,6 @@ class StatProcessor:
         self.loc_total: int = 0
         self.loc_add: int = 0
         self.loc_del: int = 0
-
-    def _get_user_id(self) -> str:
-        """
-        Fetch self.username's Github user ID.
-        """
-
-        query: str = self.QUERIES["user"]
-        variables: dict[str, str] = {"login": self.username}
-        data: dict = self._send_request(query, variables)
-
-        return data["data"]["user"]["id"]
 
     def _calculate_age(self) -> str:
         """
@@ -193,89 +90,29 @@ class StatProcessor:
             f"{diff.days} day{'s' if diff.days != 1 else ''}"
         )
 
-    def _send_request(self, query: str, variables: dict[str, str]) -> dict[str, Any]:
+    def _get_repos_and_stars(self) -> None:
         """
-        Make a GraphQL request and raise exceptions if necessary.
+        Get repository count and total star count.
         """
 
         try:
-            response: Response = post(
-                self.API_ENDPOINT,
-                json={"query": query, "variables": variables},
-                headers=self.headers,
-                timeout=10,
-            )
+            repos = list(self.user.get_repos(affiliation="owner"))
+            self.repos = len(repos)
+            self.stars = sum(repo.stargazers_count for repo in repos)
+            self.repositories = repos
+        except GithubException as e:
+            raise GitHubAPIError(f"Failed to get repositories: {str(e)}") from e
 
-            response.raise_for_status()
-            return response.json()
-        except RequestException as e:
-            raise GitHubAPIError(f"Request failed: {str(e)}") from e
-
-    def _get_repos_or_stars(
-        self, owner_affiliation: list[str], count_type: str
-    ) -> None:
-        """
-        Get repository count or total star count with pagination.
-        """
-
-        total: int = 0
-        cursor: Any = None
-        has_next_page: Any = True
-
-        while has_next_page:
-            variables: dict[str, Any] = {
-                "owner_affiliation": owner_affiliation,
-                "login": self.username,
-                "cursor": cursor,
-            }
-
-            data: dict[str, Any] = self._send_request(self.QUERIES["repos"], variables)
-            repos: Any = data["data"]["user"]["repositories"]
-
-            if count_type == "repos":
-                self.repos = repos["totalCount"]
-                return
-            elif count_type == "stars":
-                total += sum(
-                    edge["node"]["stargazers"]["totalCount"] for edge in repos["edges"]
-                )
-
-            page_info: Any = repos["pageInfo"]
-            has_next_page: Any = page_info["hasNextPage"]
-            cursor: Any = page_info["endCursor"]
-
-        self.stars = total
-
-    def _get_loc_data(self, owner_affiliation: list[str]) -> None:
+    def _get_loc_data(self) -> None:
         """
         Get lines of code data with caching.
         """
 
-        edges: list[Any] = []
-        cursor: Any = None
-        has_next_page: Any = True
+        self.loc_total, self.loc_add, self.loc_del = self._process_cache(
+            self.repositories
+        )
 
-        while has_next_page:
-            variables: dict[str, Any] = {
-                "owner_affiliation": owner_affiliation,
-                "login": self.username,
-                "cursor": cursor,
-            }
-
-            data: dict[str, Any] = self._send_request(
-                self.QUERIES["loc_query"], variables
-            )
-
-            repos: Any = data["data"]["user"]["repositories"]
-            edges.extend(repos["edges"])
-
-            page_info: Any = repos["pageInfo"]
-            has_next_page: Any = page_info["hasNextPage"]
-            cursor: Any = page_info["endCursor"]
-
-        self.loc_total, self.loc_add, self.loc_del = self._process_cache(edges)
-
-    def _process_cache(self, edges: list[dict[str, Any]]) -> tuple[int, int, int]:
+    def _process_cache(self, repositories: list[Repository]) -> tuple[int, int, int]:
         """
         Process cache and compute LOC totals.
         """
@@ -284,35 +121,34 @@ class StatProcessor:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
         except (FileNotFoundError, JSONDecodeError):
-            cache: dict[str, dict[str, Union[int, str]]] = {}
+            cache = {}
 
         loc_add: int = 0
         loc_del: int = 0
 
-        for edge in edges:
-            repo: Any = edge.get("node", {})
-            repo_name: Any = repo.get("nameWithOwner")
-            if not repo_name:
-                continue
+        for repo in repositories:
+            repo_name = repo.full_name
+            repo_hash = sha256(repo_name.encode()).hexdigest()
 
-            repo_hash: str = sha256(repo_name.encode()).hexdigest()
-            default_branch: Any = repo.get("defaultBranchRef", {})
-            target: Any = default_branch.get("target", {}) if default_branch else {}
-            history: Any = target.get("history", {}) if target else {}
-            current_commits: Any = history.get("totalCount", 0)
+            try:
+                current_commits = repo.get_commits().totalCount
+            except GithubException:
+                current_commits = 0
 
-            if current_commits > 0:
-                owner, name = repo_name.split("/")
+            if current_commits > 0 and (
+                repo_hash not in cache or cache[repo_hash]["commits"] != current_commits
+            ):
                 try:
-                    additions, deletions, user_commits = self._calculate_repo_loc(
-                        owner, name
-                    )
+                    additions, deletions, user_commits = self._calculate_repo_loc(repo)
                 except Exception as e:
                     print(f"Error processing {repo_name}: {str(e)}")
                     additions, deletions, user_commits = 0, 0, 0
             else:
-                additions, deletions, user_commits = 0, 0, 0
-
+                cached = cache.get(repo_hash, {})
+                additions = cached.get("additions", 0)
+                deletions = cached.get("deletions", 0)
+                user_commits = cached.get("user_commits", 0)
+            # Update cache
             cache[repo_hash] = {
                 "name": repo_name,
                 "commits": current_commits,
@@ -332,7 +168,7 @@ class StatProcessor:
 
         return (loc_add - loc_del, loc_add, loc_del)
 
-    def _calculate_repo_loc(self, owner: str, repo_name: str) -> tuple[int, int, int]:
+    def _calculate_repo_loc(self, repo: Repository) -> tuple[int, int, int]:
         """
         Calculate LOC for a single repository.
         """
@@ -340,48 +176,28 @@ class StatProcessor:
         additions: int = 0
         deletions: int = 0
         user_commits: int = 0
-        cursor: Any = None
-        has_next: Any = True
 
-        while has_next:
-            variables: dict[str, Any] = {
-                "owner": owner,
-                "repo_name": repo_name,
-                "cursor": cursor,
-            }
-
-            try:
-                data: dict[str, Any] = self._send_request(
-                    self.QUERIES["repo_history"], variables
-                )
-            except GitHubAPIError:
-                break
-
-            repo_data: Any = data.get("data", {}).get("repository")
-            if not repo_data or not repo_data.get("defaultBranchRef"):
-                break
-
-            history: Any = repo_data["defaultBranchRef"]["target"]["history"]
-            total_commits: Any = history["totalCount"]
-
-            for edge in history.get("edges", []):
-                commit: Any = edge.get("node", {})
-                author: Any = commit.get("author", {})
-                user: Any = author.get("user", {}) if author else {}
-
-                if user and user.get("id") == self.user_id:
-                    additions += commit.get("additions", 0)
-                    deletions += commit.get("deletions", 0)
+        try:
+            commits = repo.get_commits()
+            for commit in commits:
+                if self._is_user_commit(commit):
+                    additions += commit.stats.additions
+                    deletions += commit.stats.deletions
                     user_commits += 1
-
-            page_info: Any = history.get("pageInfo", {})
-            has_next: Any = (
-                page_info.get("hasNextPage", False) and user_commits < total_commits
-            )
-
-            cursor: Any = page_info.get("endCursor")
+        except GithubException as e:
+            if e.status != 409:
+                print(f"Error getting commits for {repo.full_name}: {str(e)}")
 
         return additions, deletions, user_commits
+
+    def _is_user_commit(self, commit: Commit) -> bool:
+        """
+        Check if commit belongs to the user.
+        """
+
+        if commit.author:
+            return commit.author.id == self.user_id
+        return False
 
     def _get_commit_count(self) -> None:
         """
@@ -391,7 +207,7 @@ class StatProcessor:
         try:
             with open(self.cache_file, "r") as f:
                 cache: dict[str, dict[str, Union[int, str]]] = load(f)
-            self.commits = sum([int(repo["user_commits"]) for repo in cache.values()])
+            self.commits = sum(int(repo["user_commits"]) for repo in cache.values())
         except (FileNotFoundError, JSONDecodeError, KeyError):
             self.commits = 0
 
@@ -400,7 +216,7 @@ class StatProcessor:
         Update SVG file with the new data.
         """
 
-        svg_path: Path = self.SVG_DIR / svg_name
+        svg_path: Path = self.svg_dir / svg_name
 
         try:
             tree: lxml_tree = lxml_parse(svg_path, parser=None)
@@ -450,11 +266,11 @@ class StatProcessor:
 
         if dots_element is not None:
             if element_id == "loc_total":
-                num_dots: int = self.DOTS_LENGTHS[dots_id] - len(
+                num_dots: int = self.just_lengths[dots_id] - len(
                     f"{value_str} , +{self.loc_add} , -{self.loc_del}"
                 )
             else:
-                num_dots: int = self.DOTS_LENGTHS[dots_id] - len(value_str)
+                num_dots: int = self.just_lengths[dots_id] - len(value_str)
 
             dots_element.text = f" {'.' * num_dots} "
 
@@ -463,9 +279,8 @@ class StatProcessor:
         Main entry point for stat calculation.
         """
 
-        self._get_repos_or_stars(["OWNER"], "stars")
-        self._get_repos_or_stars(["OWNER"], "repos")
-        self._get_loc_data(["OWNER"])
+        self._get_repos_and_stars()
+        self._get_loc_data()
         self._get_commit_count()
 
         self._update_svg("dark_mode.svg")
@@ -474,8 +289,7 @@ class StatProcessor:
 
 def main() -> None:
     """
-    Fetch personal user data from Github's GraphQL4 API,
-    and update the README's SVG image with the new data.
+    Fetch GitHub statistics and update SVG files.
     """
 
     try:

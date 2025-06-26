@@ -5,6 +5,7 @@ description = "Updates the repo's README.md."
 requires-python = ">=3.13"
 dependencies = [
     "lxml>=5.4.0",
+    "pygithub>=2.6.1",
     "python-dateutil>=2.9.0.post0",
     "requests>=2.32.4",
 ]

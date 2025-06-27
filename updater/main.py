@@ -247,7 +247,7 @@ class StatProcessor:
         if element_id == "loc_add":
             value_str = f"+{value_str}"
         elif element_id == "loc_del":
-            value_str = f"-{value_str}"
+            value_str = f"−{value_str}"
 
         value_element: Any = root.find(
             path=f".//*[@id='{element_id}']", namespaces=None
@@ -265,7 +265,7 @@ class StatProcessor:
         if dots_element is not None:
             if element_id == "loc_total":
                 num_dots: int = self.just_lengths[dots_id] - len(
-                    f"{value_str} , +{self.loc_add_count} , -{self.loc_del_count}"
+                    f"{value_str} , +{self.loc_add_count} , −{self.loc_del_count}"
                 )
             else:
                 num_dots: int = self.just_lengths[dots_id] - len(value_str)

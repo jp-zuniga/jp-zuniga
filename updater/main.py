@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from github import Github, GithubException
 from github.Commit import Commit
 from github.Repository import PaginatedList, Repository
-from lxml.etree import (
+from lxml.etree import (  # type: ignore
     ParseError,
     _Element as lxml_elem,
     _ElementTree as lxml_tree,
@@ -55,6 +55,7 @@ class StatProcessor:
         self.gh = Github(access_token)
         self.user = self.gh.get_user(username)
         self.user_id = self.user.id
+        self.verified_emails = self._get_verified_emails()
 
         self.cache_file: Path = (
             self.cache_dir / f"{sha256(username.encode()).hexdigest()}.json"
@@ -78,6 +79,20 @@ class StatProcessor:
         self._get_commit_count()
         self._update_svg("dark_mode.svg")
         self._update_svg("light_mode.svg")
+
+    def _get_verified_emails(self) -> list[str]:
+        """
+        Fetch all verified email addresses for the user.
+        """
+
+        emails: list[str] = []
+        try:
+            for email_info in self.user.get_emails():
+                if email_info.verified:
+                    emails.append(email_info.email.lower())
+        except GithubException as e:
+            print(f"Warning: Could not fetch verified emails: {str(e)}")
+        return emails
 
     def _get_repos_and_stars(self) -> None:
         """
@@ -184,11 +199,15 @@ class StatProcessor:
 
     def _is_user_commit(self, commit: Commit) -> bool:
         """
-        Check if commit belongs to the user.
+        Check if commit belongs to the user using ID or verified emails.
         """
 
-        if commit.author:
-            return commit.author.id == self.user_id
+        if (commit.author and commit.author.id == self.user_id) or (
+            commit.commit
+            and commit.commit.author
+            and commit.commit.author.email.lower() in self.verified_emails
+        ):
+            return True
         return False
 
     def _get_commit_count(self) -> None:

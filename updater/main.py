@@ -4,12 +4,12 @@ from json import JSONDecodeError, dump, load
 from os import environ
 from pathlib import Path
 from sys import exit, stderr
-from typing import Any, Union
+from typing import Any
 
 from dateutil.relativedelta import relativedelta
 from github import Github, GithubException
 from github.Commit import Commit
-from github.Repository import Repository
+from github.Repository import PaginatedList, Repository
 from lxml.etree import (
     ParseError,
     _Element as lxml_elem,
@@ -18,20 +18,10 @@ from lxml.etree import (
 )
 
 
-class GitHubAPIError(Exception):
-    """
-    Custom exception for GitHub API errors.
-    """
-
-    pass
-
-
 class CacheError(Exception):
     """
     Custom exception for cache handling errors.
     """
-
-    pass
 
 
 class StatProcessor:
@@ -70,12 +60,14 @@ class StatProcessor:
             self.cache_dir / f"{sha256(username.encode()).hexdigest()}.json"
         )
 
-        self.stars: int = 0
-        self.repos: int = 0
-        self.commits: int = 0
-        self.loc_total: int = 0
-        self.loc_add: int = 0
-        self.loc_del: int = 0
+        self.repositories: PaginatedList[Repository] = []
+
+        self.star_count: int = 0
+        self.repo_count: int = 0
+        self.commit_count: int = 0
+        self.total_loc_count: int = 0
+        self.loc_add_count: int = 0
+        self.loc_del_count: int = 0
 
     def _calculate_age(self) -> str:
         """
@@ -96,59 +88,62 @@ class StatProcessor:
         """
 
         try:
-            repos = list(self.user.get_repos(affiliation="owner"))
-            self.repos = len(repos)
-            self.stars = sum(repo.stargazers_count for repo in repos)
+            repos: PaginatedList[Repository] = self.user.get_repos(type="owner")
+            self.repo_count = repos.totalCount
+            self.star_count = sum(repo.stargazers_count for repo in repos)
             self.repositories = repos
         except GithubException as e:
-            raise GitHubAPIError(f"Failed to get repositories: {str(e)}") from e
+            print(f"Failed to get repositories: {str(e)}")
 
     def _get_loc_data(self) -> None:
         """
         Get lines of code data with caching.
         """
 
-        self.loc_total, self.loc_add, self.loc_del = self._process_cache(
-            self.repositories
+        self.total_loc_count, self.loc_add_count, self.loc_del_count = (
+            self._process_cache(self.repositories)
         )
 
-    def _process_cache(self, repositories: list[Repository]) -> tuple[int, int, int]:
+    def _process_cache(
+        self, repositories: PaginatedList[Repository]
+    ) -> tuple[int, int, int]:
         """
         Process cache and compute LOC totals.
         """
 
         try:
-            with open(self.cache_file, "r") as f:
-                cache: dict[str, dict[str, Union[int, str]]] = load(f)
+            with open(self.cache_file, mode="r", encoding="utf-8") as f:
+                cache: dict[str, dict[str, int | str]] = load(f)
         except (FileNotFoundError, JSONDecodeError):
-            cache = {}
+            cache: dict[str, dict[str, int | str]] = {}
 
         loc_add: int = 0
         loc_del: int = 0
 
         for repo in repositories:
-            repo_name = repo.full_name
-            repo_hash = sha256(repo_name.encode()).hexdigest()
+            repo_name: str = repo.full_name
+            repo_hash: str = sha256(repo_name.encode()).hexdigest()
 
             try:
-                current_commits = repo.get_commits().totalCount
+                current_commits: int = repo.get_commits().totalCount
             except GithubException:
-                current_commits = 0
+                current_commits: int = 0
 
             if current_commits > 0 and (
                 repo_hash not in cache or cache[repo_hash]["commits"] != current_commits
             ):
                 try:
                     additions, deletions, user_commits = self._calculate_repo_loc(repo)
-                except Exception as e:
+                except GithubException as e:
                     print(f"Error processing {repo_name}: {str(e)}")
-                    additions, deletions, user_commits = 0, 0, 0
+                    print(f"Setting data for {repo} to 0.")
+                    additions = deletions = user_commits = int()
             else:
-                cached = cache.get(repo_hash, {})
-                additions = cached.get("additions", 0)
-                deletions = cached.get("deletions", 0)
-                user_commits = cached.get("user_commits", 0)
-            # Update cache
+                cached: dict[str, int | str] = cache.get(repo_hash, {})
+                additions = int(cached.get("additions", 0))
+                deletions = int(cached.get("deletions", 0))
+                user_commits = int(cached.get("user_commits", 0))
+
             cache[repo_hash] = {
                 "name": repo_name,
                 "commits": current_commits,
@@ -161,7 +156,7 @@ class StatProcessor:
             loc_del += deletions
 
         try:
-            with open(self.cache_file, "w") as f:
+            with open(self.cache_file, mode="w", encoding="utf-8") as f:
                 dump(cache, f, indent=4)
         except IOError as e:
             raise CacheError(f"Failed to write cache: {str(e)}") from e
@@ -178,7 +173,7 @@ class StatProcessor:
         user_commits: int = 0
 
         try:
-            commits = repo.get_commits()
+            commits: PaginatedList[Commit] = repo.get_commits()
             for commit in commits:
                 if self._is_user_commit(commit):
                     additions += commit.stats.additions
@@ -205,11 +200,13 @@ class StatProcessor:
         """
 
         try:
-            with open(self.cache_file, "r") as f:
-                cache: dict[str, dict[str, Union[int, str]]] = load(f)
-            self.commits = sum(int(repo["user_commits"]) for repo in cache.values())
+            with open(self.cache_file, mode="r", encoding="utf-8") as f:
+                cache: dict[str, dict[str, int | str]] = load(f)
+            self.commit_count = sum(
+                int(repo["user_commits"]) for repo in cache.values()
+            )
         except (FileNotFoundError, JSONDecodeError, KeyError):
-            self.commits = 0
+            self.commit_count = 0
 
     def _update_svg(self, svg_name: str) -> None:
         """
@@ -223,19 +220,19 @@ class StatProcessor:
             root: lxml_elem = tree.getroot()
 
             self._update_svg_element(root, "age_data", self._calculate_age())
-            self._update_svg_element(root, "star_data", self.stars)
-            self._update_svg_element(root, "repo_data", self.repos)
-            self._update_svg_element(root, "commit_data", self.commits)
-            self._update_svg_element(root, "loc_total", self.loc_total)
-            self._update_svg_element(root, "loc_add", self.loc_add)
-            self._update_svg_element(root, "loc_del", self.loc_del)
+            self._update_svg_element(root, "star_data", self.star_count)
+            self._update_svg_element(root, "repo_data", self.repo_count)
+            self._update_svg_element(root, "commit_data", self.commit_count)
+            self._update_svg_element(root, "loc_total", self.total_loc_count)
+            self._update_svg_element(root, "loc_add", self.loc_add_count)
+            self._update_svg_element(root, "loc_del", self.loc_del_count)
 
             tree.write(svg_path, encoding="utf-8", xml_declaration=True)  # type: ignore
         except (IOError, ParseError) as e:
             raise CacheError(f"SVG update failed: {str(e)}") from e
 
     def _update_svg_element(
-        self, root: lxml_elem, element_id: str, value: Union[int, str]
+        self, root: lxml_elem, element_id: str, value: int | str
     ) -> None:
         """
         Update an SVG element and its corresponding justification dots.
@@ -267,7 +264,7 @@ class StatProcessor:
         if dots_element is not None:
             if element_id == "loc_total":
                 num_dots: int = self.just_lengths[dots_id] - len(
-                    f"{value_str} , +{self.loc_add} , -{self.loc_del}"
+                    f"{value_str} , +{self.loc_add_count} , -{self.loc_del_count}"
                 )
             else:
                 num_dots: int = self.just_lengths[dots_id] - len(value_str)
@@ -301,7 +298,7 @@ def main() -> None:
     except KeyError as e:
         print(f"Missing environment variable: {str(e)}", file=stderr)
         exit(1)
-    except (GitHubAPIError, CacheError) as e:
+    except (GithubException, CacheError) as e:
         print(f"Error: {str(e)}", file=stderr)
         exit(1)
 

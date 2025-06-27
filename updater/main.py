@@ -112,8 +112,8 @@ class StatProcessor:
         """
 
         try:
-            with open(self.cache_file, mode="r", encoding="utf-8") as f:
-                cache: dict[str, dict[str, int | str]] = load(f)
+            with open(self.cache_file, mode="r", encoding="utf-8") as file:
+                cache: dict[str, dict[str, int | str]] = load(file)
         except (FileNotFoundError, JSONDecodeError):
             cache: dict[str, dict[str, int | str]] = {}
 
@@ -156,8 +156,8 @@ class StatProcessor:
             loc_del += deletions
 
         try:
-            with open(self.cache_file, mode="w", encoding="utf-8") as f:
-                dump(cache, f, indent=4)
+            with open(self.cache_file, mode="w", encoding="utf-8") as file:
+                dump(cache, file, indent=4, sort_keys=True)
         except IOError as e:
             raise CacheError(f"Failed to write cache: {str(e)}") from e
 
@@ -200,10 +200,14 @@ class StatProcessor:
         """
 
         try:
-            with open(self.cache_file, mode="r", encoding="utf-8") as f:
-                cache: dict[str, dict[str, int | str]] = load(f)
+            with open(self.cache_file, mode="r", encoding="utf-8") as file:
+                cache: dict[str, dict[str, int | str]] = load(file)
+
             self.commit_count = sum(
-                int(repo["user_commits"]) for repo in cache.values()
+                int(repo["user_commits"]) + 1
+                if repo["name"] == "jp-zuniga/jp-zuniga"
+                else int(repo["user_commits"])
+                for repo in cache.values()
             )
         except (FileNotFoundError, JSONDecodeError, KeyError):
             self.commit_count = 0

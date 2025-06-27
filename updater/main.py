@@ -8,6 +8,7 @@ from typing import Any
 
 from dateutil.relativedelta import relativedelta
 from github import Github, GithubException
+from github.Auth import Token
 from github.Commit import Commit
 from github.Repository import PaginatedList, Repository
 from lxml.etree import (  # type: ignore
@@ -34,6 +35,7 @@ class StatProcessor:
         Initialize all necessary data.
         """
 
+        self.birthday = birthday
         self.just_lengths: dict[str, int] = {
             "age_data_dots": 49,
             "star_data_dots": 50,
@@ -48,12 +50,8 @@ class StatProcessor:
         self.cache_dir.mkdir(exist_ok=True)
         self.svg_dir.mkdir(exist_ok=True)
 
-        self.access_token = access_token
-        self.username = username
-        self.birthday = birthday
-
-        self.gh = Github(access_token)
-        self.user = self.gh.get_user(username)
+        self.gh = Github(auth=Token(access_token))
+        self.user = self.gh.get_user()
         self.user_id = self.user.id
         self.verified_emails = self._get_verified_emails()
 

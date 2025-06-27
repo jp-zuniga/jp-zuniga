@@ -312,7 +312,7 @@ def main() -> None:
 
     try:
         StatProcessor(
-            access_token=environ["GH_TOKEN"],
+            access_token=environ["ACCESS_TOKEN"],
             username=environ["USER_NAME"],
             birthday=datetime(2005, 7, 7),
         ).calculate_stats()

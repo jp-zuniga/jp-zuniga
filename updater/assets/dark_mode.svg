@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1351px" height="870px" font-family="DejaVu Sans Mono, monospace">
     <style>
         .bg { fill: #1f2938 }
@@ -70,10 +70,10 @@
         <tspan x="560" y="545" class="border">│ ‣ </tspan><tspan class="key">LinkedIn</tspan><tspan class="border"> ......................................</tspan> <tspan class="value">jp-zuniga</tspan><tspan class="border"> │</tspan>
         <tspan x="560" y="575" class="border">│ ‣ </tspan><tspan class="key">Instagram</tspan><tspan class="border"> ..................................</tspan> <tspan class="value">@framesbyjaq</tspan><tspan class="border"> │</tspan>
         <tspan x="560" y="615" class="border">├── </tspan><tspan class="title">User.Git</tspan><tspan class="border"> ─────────────────────────────────────────────────┤</tspan>
-        <tspan x="560" y="655" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="star_data_dots"> ................................................ </tspan><tspan class="value" id="star_data">16</tspan><tspan class="border"> │</tspan>
+        <tspan x="560" y="655" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="star_data_dots"> ................................................ </tspan><tspan class="value" id="star_data">14</tspan><tspan class="border"> │</tspan>
         <tspan x="560" y="685" class="border">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan class="border" id="repo_data_dots"> ................................................ </tspan><tspan class="value" id="repo_data">12</tspan><tspan class="border"> │</tspan>
-        <tspan x="560" y="715" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ............................................. </tspan><tspan class="value" id="commit_data">482</tspan><tspan class="border"> │</tspan>
-        <tspan x="560" y="745" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ............... </tspan><tspan class="value" id="loc_total">52,963</tspan><tspan class="border"> , </tspan><tspan class="add_color" id="loc_add">+119,719</tspan><tspan class="border"> , </tspan><tspan class="del_color" id="loc_del">−66,756</tspan><tspan class="border"> │</tspan>
+        <tspan x="560" y="715" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ............................................. </tspan><tspan class="value" id="commit_data">514</tspan><tspan class="border"> │</tspan>
+        <tspan x="560" y="745" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ............... </tspan><tspan class="value" id="loc_total">53,117</tspan><tspan class="border"> , </tspan><tspan class="add_color" id="loc_add">+121,409</tspan><tspan class="border"> , </tspan><tspan class="del_color" id="loc_del">-68,292</tspan><tspan class="border"> │</tspan>
         <tspan x="560" y="775" class="border">╰─────────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

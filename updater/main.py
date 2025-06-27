@@ -35,11 +35,11 @@ class StatProcessor:
         """
 
         self.just_lengths: dict[str, int] = {
-            "age_data_dots": 50,
-            "star_data_dots": 51,
-            "repo_data_dots": 51,
-            "commit_data_dots": 49,
-            "loc_total_dots": 41,
+            "age_data_dots": 49,
+            "star_data_dots": 50,
+            "repo_data_dots": 50,
+            "commit_data_dots": 48,
+            "loc_total_dots": 40,
         }
 
         self.cache_dir = Path("cache")

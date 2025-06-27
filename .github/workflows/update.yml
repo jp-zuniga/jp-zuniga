@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: uv setup
         uses: astral-sh/setup-uv@v6.3.0
@@ -31,6 +31,7 @@ jobs:
       - name: Run script
         working-directory: ./updater/
         env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: uv run main.py

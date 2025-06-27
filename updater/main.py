@@ -61,7 +61,6 @@ class StatProcessor:
         )
 
         self.repositories: PaginatedList[Repository] = []
-
         self.star_count: int = 0
         self.repo_count: int = 0
         self.commit_count: int = 0
@@ -69,18 +68,16 @@ class StatProcessor:
         self.loc_add_count: int = 0
         self.loc_del_count: int = 0
 
-    def _calculate_age(self) -> str:
+    def calculate_stats(self) -> None:
         """
-        Calculate time since self.birthday.
+        Main entry point for stat calculation.
         """
 
-        diff = relativedelta(datetime.today(), self.birthday)
-        return (
-            f"{'🎂 ' if (diff.months == 0 and diff.days == 0) else ''}"
-            f"{diff.years} year{'s' if diff.years != 1 else ''}, "
-            f"{diff.months} month{'s' if diff.months != 1 else ''}, "
-            f"{diff.days} day{'s' if diff.days != 1 else ''}"
-        )
+        self._get_repos_and_stars()
+        self._get_loc_data()
+        self._get_commit_count()
+        self._update_svg("dark_mode.svg")
+        self._update_svg("light_mode.svg")
 
     def _get_repos_and_stars(self) -> None:
         """
@@ -275,17 +272,18 @@ class StatProcessor:
 
             dots_element.text = f" {'.' * num_dots} "
 
-    def calculate_stats(self) -> None:
+    def _calculate_age(self) -> str:
         """
-        Main entry point for stat calculation.
+        Calculate time since self.birthday.
         """
 
-        self._get_repos_and_stars()
-        self._get_loc_data()
-        self._get_commit_count()
-
-        self._update_svg("dark_mode.svg")
-        self._update_svg("light_mode.svg")
+        diff = relativedelta(datetime.today(), self.birthday)
+        return (
+            f"{'🎂 ' if (diff.months == 0 and diff.days == 0) else ''}"
+            f"{diff.years} year{'s' if diff.years != 1 else ''}, "
+            f"{diff.months} month{'s' if diff.months != 1 else ''}, "
+            f"{diff.days} day{'s' if diff.days != 1 else ''}"
+        )
 
 
 def main() -> None:

@@ -74,7 +74,7 @@
     </text>
     <text x="735" y="150" class="border" font-size="20">
         <tspan x="735" y="150">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan> ─────────────────────────────────────────╮
-        <tspan x="735" y="190">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan id="age_data_dots"> ........................... </tspan><tspan class="value" id="age_data">19 years, 11 months, 19 days</tspan> │
+        <tspan x="735" y="190">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan id="age_data_dots"> ........................... </tspan><tspan class="value" id="age_data">19 years, 11 months, 20 days</tspan> │
         <tspan x="735" y="220">│ ‣ </tspan><tspan class="key">OS</tspan> ............................................ <tspan class="value">Linux Mint 22.1</tspan> │
         <tspan x="735" y="250">│ ‣ </tspan><tspan class="key">IDE</tspan> ............................................ <tspan class="value">VSCodium 1.101</tspan> │
         <tspan x="735" y="280">│ ‣ </tspan><tspan class="key">Shell</tspan> ......................................... <tspan class="value">Nushell 0.105.1</tspan> │

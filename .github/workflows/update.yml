@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: uv setup
-        uses: astral-sh/setup-uv@v6.3.0
+        uses: astral-sh/setup-uv@v6.3.1
         with:
           version: "latest"
           working-directory: ./updater/

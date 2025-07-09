@@ -17,16 +17,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: uv setup
+      - name: Install uv
         uses: astral-sh/setup-uv@v6.3.1
         with:
           version: "latest"
           working-directory: ./updater/
           enable-cache: true
-          cache-dependency-glob: |
-            **/pyproject.toml
-            **/uv.lock
           ignore-nothing-to-cache: true
+
+      - name: Set up environment
+        working-directory: ./updater/
+        run: uv sync
 
       - name: Run script
         working-directory: ./updater/

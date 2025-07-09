@@ -85,7 +85,6 @@ class StatProcessor:
         self._get_loc_data()
         self._get_commit_count()
         self._update_svg("dark_mode.svg")
-        self._update_svg("light_mode.svg")
 
     def _get_verified_emails(self) -> list[str]:
         """

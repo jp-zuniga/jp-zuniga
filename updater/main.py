@@ -255,7 +255,7 @@ class StatProcessor:
             self._update_svg_element(root, "loc_add", self.loc_add_count)
             self._update_svg_element(root, "loc_del", self.loc_del_count)
 
-            tree.write(svg_path)
+            tree.write(svg_path, encoding="utf-8", xml_declaration=True)  # type: ignore[reportCallIssue]
         except (OSError, ParseError) as e:
             raise CacheError(f"SVG update failed: {e!s}") from e
 

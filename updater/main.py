@@ -228,7 +228,7 @@ class StatProcessor:
                 cache: dict[str, dict[str, int | str]] = load(file)
 
             self.commit_count = sum(
-                int(repo["user_commits"]) + 1
+                int(repo["user_commits"]) + 2
                 if repo["name"] == "jp-zuniga/jp-zuniga"
                 else int(repo["user_commits"])
                 for repo in cache.values()

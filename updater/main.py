@@ -227,10 +227,7 @@ class StatProcessor:
                 cache: dict[str, dict[str, int | str]] = load(file)
 
             self.commit_count = sum(
-                int(repo["user_commits"]) + 2
-                if repo["name"] == "jp-zuniga/jp-zuniga"
-                else int(repo["user_commits"])
-                for repo in cache.values()
+                int(repo["user_commits"]) for repo in cache.values()
             )
         except (FileNotFoundError, JSONDecodeError, KeyError):
             self.commit_count = 0

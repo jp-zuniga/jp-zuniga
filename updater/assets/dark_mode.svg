@@ -44,7 +44,7 @@
     </text>
     <text font-size="16">
         <tspan x="540" y="40" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ───────────────────────────────────╮</tspan>
-        <tspan x="540" y="70" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> ....................... </tspan><tspan class="value" id="age_data">20 years, 0 months, 3 days</tspan><tspan class="border"> │</tspan>
+        <tspan x="540" y="70" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> ....................... </tspan><tspan class="value" id="age_data">20 years, 0 months, 7 days</tspan><tspan class="border"> │</tspan>
         <tspan x="540" y="100" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ...................................... </tspan><tspan class="value">Linux Mint 22.1</tspan><tspan class="border"> │</tspan>
         <tspan x="540" y="130" class="border">│ ‣ </tspan><tspan class="key">IDE</tspan><tspan class="border"> ........................................ </tspan><tspan class="value">VSCode 1.101</tspan><tspan class="border"> │</tspan>
         <tspan x="540" y="160" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> ........................................ </tspan><tspan class="value">Nu 0.105.1</tspan><tspan class="border"> │</tspan>
@@ -61,8 +61,8 @@
         <tspan x="540" y="490" class="border">├── </tspan><tspan class="title">User.Git</tspan><tspan class="border"> ─────────────────────────────────────────────────┤</tspan>
         <tspan x="540" y="520" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="star_data_dots"> ................................................ </tspan><tspan class="value" id="star_data">17</tspan><tspan class="border"> │</tspan>
         <tspan x="540" y="550" class="border">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan class="border" id="repo_data_dots"> ................................................ </tspan><tspan class="value" id="repo_data">12</tspan><tspan class="border"> │</tspan>
-        <tspan x="540" y="580" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ............................................. </tspan><tspan class="value" id="commit_data">604</tspan><tspan class="border"> │</tspan>
-        <tspan x="540" y="610" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ............... </tspan><tspan class="value" id="loc_total">53,062</tspan><tspan class="border"> , </tspan><tspan class="add_color" id="loc_add">+124,646</tspan><tspan class="border"> , </tspan><tspan class="del_color" id="loc_del">−71,584</tspan><tspan class="border"> │</tspan>
+        <tspan x="540" y="580" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ............................................. </tspan><tspan class="value" id="commit_data">607</tspan><tspan class="border"> │</tspan>
+        <tspan x="540" y="610" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ............... </tspan><tspan class="value" id="loc_total">53,060</tspan><tspan class="border"> , </tspan><tspan class="add_color" id="loc_add">+124,675</tspan><tspan class="border"> , </tspan><tspan class="del_color" id="loc_del">−71,615</tspan><tspan class="border"> │</tspan>
         <tspan x="540" y="640" class="border">╰─────────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

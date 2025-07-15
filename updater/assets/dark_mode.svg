@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="980px" height="580px" font-family="'Meslo LGM Nerd Font Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
     <style>
-        .pic { fill: #ffffff; }
+        .pic { fill: #ffffff; font-weight: bold; }
         .border { fill: #808080; font-weight: bold; }
         .title { fill: #ff8400; font-weight: bold; }
         .key { fill: #ffaa33; }

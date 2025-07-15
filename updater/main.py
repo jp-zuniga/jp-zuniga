@@ -2,29 +2,29 @@
 Fetch a user's Github statistics and update a profile card.
 """
 
+from __future__ import annotations
+
 from datetime import UTC, datetime
 from hashlib import sha256
 from json import JSONDecodeError, dump, load
 from os import environ
 from pathlib import Path
-import sys
 from typing import TYPE_CHECKING, Any
 
 from dateutil.relativedelta import relativedelta
 from github import Github, GithubException
 from github.Auth import Token
-from github.Commit import Commit
-from github.PaginatedList import PaginatedList
-from github.Repository import Repository
 from lxml.etree import (
     ParseError,
-    _Element as lxml_elem,
-    _ElementTree as lxml_tree,
     parse as lxml_parse,
 )
 
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
+    from github.Commit import Commit
+    from github.PaginatedList import PaginatedList
+    from github.Repository import Repository
+    from lxml.etree import _Element as lxml_elem, _ElementTree as lxml_tree
 
 
 class CacheError(Exception):
@@ -363,6 +363,8 @@ def main() -> None:
     """
     Fetch GitHub statistics and update SVG files.
     """
+
+    import sys  # noqa: PLC0415
 
     try:
         StatProcessor(

@@ -1,5 +1,5 @@
 """
-Fetch a user's Github statistics and update SVG images.
+Fetch a user's Github statistics and update a profile card.
 """
 
 from datetime import UTC, datetime
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 class CacheError(Exception):
     """
-    Custom exception for cache handling errors.
+    Custom exception for cache errors.
     """
 
 
@@ -41,6 +41,12 @@ class StatProcessor:
     def __init__(self, access_token: str, username: str, birthday: datetime) -> None:
         """
         Initialize all necessary data.
+
+        Args:
+            access_token: Github token to use for authentication.
+            username:     User's username.
+            birthday:     User's birthday.
+
         """
 
         self.birthday = birthday
@@ -76,19 +82,27 @@ class StatProcessor:
         self.loc_add_count: int = 0
         self.loc_del_count: int = 0
 
-    def calculate_stats(self) -> None:
+    def calculate_stats(self, svg_name: str) -> None:
         """
-        Main entry point for stat calculation.
+        Calculate user statistics.
+
+        Args:
+            svg_name: Name of image to be updated.
+
         """
 
         self._get_repos_and_stars()
         self._get_loc_data()
         self._get_commit_count()
-        self._update_svg("dark_mode.svg")
+        self._update_svg(svg_name)
 
     def _get_verified_emails(self) -> list[str]:
         """
         Fetch all verified email addresses for the user.
+
+        Returns:
+            list[str]: List of user's verified emails.
+
         """
 
         emails: list[str] = []
@@ -130,6 +144,13 @@ class StatProcessor:
     ) -> tuple[int, int, int]:
         """
         Process cache and compute LOC totals.
+
+        Args:
+            repositories: List of repositories owned by the user.
+
+        Returns:
+            (int, int, int): Lines of code calculated (total, added, deleted).
+
         """
 
         try:
@@ -187,6 +208,13 @@ class StatProcessor:
     def _calculate_repo_loc(self, repo: Repository) -> tuple[int, int, int]:
         """
         Calculate LOC for a single repository.
+
+        Args:
+            repo: Repository to calculate LOC for.
+
+        Returns:
+            (int, int, int): Lines of code calculated (total, added, deleted).
+
         """
 
         additions: int = 0
@@ -209,6 +237,13 @@ class StatProcessor:
     def _is_user_commit(self, commit: Commit) -> bool:
         """
         Check if commit belongs to the user using ID or verified emails.
+
+        Args:
+            commit: Commit to check.
+
+        Returns:
+            bool: If the commit was authored by the user.
+
         """
 
         return (commit.author and commit.author.id == self.user_id) or (
@@ -235,6 +270,10 @@ class StatProcessor:
     def _update_svg(self, svg_name: str) -> None:
         """
         Update SVG file with the new data.
+
+        Args:
+            svg_name: Image to be updated.
+
         """
 
         svg_path: Path = self.svg_dir / svg_name
@@ -263,6 +302,12 @@ class StatProcessor:
     ) -> None:
         """
         Update an SVG element and its corresponding justification dots.
+
+        Args:
+            root:       Root XML element of image.
+            element_id: ID of element to update.
+            value:      New value of element.
+
         """
 
         value_str = f"{value:,}" if isinstance(value, int) else str(value)
@@ -299,6 +344,10 @@ class StatProcessor:
     def _calculate_age(self) -> str:
         """
         Calculate time since self.birthday.
+
+        Returns:
+            str: Time since user's birth.
+
         """
 
         diff = relativedelta(datetime.now(tz=UTC), self.birthday)
@@ -320,7 +369,7 @@ def main() -> None:
             access_token=environ["ACCESS_TOKEN"],
             username=environ["USER_NAME"],
             birthday=datetime(2005, 7, 7, tzinfo=UTC),
-        ).calculate_stats()
+        ).calculate_stats(svg_name="profile_card.svg")
     except KeyError as e:
         print(f"Missing environment variable: {e!s}", file=sys.stderr)
         sys.exit(1)

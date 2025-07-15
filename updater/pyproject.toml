@@ -3,7 +3,6 @@
         "lxml>=5.4.0",
         "pygithub>=2.6.1",
         "python-dateutil>=2.9.0.post0",
-        "requests>=2.32.4",
     ]
     description = "Updates the repo's README.md."
     name = "updater"
@@ -15,15 +14,8 @@
     ignore = [
         "D200",
         "D202",
-        "D203",
-        "D205",
         "D212",
-        "D401",
-        "EM101",
         "EM102",
-        "FBT001",
-        "FBT002",
-        "FBT003",
         "PLR2004",
         "T201",
         "TRY003",
@@ -31,9 +23,6 @@
     select = ["ALL"]
 
     [tool.ruff.lint.isort]
-        case-sensitive             = true
         combine-as-imports         = true
         force-sort-within-sections = true
         order-by-type              = true
-        relative-imports-order     = "closest-to-furthest"
-        split-on-trailing-comma    = false

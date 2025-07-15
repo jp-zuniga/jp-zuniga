@@ -249,7 +249,6 @@ dependencies = [
     { name = "lxml" },
     { name = "pygithub" },
     { name = "python-dateutil" },
-    { name = "requests" },
 ]
 
 [package.metadata]
@@ -257,7 +256,6 @@ requires-dist = [
     { name = "lxml", specifier = ">=5.4.0" },
     { name = "pygithub", specifier = ">=2.6.1" },
     { name = "python-dateutil", specifier = ">=2.9.0.post0" },
-    { name = "requests", specifier = ">=2.32.4" },
 ]
 
 [[package]]

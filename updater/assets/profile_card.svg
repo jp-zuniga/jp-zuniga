@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="980px" height="580px" font-family="'Meslo LGM Nerd Font Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" width="935px" height="550px" font-family="'Meslo LGM Nerd Font Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
     <style>
         .pic { fill: #ffffff; font-weight: bold; }
         .border { fill: #808080; font-weight: bold; }
@@ -9,63 +9,64 @@
         .del { fill: #f85149; }
     </style>
     <text class="pic" font-size="11px">
-        <tspan x="20" y="35">⠀⠀⠐⠀⠁⠀⠀⠀⠐⠈⢀⠐⠀⠐⠠⠀⡀⢁⠀⠀⢈⠀⡈⠄⡐⢄⢈⠢⢑⠌⡢⡂⠄</tspan>
-        <tspan x="20" y="50">⠀⢀⠀⠀⠀⠀⠀⡀⠁⠐⠀⠀⠂⠁⠀⠀⠀⠀⢀⠐⠠⠐⢀⠂⠊⡐⡐⠨⢀⠑⢔⠬⡨⢂</tspan>
-        <tspan x="20" y="65">⠀⠀⠀⠀⠠⠀⠁⠀⠀⠠⠀⠐⠀⠀⠂⠀⠀⠁⠀⠄⠀⠈⠄⠄⠡⢀⢂⢅⠢⠡⠱⡑⠌⠂⡂</tspan>
-        <tspan x="20" y="80">⠀⢀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠄⠀⠄⠀⠀⠄⠈⢀⠀⠄⠡⢈⢎⢌⣦⣦⣧⣧⣫⣂⢂⠂⡁⢂⢂</tspan>
-        <tspan x="20" y="95">⠀⠀⠀⠀⠐⠀⠐⠀⠈⠀⠀⠀⠀⠀⠄⠐⢀⠈⢀⠀⠂⡈⡢⣣⢿⣿⣿⣿⣿⣿⣿⣦⠱⢐⠠⠠</tspan>
-        <tspan x="20" y="110">⠀⠀⠀⠀⠀⠀⡀⠄⠀⠠⠀⠀⠀⠂⠀⢀⠀⠄⠠⠀⡁⠢⡪⣮⣿⣿⣿⣿⣿⣿⣿⣿⣇⠅⠌⡘⠌⠄</tspan>
-        <tspan x="20" y="125">⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠐⠀⠀⡀⠀⠐⠀⠕⣜⢜⣞⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠅⠅⡂⠅⠂</tspan>
-        <tspan x="20" y="140">⠀⢀⠠⠐⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠄⠀⡈⠄⢅⢣⡪⣟⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⡁⢐⠐⠠</tspan>
-        <tspan x="20" y="155">⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⢀⠀⢀⠠⠀⠀⠅⡱⣵⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⢆⠂⠨</tspan>
-        <tspan x="20" y="170">⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⢀⠀⡡⡰⡽⣺⣽⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠄</tspan>
-        <tspan x="20" y="185">⠀⠀⠀⠀⠀⠐⠀⠀⠠⠀⠈⠀⢀⠈⡀⠪⡸⡸⣝⣿⣻⣿⣿⣿⣿⣿⣿⣿⣿⣻⢏⢏⢳⢹⡳⣧</tspan>
-        <tspan x="20" y="200">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠠⢀⢐⠨⡘⡜⣜⢗⢽⠽⡻⢝⠿⣽⣿⣿⣿⣿⣳⢯⣞⢼⣽⡿⣿⠀⠂</tspan>
-        <tspan x="20" y="215">⠀⠀⠀⠀⠀⠀⠈⠀⠀⠂⠀⢀⠂⡂⠅⡑⡑⠨⢈⢐⠨⢨⢨⢪⢚⢞⣽⣯⣿⡽⡕⡗⠟⠛⠛⡻⡂</tspan>
-        <tspan x="20" y="230">⠀⠀⠠⠀⠀⠀⠀⠄⠂⠀⠠⠀⠄⠂⡁⢄⢢⢌⢆⡢⡑⠔⠌⠢⢑⠱⡱⣿⣿⡏⠋⣄⣠⣰⢼⣿⣗</tspan>
-        <tspan x="20" y="245">⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠄⠂⠄⡑⢌⢊⠪⠪⠃⠇⠋⠌⢌⢐⢀⠂⠌⢯⣿⣿⣿⣿⣷⣷⣿⣿⣿⣧⠀</tspan>
-        <tspan x="20" y="260">⠀⠁⠀⠀⠀⠀⠐⠀⠀⡁⠄⠁⠂⢌⣄⢀⢀⢀⢀⣠⣰⣲⢱⢐⢐⠄⡈⢢⢫⢿⣿⣿⣿⣿⣿⣿⣿⣿⣧</tspan>
-        <tspan x="20" y="275">⠀⠀⠀⠀⠀⠠⠀⠀⠂⠄⡂⠌⢌⢢⢢⣾⣯⣿⢿⣸⣜⢮⡣⡣⠢⡑⢌⠢⡑⡕⣻⣿⣿⣿⣿⣿⣿⣿⣿⡄</tspan>
-        <tspan x="20" y="290">⠀⠀⠀⡀⠄⠀⠀⡀⠁⡂⢌⠪⡪⣪⢞⣽⣾⣯⣿⡷⣯⣳⡱⣑⠱⠘⢄⠑⠌⢜⢔⣟⣿⣿⣯⡯⡻⣟⣿⡇</tspan>
-        <tspan x="20" y="305">⠀⠐⠀⠀⠀⠀⢀⠠⠀⠂⡂⡑⢜⢜⢽⣳⣿⢿⣯⣿⣗⡷⡹⠠⠁⠅⠢⠨⡨⢐⢕⢽⢿⣿⣿⣿⠌⡫⣿⡂</tspan>
-        <tspan x="20" y="320">⠀⠀⠀⠀⠀⢀⠀⠄⢈⠠⠐⡈⡢⡣⡻⣺⢽⣿⣻⣽⢺⢸⢘⠀⠄⠁⠅⡑⠌⡢⡑⠭⡫⣟⡿⣿⡣⢐⡝</tspan>
-        <tspan x="20" y="335">⠀⠀⠀⠀⠀⡀⠄⠂⠠⠐⠐⡐⡐⢜⢜⠼⣕⢯⡳⡣⡣⡃⡂⡂⠄⢈⠀⠂⡁⠠⠈⡐⡈⣎⣿⣿⡏⢴⠁</tspan>
-        <tspan x="20" y="350">⠀⠀⠀⠀⠄⠀⡀⠐⠀⡈⠄⡐⢐⢐⢑⠭⡪⡣⡃⡣⠢⡑⢌⠢⡑⡐⢌⠔⡄⡅⣅⣦⣽⣽⢿⡻⣡⡇</tspan>
-        <tspan x="20" y="365">⠀⠀⢀⠀⠠⠀⡀⠄⠠⠀⢂⠐⢐⢈⠢⢣⠱⡨⠪⠨⠨⡈⡂⡑⠐⠌⠢⢑⠑⢍⠪⡙⣘⣼⣼⣯⣾</tspan>
-        <tspan x="20" y="380">⠀⠄⠀⠀⠀⠄⠀⠄⠂⡈⠄⠨⢀⠢⡑⡁⡂⡊⠌⠨⠐⠀⠀⡀⠈⢄⠨⢠⡪⣢⣷⣾⢿⣿⣽⣷⠇</tspan>
-        <tspan x="20" y="395">⠀⠀⠀⠠⠀⠂⠁⢐⠠⠐⡀⠅⡐⠨⡢⡂⡂⡢⢀⢀⠀⠈⠀⠀⠈⢖⠡⠛⡫⠟⠛⡯⢼⣷⣿⣿</tspan>
-        <tspan x="20" y="410">⠀⠂⠁⠀⠀⡀⠁⠄⢂⠐⢐⠐⠠⠁⡪⡢⠪⡈⡂⡂⠅⠡⠡⠨⠐⡀⠢⠢⡪⣮⣿⢿⡿⡿⣻⡿</tspan>
-        <tspan x="20" y="425">⠀⠀⠀⠀⠄⠀⠐⠀⡐⢈⠐⠨⠠⠡⢐⠨⢣⠣⡂⡪⠨⠨⠐⠄⠅⠄⡡⠡⡈⡢⠱⡙⡜⣼⣾⡯</tspan>
-        <tspan x="20" y="440">⠀⠠⠐⠀⠀⠄⠈⠀⠠⠀⠨⠈⠌⡐⢐⠨⢐⢙⠬⡢⡡⠨⢈⠂⢅⢅⢪⢢⡢⣮⣾⣼⣾⣿⣿⣿</tspan>
-        <tspan x="20" y="455">⠀⠀⠀⠀⠀⠄⠐⠈⠀⡀⠁⠄⢁⠐⡀⠂⠐⠠⠑⢌⢊⠪⡢⡡⢕⠬⣪⢺⢽⣿⣿⣿⣿⣿⣿⡇</tspan>
-        <tspan x="20" y="470">⠁⠀⠀⠐⠀⠀⢀⠀⠂⠀⠐⠀⡀⠄⠐⢈⠀⡁⠂⠐⠠⠑⠨⢈⠢⠫⢸⠸⡝⣞⢯⢿⣟⣿⠟⠀⠈⡈</tspan>
-        <tspan x="20" y="485">⠀⠀⠀⠀⠀⠁⠀⠐⠀⡀⠀⠐⠈⠀⠄⠀⠄⠂⠠⠀⠄⡈⠄⠡⢈⠐⠠⠨⠈⠢⠡⡑⡑⣱⣩⣪⣈⣀⡀⣤</tspan>
-        <tspan x="20" y="500">⢀⠀⠀⠈⠀⠀⠁⠀⠂⡀⢈⠠⠐⠀⡐⠀⠄⠂⠀⠂⠠⠀⡈⢐⠠⣨⣖⣷⠁⡩⢱⢢⡈⢺⣟⡿⣿⣿⣋⠹⢿</tspan>
-        <tspan x="20" y="515">⠀⠀⡀⠀⠀⠀⠈⠀⠄⠠⠀⠂⠄⠡⠀⠂⠄⠡⢈⠐⠠⡁⡂⢆⢧⡳⣯⣿⠀⢐⢐⠙⠌⡄⡳⡏⡯⣿⣿⣾⣴⣍</tspan>
-        <tspan x="20" y="530">⠁⡀⢀⠀⠀⠀⠀⠐⠀⠐⠈⠠⠈⠄⡁⠅⠨⢐⠠⡈⡂⠢⡊⡪⣪⢞⣯⣿⠀⠀⠐⠈⠌⢎⢎⢧⠈⠰⢹⣿⣿⣿⣿</tspan>
-        <tspan x="20" y="545">⢀⠀⠀⠈⠀⠀⠐⠀⠈⠀⠨⢀⢁⠂⠄⠅⢌⢐⠰⡐⢅⢇⢇⣗⡵⣻⣽⣾⠂⠀⠀⠐⠈⠜⡎⡮⣷⣄⠐⠘⡽⣿⣿⣿</tspan>
+        <tspan x="0" y="12">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⡀⠄⢀⠂⠀⠀⡁⠀⠢⠐⢀⠂⠀⡐⢌⢂⠑</tspan>
+        <tspan x="0" y="27">⠀⠐⠀⠀⠀⠀⠀⠐⠈⢀⠐⠀⠐⠠⠀⡀⢁⠀⠀⢈⠀⡈⠄⡐⢄⢈⠢⢑⠌⡢⡂⠄</tspan>
+        <tspan x="0" y="42">⢀⠀⠀⠀⠀⠀⡀⠁⠐⠀⠀⠂⠁⠀⠀⠀⠀⢀⠐⠠⠐⢀⠂⠊⡐⡐⠨⢀⠑⢔⠬⡨⢂</tspan>
+        <tspan x="0" y="57">⠀⠀⠀⠠⠀⠁⠀⠀⠠⠀⠐⠀⠀⠂⠀⠀⠁⠀⠄⠀⠈⠄⠄⠡⢀⢂⢅⠢⠡⠱⡑⠌⠂⡂</tspan>
+        <tspan x="0" y="72">⢀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠄⠀⠄⠀⠀⠄⠈⢀⠀⠄⠡⢈⢎⢌⣦⣦⣧⣧⣫⣂⢂⠂⡁⢂⢂</tspan>
+        <tspan x="0" y="87">⠀⠀⠀⠐⠀⠐⠀⠈⠀⠀⠀⠀⠀⠄⠐⢀⠈⢀⠀⠂⡈⡢⣣⢿⣿⣿⣿⣿⣿⣿⣦⠱⢐⠠⠠</tspan>
+        <tspan x="0" y="102">⠀⠀⠀⠀⠀⡀⠄⠀⠠⠀⠀⠀⠂⠀⢀⠀⠄⠠⠀⡁⠢⡪⣮⣿⣿⣿⣿⣿⣿⣿⣿⣇⠅⠌⡘⠌⠄</tspan>
+        <tspan x="0" y="117">⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠐⠀⠀⡀⠀⠐⠀⠕⣜⢜⣞⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠅⠅⡂⠅⠂</tspan>
+        <tspan x="0" y="132">⢀⠠⠐⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠄⠀⡈⠄⢅⢣⡪⣟⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⡁⢐⠐⠠</tspan>
+        <tspan x="0" y="147">⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⢀⠀⢀⠠⠀⠀⠅⡱⣵⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⢆⠂⠨</tspan>
+        <tspan x="0" y="162">⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⢀⠀⡡⡰⡽⣺⣽⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠄</tspan>
+        <tspan x="0" y="177">⠀⠀⠀⠀⠐⠀⠀⠠⠀⠈⠀⢀⠈⡀⠪⡸⡸⣝⣿⣻⣿⣿⣿⣿⣿⣿⣿⣿⣻⢏⢏⢳⢹⡳⣧</tspan>
+        <tspan x="0" y="192">⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠠⢀⢐⠨⡘⡜⣜⢗⢽⠽⡻⢝⠿⣽⣿⣿⣿⣿⣳⢯⣞⢼⣽⡿⣿⠀⠂</tspan>
+        <tspan x="0" y="207">⠀⠀⠀⠀⠀⠈⠀⠀⠂⠀⢀⠂⡂⠅⡑⡑⠨⢈⢐⠨⢨⢨⢪⢚⢞⣽⣯⣿⡽⡕⡗⠟⠛⠛⡻⡂</tspan>
+        <tspan x="0" y="222">⠀⠠⠀⠀⠀⠀⠄⠂⠀⠠⠀⠄⠂⡁⢄⢢⢌⢆⡢⡑⠔⠌⠢⢑⠱⡱⣿⣿⡏⠋⣄⣠⣰⢼⣿⣗</tspan>
+        <tspan x="0" y="237">⠀⠀⠀⠀⠀⠀⠠⠀⠀⠄⠂⠄⡑⢌⢊⠪⠪⠃⠇⠋⠌⢌⢐⢀⠂⠌⢯⣿⣿⣿⣿⣷⣷⣿⣿⣿⣧⠀</tspan>
+        <tspan x="0" y="252">⠁⠀⠀⠀⠀⠐⠀⠀⡁⠄⠁⠂⢌⣄⢀⢀⢀⢀⣠⣰⣲⢱⢐⢐⠄⡈⢢⢫⢿⣿⣿⣿⣿⣿⣿⣿⣿⣧</tspan>
+        <tspan x="0" y="267">⠀⠀⠀⠀⠠⠀⠀⠂⠄⡂⠌⢌⢢⢢⣾⣯⣿⢿⣸⣜⢮⡣⡣⠢⡑⢌⠢⡑⡕⣻⣿⣿⣿⣿⣿⣿⣿⣿⡄</tspan>
+        <tspan x="0" y="282">⠀⠀⡀⠄⠀⠀⡀⠁⡂⢌⠪⡪⣪⢞⣽⣾⣯⣿⡷⣯⣳⡱⣑⠱⠘⢄⠑⠌⢜⢔⣟⣿⣿⣯⡯⡻⣟⣿⡇</tspan>
+        <tspan x="0" y="297">⠐⠀⠀⠀⠀⢀⠠⠀⠂⡂⡑⢜⢜⢽⣳⣿⢿⣯⣿⣗⡷⡹⠠⠁⠅⠢⠨⡨⢐⢕⢽⢿⣿⣿⣿⠌⡫⣿⡂</tspan>
+        <tspan x="0" y="312">⠀⠀⠀⠀⢀⠀⠄⢈⠠⠐⡈⡢⡣⡻⣺⢽⣿⣻⣽⢺⢸⢘⠀⠄⠁⠅⡑⠌⡢⡑⠭⡫⣟⡿⣿⡣⢐⡝</tspan>
+        <tspan x="0" y="327">⠀⠀⠀⠀⡀⠄⠂⠠⠐⠐⡐⡐⢜⢜⠼⣕⢯⡳⡣⡣⡃⡂⡂⠄⢈⠀⠂⡁⠠⠈⡐⡈⣎⣿⣿⡏⢴⠁</tspan>
+        <tspan x="0" y="342">⠀⠀⠀⠄⠀⡀⠐⠀⡈⠄⡐⢐⢐⢑⠭⡪⡣⡃⡣⠢⡑⢌⠢⡑⡐⢌⠔⡄⡅⣅⣦⣽⣽⢿⡻⣡⡇</tspan>
+        <tspan x="0" y="357">⠀⢀⠀⠠⠀⡀⠄⠠⠀⢂⠐⢐⢈⠢⢣⠱⡨⠪⠨⠨⡈⡂⡑⠐⠌⠢⢑⠑⢍⠪⡙⣘⣼⣼⣯⣾</tspan>
+        <tspan x="0" y="372">⠄⠀⠀⠀⠄⠀⠄⠂⡈⠄⠨⢀⠢⡑⡁⡂⡊⠌⠨⠐⠀⠀⡀⠈⢄⠨⢠⡪⣢⣷⣾⢿⣿⣽⣷⠇</tspan>
+        <tspan x="0" y="387">⠀⠀⠠⠀⠂⠁⢐⠠⠐⡀⠅⡐⠨⡢⡂⡂⡢⢀⢀⠀⠈⠀⠀⠈⢖⠡⠛⡫⠟⠛⡯⢼⣷⣿⣿</tspan>
+        <tspan x="0" y="402">⠂⠁⠀⠀⡀⠁⠄⢂⠐⢐⠐⠠⠁⡪⡢⠪⡈⡂⡂⠅⠡⠡⠨⠐⡀⠢⠢⡪⣮⣿⢿⡿⡿⣻⡿</tspan>
+        <tspan x="0" y="417">⠀⠀⠀⠄⠀⠐⠀⡐⢈⠐⠨⠠⠡⢐⠨⢣⠣⡂⡪⠨⠨⠐⠄⠅⠄⡡⠡⡈⡢⠱⡙⡜⣼⣾⡯</tspan>
+        <tspan x="0" y="432">⠠⠐⠀⠀⠄⠈⠀⠠⠀⠨⠈⠌⡐⢐⠨⢐⢙⠬⡢⡡⠨⢈⠂⢅⢅⢪⢢⡢⣮⣾⣼⣾⣿⣿⣿</tspan>
+        <tspan x="0" y="447">⠀⠀⠀⠀⠄⠐⠈⠀⡀⠁⠄⢁⠐⡀⠂⠐⠠⠑⢌⢊⠪⡢⡡⢕⠬⣪⢺⢽⣿⣿⣿⣿⣿⣿⡇</tspan>
+        <tspan x="0" y="462">⠀⠀⠐⠀⠀⢀⠀⠂⠀⠐⠀⡀⠄⠐⢈⠀⡁⠂⠐⠠⠑⠨⢈⠢⠫⢸⠸⡝⣞⢯⢿⣟⣿⠟⠀⠈⡈</tspan>
+        <tspan x="0" y="477">⠀⠀⠀⠀⠁⠀⠐⠀⡀⠀⠐⠈⠀⠄⠀⠄⠂⠠⠀⠄⡈⠄⠡⢈⠐⠠⠨⠈⠢⠡⡑⡑⣱⣩⣪⣈⣀⡀⣤</tspan>
+        <tspan x="0" y="492">⠀⠀⠈⠀⠀⠁⠀⠂⡀⢈⠠⠐⠀⡐⠀⠄⠂⠀⠂⠠⠀⡈⢐⠠⣨⣖⣷⠁⡩⢱⢢⡈⢺⣟⡿⣿⣿⣋⠹⢿</tspan>
+        <tspan x="0" y="507">⠀⡀⠀⠀⠀⠈⠀⠄⠠⠀⠂⠄⠡⠀⠂⠄⠡⢈⠐⠠⡁⡂⢆⢧⡳⣯⣿⠀⢐⢐⠙⠌⡄⡳⡏⡯⣿⣿⣾⣴⣍</tspan>
+        <tspan x="0" y="522">⡀⢀⠀⠀⠀⠀⠐⠀⠐⠈⠠⠈⠄⡁⠅⠨⢐⠠⡈⡂⠢⡊⡪⣪⢞⣯⣿⠀⠀⠐⠈⠌⢎⢎⢧⠈⠰⢹⣿⣿⣿⣿</tspan>
+        <tspan x="0" y="537">⠀⠀⠈⠀⠀⠐⠀⠈⠀⠨⢀⢁⠂⠄⠅⢌⢐⠰⡐⢅⢇⢇⣗⡵⣻⣽⣾⠂⠀⠀⠐⠈⠜⡎⡮⣷⣄⠐⠘⡽⣿⣿⣿</tspan>
     </text>
     <text font-size="16">
-        <tspan x="405" y="30" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ──────────────────────────────╮</tspan>
-        <tspan x="405" y="60" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> .................. </tspan><tspan class="value" id="age_data">20 years, 0 months, 1 days</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="85" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ................................. </tspan><tspan class="value">Linux Mint 22.1</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="110" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> .............................. </tspan><tspan class="value">Nushell 0.105.1</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="135" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> ................................ </tspan><tspan class="value">VSCode 1.101</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="165" class="border">├── </tspan><tspan class="title">User.Profile</tspan><tspan class="border"> ────────────────────────────────────────┤</tspan>
-        <tspan x="405" y="195" class="border">│ ‣ </tspan><tspan class="key">Hobbies</tspan><tspan class="border"> ......... </tspan><tspan class="value">OSS, Photography, Creative Writing</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="220" class="border">│ ‣ </tspan><tspan class="key">Skills.Soft</tspan><tspan class="border"> ....... </tspan><tspan class="value">Communication, Critical Analysis</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="245" class="border">│ ‣ </tspan><tspan class="key">Skills.Hard</tspan><tspan class="border"> ............. </tspan><tspan class="value">UI Design, UX Optimization</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="270" class="border">│ ‣ </tspan><tspan class="key">Languages.Machine</tspan><tspan class="border"> ......... </tspan><tspan class="value">C, C++, C#, Rust, Python</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="295" class="border">│ ‣ </tspan><tspan class="key">Languages.Human</tspan><tspan class="border"> ........... </tspan><tspan class="value">English, Spanish, French</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="325" class="border">├── </tspan><tspan class="title">User.Credentials</tspan><tspan class="border"> ────────────────────────────────────┤</tspan>
-        <tspan x="405" y="355" class="border">│ ‣ </tspan><tspan class="key">Email</tspan><tspan class="border"> ......................</tspan> <tspan class="value">jp.zuniga.dev@gmail.com</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="380" class="border">│ ‣ </tspan><tspan class="key">LinkedIn</tspan><tspan class="border"> ................................. </tspan><tspan class="value">jp-zuniga</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="405" class="border">│ ‣ </tspan><tspan class="key">Instagram</tspan><tspan class="border"> .............................. </tspan><tspan class="value">framesbyjaq</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="435" class="border">├── </tspan><tspan class="title">User.Git</tspan><tspan class="border"> ────────────────────────────────────────────┤</tspan>
-        <tspan x="405" y="460" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="star_data_dots"> ........................................... </tspan><tspan class="value" id="star_data">17</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="485" class="border">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan class="border" id="repo_data_dots"> ........................................... </tspan><tspan class="value" id="repo_data">12</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="510" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ........................................ </tspan><tspan class="value" id="commit_data">596</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="535" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> .......... </tspan><tspan class="value" id="loc_total">53,157</tspan><tspan class="border"> , </tspan><tspan class="add" id="loc_add">+124,460</tspan><tspan class="border"> , </tspan><tspan class="del" id="loc_del">−71,303</tspan><tspan class="border"> │</tspan>
-        <tspan x="405" y="560" class="border">╰────────────────────────────────────────────────────────╯</tspan>
+        <tspan x="380" y="20" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ──────────────────────────────╮</tspan>
+        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> .................. </tspan><tspan class="value" id="age_data">20 years, 0 months, 1 days</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="75" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ................................. </tspan><tspan class="value">Linux Mint 22.1</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="100" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> .............................. </tspan><tspan class="value">Nushell 0.105.1</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="125" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> ................................ </tspan><tspan class="value">VSCode 1.101</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="155" class="border">├── </tspan><tspan class="title">User.Profile</tspan><tspan class="border"> ────────────────────────────────────────┤</tspan>
+        <tspan x="380" y="185" class="border">│ ‣ </tspan><tspan class="key">Hobbies</tspan><tspan class="border"> ......... </tspan><tspan class="value">OSS, Photography, Creative Writing</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="210" class="border">│ ‣ </tspan><tspan class="key">Skills.Soft</tspan><tspan class="border"> ....... </tspan><tspan class="value">Communication, Critical Analysis</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="235" class="border">│ ‣ </tspan><tspan class="key">Skills.Hard</tspan><tspan class="border"> ............. </tspan><tspan class="value">UI Design, UX Optimization</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="260" class="border">│ ‣ </tspan><tspan class="key">Languages.Machine</tspan><tspan class="border"> ......... </tspan><tspan class="value">C, C++, C#, Rust, Python</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="285" class="border">│ ‣ </tspan><tspan class="key">Languages.Human</tspan><tspan class="border"> ........... </tspan><tspan class="value">English, Spanish, French</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="315" class="border">├── </tspan><tspan class="title">User.Credentials</tspan><tspan class="border"> ────────────────────────────────────┤</tspan>
+        <tspan x="380" y="345" class="border">│ ‣ </tspan><tspan class="key">Email</tspan><tspan class="border"> ......................</tspan> <tspan class="value">jp.zuniga.dev@gmail.com</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="370" class="border">│ ‣ </tspan><tspan class="key">LinkedIn</tspan><tspan class="border"> ................................. </tspan><tspan class="value">jp-zuniga</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="395" class="border">│ ‣ </tspan><tspan class="key">Instagram</tspan><tspan class="border"> .............................. </tspan><tspan class="value">framesbyjaq</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="425" class="border">├── </tspan><tspan class="title">User.Git</tspan><tspan class="border"> ────────────────────────────────────────────┤</tspan>
+        <tspan x="380" y="450" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="star_data_dots"> ........................................... </tspan><tspan class="value" id="star_data">17</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="475" class="border">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan class="border" id="repo_data_dots"> ........................................... </tspan><tspan class="value" id="repo_data">12</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="500" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commit_data_dots"> ........................................ </tspan><tspan class="value" id="commit_data">596</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="525" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> .......... </tspan><tspan class="value" id="loc_total">53,157</tspan><tspan class="border"> , </tspan><tspan class="add" id="loc_add">+124,460</tspan><tspan class="border"> , </tspan><tspan class="del" id="loc_del">−71,303</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="550" class="border">╰────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

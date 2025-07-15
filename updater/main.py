@@ -51,11 +51,11 @@ class StatProcessor:
 
         self.birthday = birthday
         self.just_lengths: dict[str, int] = {
-            "age_data_dots": 49,
-            "star_data_dots": 50,
-            "repo_data_dots": 50,
-            "commit_data_dots": 48,
-            "loc_total_dots": 40,
+            "age_data_dots": 44,
+            "star_data_dots": 45,
+            "repo_data_dots": 45,
+            "commit_data_dots": 43,
+            "loc_total_dots": 35,
         }
 
         self.cache_dir = Path("cache")

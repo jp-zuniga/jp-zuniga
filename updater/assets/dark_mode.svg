@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="980px" height="575px" font-family="'Meslo LGM Nerd Font Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
     <style>
-        .bg { fill:hsl(219, 54.20%, 15.10%) }
         .pic { fill: #ffffff; }
         .border { fill: #4d76b3; font-weight: bold; }
         .title { fill: #ff8400; font-weight: bold; }
@@ -9,7 +8,6 @@
         .add { fill: #3fb950; }
         .del { fill: #f85149; }
     </style>
-    <rect width="100%" height="100%" class="bg" rx="5.25"/>
     <text class="pic" font-size="11px">
         <tspan x="25" y="35">⠀⠀⠐⠀⠁⠀⠀⠀⠐⠈⢀⠐⠀⠐⠠⠀⡀⢁⠀⠀⢈⠀⡈⠄⡐⢄⢈⠢⢑⠌⡢⡂⠄</tspan>
         <tspan x="25" y="50">⠀⢀⠀⠀⠀⠀⠀⡀⠁⠐⠀⠀⠂⠁⠀⠀⠀⠀⢀⠐⠠⠐⢀⠂⠊⡐⡐⠨⢀⠑⢔⠬⡨⢂</tspan>

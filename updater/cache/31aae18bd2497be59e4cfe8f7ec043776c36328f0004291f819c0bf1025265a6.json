@@ -56,11 +56,11 @@
         "user_commits": 339
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
-        "additions": 5003,
-        "commits": 130,
-        "deletions": 4030,
+        "additions": 5010,
+        "commits": 131,
+        "deletions": 4037,
         "name": "jp-zuniga/jp-zuniga",
-        "user_commits": 130
+        "user_commits": 131
     },
     "a901d1e1dc14213af8e65a4ff9d6eaaff29682ea7921b98efb49a804f61ef45d": {
         "additions": 737,
@@ -105,10 +105,10 @@
         "user_commits": 79
     },
     "f6fc626d9e6a8fb8ccf7a99a309aa97daa1ace097098dfa14ab27db0491388a0": {
-        "additions": 5398,
-        "commits": 33,
-        "deletions": 1270,
+        "additions": 8654,
+        "commits": 44,
+        "deletions": 5993,
         "name": "jp-zuniga/dots",
-        "user_commits": 33
+        "user_commits": 44
     }
 }

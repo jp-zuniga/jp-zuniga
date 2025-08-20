@@ -34,26 +34,12 @@
         "name": "jp-zuniga/rust-learning",
         "user_commits": 16
     },
-    "68bed0ee8b9197ea34d2f16271526fdc51c5d37449dd99116021507c56ac859c": {
-        "additions": 1216,
-        "commits": 11,
-        "deletions": 364,
-        "name": "jp-zuniga/reforzamientos-python-basico",
-        "user_commits": 9
-    },
     "693bbfd71f65aa825c99f653dfd95913a222b6a31d3ebd9b8fb913cfe2d5c2c0": {
         "additions": 209,
         "commits": 2,
         "deletions": 0,
         "name": "jp-zuniga/NutriPlan",
         "user_commits": 1
-    },
-    "91063da024705c2554f58439f36b8225810ab9c2c4e1d37033ca9e8154c33704": {
-        "additions": 97822,
-        "commits": 339,
-        "deletions": 65808,
-        "name": "jp-zuniga/GaussBot",
-        "user_commits": 339
     },
     "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
         "additions": 5144,
@@ -96,13 +82,6 @@
         "deletions": 0,
         "name": "jp-zuniga/alli",
         "user_commits": 2
-    },
-    "ca4ecda7309ec5ae31b806b5fb5d42e2ee2b0f4780ae611e824a86b662699cd8": {
-        "additions": 8521,
-        "commits": 79,
-        "deletions": 5526,
-        "name": "jp-zuniga/Project-Euler",
-        "user_commits": 79
     },
     "f6fc626d9e6a8fb8ccf7a99a309aa97daa1ace097098dfa14ab27db0491388a0": {
         "additions": 12133,

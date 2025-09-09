@@ -50,6 +50,7 @@ class StatProcessor:
         """
 
         self.birthday = birthday
+        self.svg_name = "profile_card.svg"
         self.just_lengths: dict[str, int] = {
             "age_data_dots": 44,
             "star_data_dots": 45,
@@ -82,7 +83,7 @@ class StatProcessor:
         self.loc_add_count: int = 0
         self.loc_del_count: int = 0
 
-    def calculate_stats(self, svg_name: str) -> None:
+    def calculate_stats(self) -> None:
         """
         Calculate user statistics.
 
@@ -94,7 +95,8 @@ class StatProcessor:
         self._get_repos_and_stars()
         self._get_loc_data()
         self._get_commit_count()
-        self._update_svg(svg_name)
+        self._update_svg(f"dark_{self.svg_name}")
+        self._update_svg(f"light_{self.svg_name}")
 
     def _get_verified_emails(self) -> list[str]:
         """
@@ -371,7 +373,7 @@ def main() -> None:
             access_token=environ["ACCESS_TOKEN"],
             username=environ["USER_NAME"],
             birthday=datetime(2005, 7, 7, tzinfo=UTC),
-        ).calculate_stats(svg_name="profile_card.svg")
+        ).calculate_stats()
     except KeyError as e:
         print(f"Missing environment variable: {e!s}", file=sys.stderr)
         sys.exit(1)

@@ -1,4 +1,4 @@
-name: Update README.md
+name: stat refresher
 
 on:
   schedule:
@@ -12,12 +12,12 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: checkout repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Install uv
+      - name: install uv
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
@@ -25,18 +25,18 @@ jobs:
           enable-cache: true
           ignore-nothing-to-cache: true
 
-      - name: Set up environment
+      - name: environment setup
         working-directory: ./updater/
         run: uv sync
 
-      - name: Run script
+      - name: execute script
         working-directory: ./updater/
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_NAME: ${{ secrets.USER_NAME }}
         run: uv run main.py
 
-      - name: Commit and push changes
+      - name: commit && push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="935px" height="550px" font-family="'JetBrainsMono Nerd Font Mono', 'Noto Sans Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
     <style>
         .pic { fill: #e0def4; font-weight: bold; }
-        .border { fill: #c4a7e7; font-weight: bold; }
+        .border { fill: #6e6a86; font-weight: bold; }
         .title { fill: #eb6f92; font-weight: bold; }
         .key { fill: #f6c177; }
         .value { fill: #3e8fb0; }

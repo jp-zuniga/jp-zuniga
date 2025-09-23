@@ -6,7 +6,7 @@
         >
         <img
             src="./updater/assets/light_profile_card.svg"
-            alt="jp-zuniga's Github Profile Card"
+            alt="jp-zuniga's Github Profile Card."
         >
     </picture>
 </a>

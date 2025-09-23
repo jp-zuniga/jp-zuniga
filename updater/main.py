@@ -9,6 +9,7 @@ from hashlib import sha256
 from json import JSONDecodeError, dump, load
 from os import environ
 from pathlib import Path
+from sys import exit, stderr
 from typing import TYPE_CHECKING, Any
 
 from dateutil.relativedelta import relativedelta
@@ -201,7 +202,7 @@ class StatProcessor:
 
         try:
             with self.cache_file.open(mode="w") as file:
-                dump(cache, file, indent=4, sort_keys=True)
+                dump(cache, file, indent=2, sort_keys=True)
         except OSError as e:
             raise CacheError(f"Failed to write cache: {e!s}") from e
 
@@ -366,8 +367,6 @@ def main() -> None:
     Fetch GitHub statistics and update SVG files.
     """
 
-    import sys  # noqa: PLC0415
-
     try:
         StatProcessor(
             access_token=environ["ACCESS_TOKEN"],
@@ -375,11 +374,11 @@ def main() -> None:
             birthday=datetime(2005, 7, 7, tzinfo=UTC),
         ).calculate_stats()
     except KeyError as e:
-        print(f"Missing environment variable: {e!s}", file=sys.stderr)
-        sys.exit(1)
+        print(f"Missing environment variable: {e!s}", file=stderr)
+        exit(1)
     except (GithubException, CacheError) as e:
-        print(f"Error: {e!s}", file=sys.stderr)
-        sys.exit(1)
+        print(f"Error: {e!s}", file=stderr)
+        exit(1)
 
 
 if __name__ == "__main__":

@@ -4,10 +4,10 @@
         "pygithub>=2.6.1",
         "python-dateutil>=2.9.0.post0",
     ]
-    description = "Update profile card stats."
+    description = "refresh profile's stats."
     name = "updater"
     requires-python = ">=3.13"
-    version = "0.2.0"
+    version = "0.3"
 
 [tool.ruff.lint]
     allowed-confusables = ["−"]

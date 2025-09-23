@@ -27,6 +27,8 @@ if TYPE_CHECKING:
     from github.Repository import Repository
     from lxml.etree import _Element as lxml_elem, _ElementTree as lxml_tree
 
+EMPTY_REPO: int = 409
+
 
 class CacheError(Exception):
     """
@@ -76,8 +78,8 @@ class StatProcessor:
         self.user_id = self.user.id
         self.verified_emails = self._get_verified_emails()
 
-        self.all_repositories: PaginatedList[Repository] = []  # type: ignore[reportAttributeAccessIssue]
-        self.repositories: PaginatedList[Repository] = []  # type: ignore[reportAttributeAccessIssue]
+        self.all_repos: PaginatedList[Repository] = []  # type: ignore[reportAttributeAccessIssue]
+        self.owned_repos: PaginatedList[Repository] = []  # type: ignore[reportAttributeAccessIssue]
 
         self.star_count: int = 0
         self.repo_count: int = 0
@@ -129,16 +131,10 @@ class StatProcessor:
         """
 
         try:
-            # fetch user's owned repos
-            owned_repos: PaginatedList[Repository] = self.user.get_repos(type="owner")
-
-            self.repo_count = owned_repos.totalCount
-            self.star_count = sum(repo.stargazers_count for repo in owned_repos)
-
-            self.repositories = owned_repos
-
-            # fetch repos the user has access to
-            self.all_repositories = self.user.get_repos(
+            self.owned_repos = self.user.get_repos(type="owner")
+            self.repo_count = self.owned_repos.totalCount
+            self.star_count = sum(repo.stargazers_count for repo in self.owned_repos)
+            self.all_repos = self.user.get_repos(
                 affiliation="owner,collaborator,organization_member",
             )
         except GithubException as e:
@@ -151,7 +147,7 @@ class StatProcessor:
 
         self.total_loc_count, self.loc_add_count, self.loc_del_count = (
             self._process_cache(
-                self.all_repositories,
+                self.all_repos,
             )
         )
 
@@ -184,12 +180,10 @@ class StatProcessor:
             repo_hash: str = sha256(repo_name.encode()).hexdigest()
 
             try:
-                # total commits in all branches
                 current_commits: int = repo.get_commits().totalCount
             except GithubException:
                 current_commits: int = 0
 
-            # only process if cache is outdated (and there are commits)
             if current_commits > 0 and (
                 repo_hash not in cache or cache[repo_hash]["commits"] != current_commits
             ):
@@ -205,6 +199,8 @@ class StatProcessor:
                 deletions = int(cached.get("deletions", 0))
                 user_commits = int(cached.get("user_commits", 0))
 
+            loc_add += additions
+            loc_del += deletions
             cache[repo_hash] = {
                 "name": repo_name,
                 "commits": current_commits,
@@ -212,9 +208,6 @@ class StatProcessor:
                 "additions": additions,
                 "deletions": deletions,
             }
-
-            loc_add += additions
-            loc_del += deletions
 
         try:
             with self.cache_file.open(mode="w") as file:
@@ -241,7 +234,6 @@ class StatProcessor:
         user_commits: int = 0
 
         try:
-            # fetch commits from all branches:
             commits: PaginatedList[Commit] = repo.get_commits()
             for commit in commits:
                 if self._is_user_commit(commit):
@@ -249,7 +241,7 @@ class StatProcessor:
                     deletions += commit.stats.deletions
                     user_commits += 1
         except GithubException as e:
-            if e.status != 409:  # 409: empty repo
+            if e.status != EMPTY_REPO:
                 print(f"Error getting commits for {repo.full_name}: {e!s}")
 
         return additions, deletions, user_commits
@@ -266,11 +258,9 @@ class StatProcessor:
 
         """
 
-        # check user id
         if commit.author and commit.author.id == self.user_id:
             return True
 
-        # check emails
         if commit.commit and commit.commit.author:
             commit_email = (
                 commit.commit.author.email.lower() if commit.commit.author.email else ""
@@ -279,7 +269,6 @@ class StatProcessor:
             if commit_email in self.verified_emails:
                 return True
 
-        # compare logins
         return bool(commit.author and commit.author.login == self.user.login)
 
     def _get_commit_count(self) -> None:

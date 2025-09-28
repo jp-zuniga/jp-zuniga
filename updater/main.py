@@ -232,17 +232,34 @@ class StatProcessor:
         additions: int = 0
         deletions: int = 0
         user_commits: int = 0
+        seen_commits: set[str] = set()
 
+        print(f"Processing {repo.full_name}...")
         try:
-            commits: PaginatedList[Commit] = repo.get_commits()
-            for commit in commits:
-                if self._is_user_commit(commit):
-                    additions += commit.stats.additions
-                    deletions += commit.stats.deletions
-                    user_commits += 1
+            for branch in repo.get_branches():
+                print(f"  Analyzing branch {branch.name}...")
+                try:
+                    commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
+                    print(f"    Found {commits.totalCount} commits.")
+                    for commit in commits:
+                        if commit.sha in seen_commits:
+                            continue
+
+                        seen_commits.add(commit.sha)
+                        if self._is_user_commit(commit):
+                            additions += commit.stats.additions
+                            deletions += commit.stats.deletions
+                            user_commits += 1
+                except GithubException as e:
+                    if e.status != EMPTY_REPO:
+                        print(
+                            "Error getting commits for branch "
+                            f"{branch.name} in {repo.full_name}: {e!s}",
+                        )
+
         except GithubException as e:
             if e.status != EMPTY_REPO:
-                print(f"Error getting commits for {repo.full_name}: {e!s}")
+                print(f"Error getting branches for {repo.full_name}: {e!s}")
 
         return additions, deletions, user_commits
 

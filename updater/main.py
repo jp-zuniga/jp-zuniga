@@ -226,7 +226,7 @@ class StatProcessor:
         """
 
         total_commits: int = 0
-        seen_commits: set[str] = set()
+        processed_commit: set[str] = set()
 
         print(f"Processing {repo.full_name} for commit count...")
         try:
@@ -236,12 +236,10 @@ class StatProcessor:
                     commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
                     print(f"    Found {commits.totalCount} commits.")
                     for commit in commits:
-                        if commit.sha in seen_commits:
+                        if commit.sha in processed_commit:
                             continue
 
-                        seen_commits.add(commit.sha)
-                        if self._is_user_commit(commit):
-                            total_commits += 1
+                        processed_commit.add(commit.sha)
                 except GithubException as e:
                     if e.status != EMPTY_REPO:
                         print(
@@ -270,20 +268,20 @@ class StatProcessor:
         additions: int = 0
         deletions: int = 0
         user_commits: int = 0
-        seen_commits: set[str] = set()
+        processed_commit: set[str] = set()
 
-        print(f"Processing {repo.full_name}...")
+        # print(f"Processing {repo.full_name}...")
         try:
             for branch in repo.get_branches():
-                print(f"  Analyzing branch {branch.name}...")
+                # print(f"  Analyzing branch {branch.name}...")
                 try:
                     commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
-                    print(f"    Found {commits.totalCount} commits.")
+                    # print(f"    Found {commits.totalCount} commits.")
                     for commit in commits:
-                        if commit.sha in seen_commits:
+                        if commit.sha in processed_commit:
                             continue
 
-                        seen_commits.add(commit.sha)
+                        processed_commit.add(commit.sha)
                         if self._is_user_commit(commit):
                             additions += commit.stats.additions
                             deletions += commit.stats.deletions

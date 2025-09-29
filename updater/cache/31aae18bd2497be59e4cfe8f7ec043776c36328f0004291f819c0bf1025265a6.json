@@ -8,7 +8,7 @@
   },
   "235da6f2c53f9d5aa9f775138ee5828a7a091ad2d5149d37707ef259a212c40e": {
     "additions": 1320,
-    "commits": 13,
+    "commits": 15,
     "deletions": 498,
     "name": "jp-zuniga/reforzamientos-python",
     "user_commits": 13
@@ -36,7 +36,7 @@
   },
   "5f836a4865d9e3f7cbe7299b3799dc94204a6deabd854102fc49d472378b53cf": {
     "additions": 358,
-    "commits": 5,
+    "commits": 7,
     "deletions": 68,
     "name": "jp-zuniga/oop-caso-s4",
     "user_commits": 5
@@ -49,22 +49,22 @@
     "user_commits": 17
   },
   "693bbfd71f65aa825c99f653dfd95913a222b6a31d3ebd9b8fb913cfe2d5c2c0": {
-    "additions": 4240,
-    "commits": 31,
-    "deletions": 716,
+    "additions": 209,
+    "commits": 4,
+    "deletions": 0,
     "name": "jp-zuniga/NutriPlan",
-    "user_commits": 31
+    "user_commits": 2
   },
   "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
-    "additions": 5769,
-    "commits": 189,
-    "deletions": 4725,
+    "additions": 5726,
+    "commits": 207,
+    "deletions": 4720,
     "name": "jp-zuniga/jp-zuniga",
-    "user_commits": 189
+    "user_commits": 188
   },
   "9762c0c475c20addb87fb6c3b62e432a2fda8d0d95287947f0f14e4b2a6032ef": {
     "additions": 265,
-    "commits": 5,
+    "commits": 10,
     "deletions": 59,
     "name": "Enrique990/TransportePrivado",
     "user_commits": 5
@@ -120,7 +120,7 @@
   },
   "c6cc2de4170ac1063ae6b9df265f80721933b68b3f4c1f9e13778e3b17eda78d": {
     "additions": 150255,
-    "commits": 14,
+    "commits": 51,
     "deletions": 139766,
     "name": "franygutz/QR-Parking",
     "user_commits": 14

@@ -178,11 +178,7 @@ class StatProcessor:
         for repo in repositories:
             repo_name: str = repo.full_name
             repo_hash: str = sha256(repo_name.encode()).hexdigest()
-
-            try:
-                current_commits: int = repo.get_commits().totalCount
-            except GithubException:
-                current_commits: int = 0
+            current_commits: int = self._get_branched_commits(repo)
 
             if current_commits > 0 and (
                 repo_hash not in cache or cache[repo_hash]["commits"] != current_commits
@@ -216,6 +212,48 @@ class StatProcessor:
             raise CacheError(f"Failed to write cache: {o!s}") from o
 
         return (loc_add - loc_del, loc_add, loc_del)
+
+    def _get_branched_commits(self, repo: Repository) -> int:
+        """
+        Get total commit count across all branches for a repository.
+
+        Args:
+            repo: Repository to get commit count for.
+
+        Returns:
+            int: Total commit count.
+
+        """
+
+        total_commits: int = 0
+        seen_commits: set[str] = set()
+
+        print(f"Processing {repo.full_name} for commit count...")
+        try:
+            for branch in repo.get_branches():
+                print(f"  Analyzing branch {branch.name}...")
+                try:
+                    commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
+                    print(f"    Found {commits.totalCount} commits.")
+                    for commit in commits:
+                        if commit.sha in seen_commits:
+                            continue
+
+                        seen_commits.add(commit.sha)
+                        if self._is_user_commit(commit):
+                            total_commits += 1
+                except GithubException as e:
+                    if e.status != EMPTY_REPO:
+                        print(
+                            "Error getting commits for branch "
+                            f"{branch.name} in {repo.full_name}: {e!s}",
+                        )
+
+        except GithubException as e:
+            if e.status != EMPTY_REPO:
+                print(f"Error getting branches for {repo.full_name}: {e!s}")
+
+        return total_commits
 
     def _calculate_repo_loc(self, repo: Repository) -> tuple[int, int, int]:
         """

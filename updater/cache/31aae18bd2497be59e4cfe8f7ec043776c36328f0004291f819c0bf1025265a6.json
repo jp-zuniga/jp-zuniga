@@ -1,133 +1,133 @@
 {
   "156191e8cef35e56727c9e05f31ae98aada76ade5eccc9df531c92affe5b5fdd": {
     "additions": 664,
-    "commits": 11,
+    "commits": 0,
     "deletions": 188,
     "name": "jp-zuniga/miscellaneous",
     "user_commits": 11
   },
   "235da6f2c53f9d5aa9f775138ee5828a7a091ad2d5149d37707ef259a212c40e": {
     "additions": 1320,
-    "commits": 15,
+    "commits": 0,
     "deletions": 498,
     "name": "jp-zuniga/reforzamientos-python",
     "user_commits": 13
   },
   "304a81f87e2680013b73f5df728a0fc4ae01f6769fb4b477335ed1f8f69f3050": {
     "additions": 4402,
-    "commits": 6,
+    "commits": 0,
     "deletions": 38,
     "name": "jp-zuniga/sistema-contable",
     "user_commits": 6
   },
   "3ffa619374f810af9159c5cb23e88d63cb98139fa3fa10a743d00d3256897e72": {
     "additions": 6838,
-    "commits": 6,
+    "commits": 0,
     "deletions": 300,
     "name": "jp-zuniga/rust-practice",
     "user_commits": 6
   },
   "487d86d6336f9f2b8e29696ce8ad2f8d8d0fb3516d54e6e01e1b413062dbb5af": {
     "additions": 1128,
-    "commits": 3,
+    "commits": 0,
     "deletions": 0,
     "name": "jp-zuniga/oop-I",
     "user_commits": 3
   },
   "5f836a4865d9e3f7cbe7299b3799dc94204a6deabd854102fc49d472378b53cf": {
     "additions": 358,
-    "commits": 7,
+    "commits": 0,
     "deletions": 68,
     "name": "jp-zuniga/oop-caso-s4",
     "user_commits": 5
   },
   "664f6458d9f7b627a6d692a6748e0e8fa1ed88d7be0ce80562ec3604b3e5e909": {
     "additions": 1773,
-    "commits": 17,
+    "commits": 0,
     "deletions": 70,
     "name": "jp-zuniga/rust-learning",
     "user_commits": 17
   },
   "693bbfd71f65aa825c99f653dfd95913a222b6a31d3ebd9b8fb913cfe2d5c2c0": {
     "additions": 209,
-    "commits": 4,
+    "commits": 0,
     "deletions": 0,
     "name": "jp-zuniga/NutriPlan",
     "user_commits": 2
   },
   "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
     "additions": 5726,
-    "commits": 207,
+    "commits": 0,
     "deletions": 4720,
     "name": "jp-zuniga/jp-zuniga",
     "user_commits": 188
   },
   "9762c0c475c20addb87fb6c3b62e432a2fda8d0d95287947f0f14e4b2a6032ef": {
     "additions": 265,
-    "commits": 10,
+    "commits": 0,
     "deletions": 59,
     "name": "Enrique990/TransportePrivado",
     "user_commits": 5
   },
   "a091923c48feeab6b3117d10aec29e9406c8a0a8e984534a707d75a9e28771be": {
     "additions": 0,
-    "commits": 3,
+    "commits": 0,
     "deletions": 0,
     "name": "jp-zuniga/wallpapers",
     "user_commits": 3
   },
   "a901d1e1dc14213af8e65a4ff9d6eaaff29682ea7921b98efb49a804f61ef45d": {
     "additions": 761,
-    "commits": 8,
+    "commits": 0,
     "deletions": 71,
     "name": "jp-zuniga/manim-playground",
     "user_commits": 8
   },
   "aae7110a2b0f2ee0a928919541e766cb4c01b04a0789955254fa72b472729f0c": {
     "additions": 5001,
-    "commits": 29,
+    "commits": 0,
     "deletions": 407,
     "name": "jp-zuniga/algo-structs",
     "user_commits": 29
   },
   "bb38dba93d074162b44109911005473438d19ef17dacef4d87f6d08043c9936e": {
     "additions": 97822,
-    "commits": 339,
+    "commits": 0,
     "deletions": 65808,
     "name": "jp-zuniga/gauss-bot",
     "user_commits": 339
   },
   "bf1704a8e6c7a847ca5dff3fab3dad0dcc0b32cf016dfd3b34d77d9b66bbec86": {
     "additions": 193,
-    "commits": 1,
+    "commits": 0,
     "deletions": 0,
     "name": "soliethTrejos/Investigacion_tercer_semestre",
     "user_commits": 1
   },
   "c16f88ec1cb212abaec6be0cbc014390dba3ecd65ee8e8c2f80faf2685ec3d1a": {
     "additions": 8549,
-    "commits": 80,
+    "commits": 0,
     "deletions": 5526,
     "name": "jp-zuniga/project-euler",
     "user_commits": 80
   },
   "c20fc805a5d21366d4f810e616b4769a64326b66ab0773fcbac72bb9f04b9272": {
     "additions": 732,
-    "commits": 3,
+    "commits": 0,
     "deletions": 21,
     "name": "jp-zuniga/alli",
     "user_commits": 3
   },
   "c6cc2de4170ac1063ae6b9df265f80721933b68b3f4c1f9e13778e3b17eda78d": {
     "additions": 150255,
-    "commits": 51,
+    "commits": 0,
     "deletions": 139766,
     "name": "franygutz/QR-Parking",
     "user_commits": 14
   },
   "f6fc626d9e6a8fb8ccf7a99a309aa97daa1ace097098dfa14ab27db0491388a0": {
     "additions": 12423,
-    "commits": 111,
+    "commits": 0,
     "deletions": 7830,
     "name": "jp-zuniga/dots",
     "user_commits": 111

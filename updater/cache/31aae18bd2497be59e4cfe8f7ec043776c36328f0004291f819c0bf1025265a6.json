@@ -28,11 +28,11 @@
     "user_commits": 6
   },
   "487d86d6336f9f2b8e29696ce8ad2f8d8d0fb3516d54e6e01e1b413062dbb5af": {
-    "additions": 1128,
-    "commits": 3,
-    "deletions": 0,
+    "additions": 2062,
+    "commits": 6,
+    "deletions": 55,
     "name": "jp-zuniga/oop-I",
-    "user_commits": 3
+    "user_commits": 6
   },
   "5f836a4865d9e3f7cbe7299b3799dc94204a6deabd854102fc49d472378b53cf": {
     "additions": 359,
@@ -57,7 +57,7 @@
   },
   "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
     "additions": 5703,
-    "commits": 221,
+    "commits": 222,
     "deletions": 4714,
     "name": "jp-zuniga/jp-zuniga",
     "user_commits": 188

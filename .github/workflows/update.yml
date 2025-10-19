@@ -20,7 +20,7 @@ jobs:
       - name: install uv
         uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
+          version: "0.8.24"
           working-directory: ./updater/
           enable-cache: true
           ignore-nothing-to-cache: true

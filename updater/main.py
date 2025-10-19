@@ -13,6 +13,7 @@ from sys import exit, stderr
 from typing import TYPE_CHECKING, Any
 
 from dateutil.relativedelta import relativedelta
+from dotenv import load_dotenv
 from github import Github, GithubException
 from github.Auth import Token
 from lxml.etree import (
@@ -401,9 +402,10 @@ def main() -> None:
     """
 
     try:
+        load_dotenv()
         StatProcessor(
             access_token=environ["ACCESS_TOKEN"],
-            username=environ["USER_NAME"],
+            username="jp-zuniga",
             birthday=datetime(2005, 7, 7, tzinfo=UTC),
         ).calculate_stats()
     except KeyError as e:

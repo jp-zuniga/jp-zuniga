@@ -46,7 +46,7 @@ class StatProcessor:
         Initialize all necessary data.
 
         Args:
-            access_token: Github token to use for authentication.
+            access_token: Github authentication token.
             username:     User's username.
             birthday:     User's birthday.
 
@@ -91,15 +91,11 @@ class StatProcessor:
     def calculate_stats(self) -> None:
         """
         Calculate user statistics.
-
-        Args:
-            svg_name: Name of image to be updated.
-
         """
 
         self._get_repos_and_stars()
         self._get_loc_data()
-        self._get_commit_count()
+        self._get_total_commits()
         self._update_svg(f"dark_{self.svg_name}")
         self._update_svg(f"light_{self.svg_name}")
 
@@ -112,58 +108,35 @@ class StatProcessor:
 
         """
 
-        emails: list[str] = []
-
         try:
-            emails.extend(
+            return [
                 email_info.email.lower()
                 for email_info in self.user.get_emails()
                 if email_info.verified
-            )
-        except GithubException as e:
-            print(f"Warning: Could not fetch verified emails: {e!s}")
-
-        return emails
+            ]
+        except GithubException as g:
+            print(f"Warning: Could not fetch verified emails: {g!s}")
+            return []
 
     def _get_repos_and_stars(self) -> None:
         """
-        Get repository count and total star count.
+        Get user's repository count and total star count.
         """
 
         try:
-            self.owned_repos = self.user.get_repos(type="owner")
-            self.repo_count = self.owned_repos.totalCount
-            self.star_count = sum(repo.stargazers_count for repo in self.owned_repos)
             self.all_repos = self.user.get_repos(
                 affiliation="owner,collaborator,organization_member",
             )
-        except GithubException as e:
-            print(f"Failed to get repositories: {e!s}")
+
+            self.owned_repos = self.user.get_repos(type="owner")
+            self.repo_count = self.owned_repos.totalCount
+            self.star_count = sum(repo.stargazers_count for repo in self.owned_repos)
+        except GithubException as g:
+            print(f"Failed to get repositories: {g!s}")
 
     def _get_loc_data(self) -> None:
         """
-        Get lines of code data with caching.
-        """
-
-        self.total_loc_count, self.loc_add_count, self.loc_del_count = (
-            self._process_cache(
-                self.all_repos,
-            )
-        )
-
-    def _process_cache(
-        self,
-        repositories: PaginatedList[Repository],
-    ) -> tuple[int, int, int]:
-        """
         Process cache and compute LOC totals.
-
-        Args:
-            repositories: List of repositories user has access to.
-
-        Returns:
-            (int, int, int): Lines of code calculated (total, added, deleted).
-
         """
 
         try:
@@ -175,7 +148,7 @@ class StatProcessor:
         loc_add: int = 0
         loc_del: int = 0
 
-        for repo in repositories:
+        for repo in self.all_repos:
             repo_name: str = repo.full_name
             repo_hash: str = sha256(repo_name.encode()).hexdigest()
             current_commits: int = self._get_branched_commits(repo)
@@ -211,11 +184,15 @@ class StatProcessor:
         except OSError as o:
             raise CacheError(f"Failed to write cache: {o!s}") from o
 
-        return (loc_add - loc_del, loc_add, loc_del)
+        self.total_loc_count, self.loc_add_count, self.loc_del_count = (
+            loc_add - loc_del,
+            loc_add,
+            loc_del,
+        )
 
     def _get_branched_commits(self, repo: Repository) -> int:
         """
-        Get total commit count across all branches for a repository.
+        Get total commit count across all branches of a repository.
 
         Args:
             repo: Repository to get commit count for.
@@ -225,33 +202,26 @@ class StatProcessor:
 
         """
 
-        total_commits: int = 0
-        processed_commit: set[str] = set()
+        processed_commits: set[str] = set()
 
-        print(f"Processing {repo.full_name} for commit count...")
         try:
             for branch in repo.get_branches():
-                print(f"  Analyzing branch {branch.name}...")
                 try:
-                    commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
-                    print(f"    Found {commits.totalCount} commits.")
-                    for commit in commits:
-                        if commit.sha in processed_commit:
-                            continue
+                    for commit in repo.get_commits(sha=branch.name):
+                        processed_commits.add(commit.sha)
 
-                        processed_commit.add(commit.sha)
                 except GithubException as e:
                     if e.status != EMPTY_REPO:
                         print(
                             "Error getting commits for branch "
-                            f"{branch.name} in {repo.full_name}: {e!s}",
+                            f"`{branch.name}` in `{repo.full_name}`: {e!s}",
                         )
 
         except GithubException as e:
             if e.status != EMPTY_REPO:
                 print(f"Error getting branches for {repo.full_name}: {e!s}")
 
-        return total_commits
+        return len(processed_commits)
 
     def _calculate_repo_loc(self, repo: Repository) -> tuple[int, int, int]:
         """
@@ -268,24 +238,16 @@ class StatProcessor:
         additions: int = 0
         deletions: int = 0
         user_commits: int = 0
-        processed_commit: set[str] = set()
 
-        # print(f"Processing {repo.full_name}...")
         try:
             for branch in repo.get_branches():
-                # print(f"  Analyzing branch {branch.name}...")
                 try:
-                    commits: PaginatedList[Commit] = repo.get_commits(sha=branch.name)
-                    # print(f"    Found {commits.totalCount} commits.")
-                    for commit in commits:
-                        if commit.sha in processed_commit:
-                            continue
-
-                        processed_commit.add(commit.sha)
+                    for commit in set(repo.get_commits(sha=branch.name)):
                         if self._is_user_commit(commit):
                             additions += commit.stats.additions
                             deletions += commit.stats.deletions
                             user_commits += 1
+
                 except GithubException as e:
                     if e.status != EMPTY_REPO:
                         print(
@@ -299,9 +261,26 @@ class StatProcessor:
 
         return additions, deletions, user_commits
 
+    def _get_total_commits(self) -> None:
+        """
+        Get total commit count from cache.
+        """
+
+        try:
+            with self.cache_file.open() as file:
+                cache: dict[str, dict[str, int | str]] = load(file)
+
+            self.commit_count = sum(
+                int(repo["user_commits"]) for repo in cache.values()
+            )
+
+        except (FileNotFoundError, JSONDecodeError, KeyError) as e:
+            print(f"Error reading cache for commit count: {e!s}")
+            self.commit_count = 0
+
     def _is_user_commit(self, commit: Commit) -> bool:
         """
-        Check if commit belongs to the user using ID or verified emails.
+        Check if commit belongs to defined user.
 
         Args:
             commit: Commit to check.
@@ -323,22 +302,6 @@ class StatProcessor:
                 return True
 
         return bool(commit.author and commit.author.login == self.user.login)
-
-    def _get_commit_count(self) -> None:
-        """
-        Get total commit count from cache.
-        """
-
-        try:
-            with self.cache_file.open() as file:
-                cache: dict[str, dict[str, int | str]] = load(file)
-
-            self.commit_count = sum(
-                int(repo["user_commits"]) for repo in cache.values()
-            )
-        except (FileNotFoundError, JSONDecodeError, KeyError) as e:
-            print(f"Error reading cache for commit count: {e!s}")
-            self.commit_count = 0
 
     def _update_svg(self, svg_name: str) -> None:
         """
@@ -416,7 +379,7 @@ class StatProcessor:
 
     def _calculate_age(self) -> str:
         """
-        Calculate time since self.birthday.
+        Calculate time since `self.birthday`.
 
         Returns:
             str: Time since user's birth.

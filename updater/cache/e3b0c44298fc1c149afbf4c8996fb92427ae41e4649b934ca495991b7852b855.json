@@ -1,10 +1,10 @@
 {
   "156191e8cef35e56727c9e05f31ae98aada76ade5eccc9df531c92affe5b5fdd": {
-    "additions": 913,
-    "commits": 13,
-    "deletions": 188,
+    "additions": 1399,
+    "commits": 21,
+    "deletions": 689,
     "name": "jp-zuniga/miscellaneous",
-    "user_commits": 13
+    "user_commits": 21
   },
   "235da6f2c53f9d5aa9f775138ee5828a7a091ad2d5149d37707ef259a212c40e": {
     "additions": 1320,
@@ -35,11 +35,11 @@
     "user_commits": 10
   },
   "4e64f2abdf3b146e9ee176b4442e064f31a300a075a77718a822b5878c93e382": {
-    "additions": 5,
-    "commits": 1,
-    "deletions": 0,
+    "additions": 6,
+    "commits": 2,
+    "deletions": 1,
     "name": "jp-zuniga/git-test",
-    "user_commits": 1
+    "user_commits": 2
   },
   "5f836a4865d9e3f7cbe7299b3799dc94204a6deabd854102fc49d472378b53cf": {
     "additions": 359,
@@ -64,7 +64,7 @@
   },
   "955b0ed47f21c277d37673312bc05be5cdeb01edaa4eb223e1dadeedfb84fd24": {
     "additions": 5703,
-    "commits": 239,
+    "commits": 240,
     "deletions": 4714,
     "name": "jp-zuniga/jp-zuniga",
     "user_commits": 188

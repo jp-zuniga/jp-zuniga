@@ -5,10 +5,6 @@ Constants used by main script.
 from os import environ
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 EMPTY_REPO_ERR: int = 409
 GH_TOKEN: str = environ["ACCESS_TOKEN"]
 JUST_LENGTHS: dict[str, int] = {

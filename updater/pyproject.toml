@@ -4,7 +4,7 @@
         "pygithub>=2.6.1",
         "python-dateutil>=2.9.0.post0",
         "python-dotenv>=1.1.1",
-]
+    ]
     description = "refresh profile's stats."
     name = "updater"
     requires-python = ">=3.13"
@@ -14,9 +14,11 @@
     allowed-confusables = ["−"]
     ignore = [
         "A004",   # ignore shadowed built-ins
+        "COM812", # let ruff handle trailing commas
         "D200",   # enforce multi-line docstrings
         "D202",   # allow blank line after docstrings
-        "D212",   # ignore summary not on first line of docstring
+        "D203",   # no blank lines between class def and docstring
+        "D212",   # ignore "summary not on first line of docstring"
         "EM102",  # allow f-strings in exception constructors
         "T201",   # allow `print` statements
         "TRY003", # allow long messages in exception constructors

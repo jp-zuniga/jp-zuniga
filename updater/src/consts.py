@@ -15,8 +15,11 @@ JUST_LENGTHS: dict[str, int] = {
     "loc_total_dots": 35,
 }
 
+FILE_PATH = Path(__file__).resolve()
 SVG_NAME: str = "profile_card.svg"
 
-PAR_DIR = Path(__file__).resolve().parents[1]
-CACHE_DIR = Path(PAR_DIR / "cache")
-SVG_DIR = Path(PAR_DIR / "assets")
+ROOT_DIR = FILE_PATH.parents[2]
+SCRIPT_DIR = FILE_PATH.parents[1]
+
+CACHE_DIR = Path(SCRIPT_DIR / "cache")
+SVG_DIR = Path(ROOT_DIR / ".github" / "assets")

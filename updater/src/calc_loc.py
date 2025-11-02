@@ -20,9 +20,9 @@ def calc_repo_data(
     user: AuthenticatedUser,
     emails: set[str],
     repo: Repository,
-) -> tuple[int, int, int]:
+) -> tuple[int, int, int, int]:
     """
-    Calculate a user's commits and lines of code authored across all branches.
+    Calculate a user's authored data across all branches in a repository.
 
     Args:
         user:   User whose commits will be processed.
@@ -30,38 +30,45 @@ def calc_repo_data(
         repo:   Repository to calculate data for.
 
     Returns:
-        (int, int, int): Data calculated (additions, deletions, user commits).
+        (int, int, int, int): Additions, deletions, user commits, and total commits.
 
     """
 
     additions: int = 0
     deletions: int = 0
     user_commits: int = 0
+    processed: set[str] = set()
 
-    try:
-        for branch in repo.get_branches():
-            try:
-                for commit in set(repo.get_commits(sha=branch.name)):
-                    if is_user_commit(user, emails, commit):
-                        additions += commit.stats.additions
-                        deletions += commit.stats.deletions
-                        user_commits += 1
+    for branch in repo.get_branches():
+        try:
+            for commit in repo.get_commits(sha=branch.name):
+                sha = commit.sha
+                if sha in processed:
+                    continue
 
-            except GithubException as e:
-                if e.status != EMPTY_REPO_ERR:
-                    print(
-                        "Error getting commits for branch "
-                        f"{branch.name} in {repo.full_name}: {e!s}",
-                    )
+                processed.add(sha)
 
-    except GithubException as e:
-        if e.status != EMPTY_REPO_ERR:
-            print(f"Error getting branches for {repo.full_name}: {e!s}")
+                if is_user_commit(user, emails, commit):
+                    # avoid doubled api calls for individual commit stats
+                    stats = commit.stats
 
-    return additions, deletions, user_commits
+                    additions += stats.additions
+                    deletions += stats.deletions
+                    user_commits += 1
+
+        except GithubException as e:
+            if e.status != EMPTY_REPO_ERR:
+                print(
+                    "Error getting commits for branch "
+                    f"{branch.name} in {repo.full_name}: {e!s}",
+                )
+
+    return additions, deletions, user_commits, len(processed)
 
 
-def get_total_loc(cached_data: dict[str, dict[str, int | str]]) -> tuple[int, int, int]:
+def get_total_loc(
+    cached_data: dict[str, dict[str, dict | int | str]],
+) -> tuple[int, int, int]:
     """
     Use cached data to calculate total lines of code across all repositories.
 
@@ -77,7 +84,7 @@ def get_total_loc(cached_data: dict[str, dict[str, int | str]]) -> tuple[int, in
     dels: int = 0
 
     for repo in cached_data.values():
-        adds += int(repo["additions"])
-        dels += int(repo["deletions"])
+        adds += int(repo["additions"])  # type: ignore[reportArgumentType]
+        dels += int(repo["deletions"])  # type: ignore[reportArgumentType]
 
     return adds - dels, adds, dels

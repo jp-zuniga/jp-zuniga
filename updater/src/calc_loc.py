@@ -16,13 +16,18 @@ if TYPE_CHECKING:
     from github.Repository import Repository
 
 
-def calc_repo_data(user: AuthenticatedUser, repo: Repository) -> tuple[int, int, int]:
+def calc_repo_data(
+    user: AuthenticatedUser,
+    emails: set[str],
+    repo: Repository,
+) -> tuple[int, int, int]:
     """
     Calculate a user's commits and lines of code authored across all branches.
 
     Args:
-        user: User whose commits will be processed.
-        repo: Repository to calculate data for.
+        user:   User whose commits will be processed.
+        emails: User's emails to check commit authorship.
+        repo:   Repository to calculate data for.
 
     Returns:
         (int, int, int): Data calculated (additions, deletions, user commits).
@@ -37,7 +42,7 @@ def calc_repo_data(user: AuthenticatedUser, repo: Repository) -> tuple[int, int,
         for branch in repo.get_branches():
             try:
                 for commit in set(repo.get_commits(sha=branch.name)):
-                    if is_user_commit(user, commit):
+                    if is_user_commit(user, emails, commit):
                         additions += commit.stats.additions
                         deletions += commit.stats.deletions
                         user_commits += 1

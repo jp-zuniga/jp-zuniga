@@ -1,7 +1,50 @@
 """
-Script that fetches a user's Github statistics and updates an SVG image.
+Fetch a user's Github statistics and update a profile card.
 """
 
-from dotenv import load_dotenv
+from __future__ import annotations
 
-load_dotenv()
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
+
+from github import Github
+from github.Auth import Token
+
+from .cache_man import update_cache
+from .calc_commits import get_total_commits
+from .calc_loc import get_total_loc
+from .calc_repos import calc_stargazers, get_owned_repos
+from .consts import ACCESS_TOKEN
+from .svg import update_profile_cards
+from .utils import calculate_age
+
+if TYPE_CHECKING:
+    from github.AuthenticatedUser import AuthenticatedUser
+    from github.PaginatedList import PaginatedList
+    from github.Repository import Repository
+
+
+def main() -> None:
+    """
+    Execute script.
+    """
+
+    user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN)).get_user()  # type: ignore[reportAssignmentType]
+
+    cache: dict[str, dict[str, int | str]] = update_cache(user)
+    owned_repos: PaginatedList[Repository] = get_owned_repos(user)
+
+    age_str: str = calculate_age(datetime(2005, 7, 7, tzinfo=UTC))
+    star_count: int = calc_stargazers(owned_repos)
+    commit_count: int = get_total_commits(cache)
+    loc_total, loc_add, loc_del = get_total_loc(cache)
+
+    update_profile_cards(
+        age=age_str,
+        stars=star_count,
+        repos=owned_repos.totalCount,
+        commits=commit_count,
+        loc_total=loc_total,
+        loc_add=loc_add,
+        loc_del=loc_del,
+    )

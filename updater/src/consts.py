@@ -1,12 +1,21 @@
 """
-Constants used by main script.
+Constants used by the script.
 """
 
+from hashlib import sha256
 from os import environ
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ENCODING: str = "utf-8"
+ACCESS_TOKEN: str = environ["ACCESS_TOKEN"]
+HASH_KEY: bytes = environ["HASH_KEY"].encode(ENCODING)
+USERNAME: str = sha256(environ["USERNAME"].encode(ENCODING)).hexdigest()[:10]
+
 EMPTY_REPO_ERR: int = 409
-GH_TOKEN: str = environ["ACCESS_TOKEN"]
 JUST_LENGTHS: dict[str, int] = {
     "age_dots": 44,
     "stars_dots": 45,
@@ -15,11 +24,12 @@ JUST_LENGTHS: dict[str, int] = {
     "loc_total_dots": 35,
 }
 
-FILE_PATH = Path(__file__).resolve()
-SVG_NAME: str = "profile_card.svg"
-
-ROOT_DIR = FILE_PATH.parents[2]
-SCRIPT_DIR = FILE_PATH.parents[1]
+FILE_PATH: Path = Path(__file__).resolve()
+ROOT_DIR: Path = FILE_PATH.parents[2]
+SCRIPT_DIR: Path = FILE_PATH.parents[1]
 
 CACHE_DIR = Path(SCRIPT_DIR / "cache")
+CACHE_DIR.mkdir(exist_ok=True)
+
 SVG_DIR = Path(ROOT_DIR / ".github" / "assets")
+SVG_DIR.mkdir(exist_ok=True)

@@ -26,9 +26,9 @@ JUST_LENGTHS: dict[str, int] = {
 
 FILE_PATH: Path = Path(__file__).resolve()
 ROOT_DIR: Path = FILE_PATH.parents[2]
-SCRIPT_DIR: Path = FILE_PATH.parents[1]
+SRC_DIR: Path = FILE_PATH.parent
 
-CACHE_DIR = Path(SCRIPT_DIR / "cache")
+CACHE_DIR = Path(SRC_DIR / "cache")
 CACHE_DIR.mkdir(exist_ok=True)
 
 SVG_DIR = Path(ROOT_DIR / ".github" / "assets")

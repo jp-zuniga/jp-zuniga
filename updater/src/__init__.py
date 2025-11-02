@@ -29,7 +29,7 @@ def main() -> None:
     Execute script.
     """
 
-    user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN)).get_user()  # type: ignore[reportAssignmentType]
+    user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN), per_page=100).get_user()  # type: ignore[reportAssignmentType]
     emails = set(get_verified_emails(user))
 
     cache: dict[str, dict[str, dict | int | str]] = update_cache(user, emails)

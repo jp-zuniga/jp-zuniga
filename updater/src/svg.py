@@ -78,7 +78,7 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
             f"{element}_dots",
             element,
             element_value,
-            JUST_LENGTHS[f"{element_value}_dots"] - len(element_value),
+            JUST_LENGTHS[f"{element}_dots"] - len(element_value),
         )
 
     new_loc_total = f"{kwargs['loc_total']:,}"

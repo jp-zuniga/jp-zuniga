@@ -1,0 +1,190 @@
+{
+  "1853a48f6acb39cc8af9ecbbec54247e60854fb91691827dccb14086a722e484": {
+    "heads": {
+      "main": "28c7f6673cc0b9472b13b729d0b5bdec5d59f172"
+    },
+    "commits": 10,
+    "user_commits": 5,
+    "additions": 265,
+    "deletions": 59
+  },
+  "625da3b7c6be2ff634452af8c70524b198b12eb2502e31e9dcaef1fbfc73eb5c": {
+    "heads": {
+      "Inti": "58a9dfaeec32e5dfdc211a934bb9acf22d3be46c",
+      "final": "f451e30fab368181c3c6afd576eeb193d450b18e",
+      "main": "424cea94df0b93ae143e3bf8cf0cad46eaa26e21"
+    },
+    "commits": 52,
+    "user_commits": 14,
+    "additions": 150255,
+    "deletions": 139766
+  },
+  "1f571a8a953399910bcf85ebc27202c830e88259410080e08a0dbf70b54ceb80": {
+    "heads": {
+      "main": "916aed0b552a7c0f86cbdc410fef6c1c564c3a73"
+    },
+    "commits": 29,
+    "user_commits": 29,
+    "additions": 5001,
+    "deletions": 407
+  },
+  "22dadc3b9764e612ff1b9bbd16a576c40fd8a6820192366c5909af59a2d056a0": {
+    "heads": {
+      "main": "e23897546e7a292ed44d813cfb68333a4ab3b7a8"
+    },
+    "commits": 3,
+    "user_commits": 3,
+    "additions": 732,
+    "deletions": 21
+  },
+  "5a0a43d81fd9f99dcef7381128299e9044bcd768ccf3715227e049214066dd6e": {
+    "heads": {
+      "main": "8a9bbeb48090d80f8568b170968ef34859cfa700"
+    },
+    "commits": 145,
+    "user_commits": 145,
+    "additions": 12937,
+    "deletions": 8196
+  },
+  "486b770faac4722975300595c23cbda0ae715b5c2781d8e28ed367548fca5be5": {
+    "heads": {
+      "main": "8da2c0ab99dee5f2642658cda38c36469cfe99cb"
+    },
+    "commits": 339,
+    "user_commits": 339,
+    "additions": 97822,
+    "deletions": 65808
+  },
+  "0203bacdd4a02a39b022fd42211823b1d98415fd492b369bc13fb77b83ba2616": {
+    "heads": {
+      "Enrique": "9457a7ab1729f08f2b786f5f570f90891e567d41",
+      "main": "5988eaacf225ad9b356fb13a7555e597742b7f21"
+    },
+    "commits": 3,
+    "user_commits": 2,
+    "additions": 6,
+    "deletions": 1
+  },
+  "f6f0e74ea995ad995d86d4c9e2e854fa9c4095ec2bb2a577cb45b8e96b11bfe6": {
+    "heads": {
+      "main": "b94356c117abe8872c660292cae333a18834c9cc",
+      "script-upgrade": "4b85b758962d2d83cbb177cc5e62d999e2e4612c"
+    },
+    "commits": 273,
+    "user_commits": 214,
+    "additions": 6807,
+    "deletions": 6003
+  },
+  "2fb45db34b83ebdf765e43137340e64463f0828e088231acbebe25cc0df876e9": {
+    "heads": {
+      "main": "7fb355e82a21d354f45a3790fcbde7bb003d7c53"
+    },
+    "commits": 8,
+    "user_commits": 8,
+    "additions": 761,
+    "deletions": 71
+  },
+  "b5840386f61b7829359387d4a44ecaf87c8ae53afc46378457c5d01e296b1d1b": {
+    "heads": {
+      "main": "b7b1eaa1e76c561542a209a0ebf905dec9e37ebf"
+    },
+    "commits": 22,
+    "user_commits": 22,
+    "additions": 1594,
+    "deletions": 700
+  },
+  "c9e434ddd4358d00d92c294f4df083a76ecd0b2e1faf31eadecede6b9fe79216": {
+    "heads": {
+      "backend-dev": "0d9fc60900b16573bb0baa60c65a587dc431b48a",
+      "frontend-dev": "5a21b07ac996da1e3369ea2b1c71ec48680b8a36",
+      "main": "861b0aad4dde030f7754bd6b5e0f6b3bcee5486b",
+      "prod-backend": "e3d6b535346583af37face81a1586bd0e3ce7fd1",
+      "prod-frontend": "71bb43fbc88e70934347747231e3dfe4efb116d7"
+    },
+    "commits": 282,
+    "user_commits": 228,
+    "additions": 36211,
+    "deletions": 129179
+  },
+  "2eab88fb956f5e5bec1266fb1e35ff9fbb0d48670a7d65796f01484aa31a9afc": {
+    "heads": {
+      "main": "24da412403238d0b78fffeb0e1670dc9dcbe6d82"
+    },
+    "commits": 8,
+    "user_commits": 6,
+    "additions": 359,
+    "deletions": 68
+  },
+  "7ecaeaf698afaa2855bea86299b45e50a936f81a74ce4525bbaced7db95af275": {
+    "heads": {
+      "main": "469b2c01da33d03291834da2f58408c586e535b0"
+    },
+    "commits": 10,
+    "user_commits": 10,
+    "additions": 4104,
+    "deletions": 70
+  },
+  "71dda8042e398006c2f37bcd49a4a4d0c82024e90f1f498fad7f1b201992930f": {
+    "heads": {
+      "main": "ffce570eb92a96aa492ae9c82beb3e4de4118419"
+    },
+    "commits": 80,
+    "user_commits": 80,
+    "additions": 8549,
+    "deletions": 5526
+  },
+  "82eb6e2bc7183247b16510d112cdd0e43e3710a71a5dcc7fa2014960cb8cd2dd": {
+    "heads": {
+      "main": "5d491bdf09dcfc4773c77abee4507a8944c1f0d1"
+    },
+    "commits": 15,
+    "user_commits": 13,
+    "additions": 1320,
+    "deletions": 498
+  },
+  "cbcd2bb170d42567db91780ad891872f8f90f338d3ea773279003d2cef883061": {
+    "heads": {
+      "main": "ae171becae1671c50a74910e19eae40b3b7ced40"
+    },
+    "commits": 17,
+    "user_commits": 17,
+    "additions": 1773,
+    "deletions": 70
+  },
+  "fb74722fb1eed41a1d41c39f3711bdfec5040d59c2ac2d86173495ea97a1e745": {
+    "heads": {
+      "main": "59b4a7a05c6c62c6bf5220e928d9bf9d7eb63bc5"
+    },
+    "commits": 6,
+    "user_commits": 6,
+    "additions": 6838,
+    "deletions": 300
+  },
+  "553a3fe6adee57c9b47d1129de32fbd084bb394fc28bcdba8cead5300a279b99": {
+    "heads": {
+      "main": "929de9336cb1ee240337d86cb26edffe67284695"
+    },
+    "commits": 6,
+    "user_commits": 6,
+    "additions": 4402,
+    "deletions": 38
+  },
+  "229bc7c75e6117d0c2a7c5e00b61105122b54b3f3a50d7ffbdb90c8237daf602": {
+    "heads": {
+      "main": "96624ea33d8a2951785ab897f9579d43384fcc2e"
+    },
+    "commits": 3,
+    "user_commits": 3,
+    "additions": 0,
+    "deletions": 0
+  },
+  "28deabcbf85c02e90f0890464a77b9005b3fbb6f7ae118df7699ad79538c78bc": {
+    "heads": {
+      "main": "e9318dba4f2293417f9dbf022dbaca7499f95d03"
+    },
+    "commits": 1,
+    "user_commits": 1,
+    "additions": 193,
+    "deletions": 0
+  }
+}

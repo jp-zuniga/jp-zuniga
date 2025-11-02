@@ -8,6 +8,9 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: updater
     permissions:
       contents: write
 
@@ -20,26 +23,23 @@ jobs:
       - name: install uv
         uses: astral-sh/setup-uv@v6
         with:
-          version: "0.8.24"
-          working-directory: ./updater/
           enable-cache: true
           ignore-nothing-to-cache: true
+          working-directory: updater
+          version: "0.8.24"
 
       - name: environment setup
-        working-directory: ./updater/
         run: uv sync
 
       - name: execute script
-        working-directory: ./updater/
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          USER_NAME: ${{ secrets.USER_NAME }}
-        run: uv run main.py
+          HASH_KEY: ${{ secrets.HASH_KEY }}
+          USERNAME: ${{ secrets.USERNAME }}
+        run: uv run -m src
 
       - name: commit && push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: update stats"
-          git push
+          git add . && git commit -m "chore: update stats" && git push

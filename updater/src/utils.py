@@ -17,6 +17,7 @@ from .consts import ENCODING, HASH_KEY
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Commit import Commit
+    from github.Repository import Repository
 
 
 def calculate_age(bday: datetime) -> str:
@@ -38,6 +39,21 @@ def calculate_age(bday: datetime) -> str:
         f"{diff.days} day{'s' if diff.days != 1 else ''}"
         f"{' !!!' if (diff.months == 0 and diff.days == 0) else ''}"
     )
+
+
+def get_branch_heads(repo: Repository) -> dict[str, str]:
+    """
+    Fetch the heads of all the branches in the given repository.
+
+    Args:
+        repo: Repository whose branch heads will be fetched.
+
+    Return:
+        dict[str, str]: Mapping of branches and branch heads.
+
+    """
+
+    return {branch.name: branch.commit.sha for branch in repo.get_branches()}
 
 
 def get_verified_emails(user: AuthenticatedUser) -> list[str]:

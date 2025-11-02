@@ -10,11 +10,10 @@ from typing import TYPE_CHECKING
 
 from github.GithubException import GithubException
 
-from .calc_commits import get_branched_commits
 from .calc_loc import calc_repo_data
 from .calc_repos import get_affiliated_repos
 from .consts import CACHE_DIR, ENCODING, USERNAME
-from .utils import hash_repo
+from .utils import get_branch_heads, hash_repo
 
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
@@ -26,12 +25,12 @@ class CacheError(Exception):
     """
 
 
-def get_cache() -> dict[str, dict[str, int | str]]:
+def get_cache() -> dict[str, dict[str, dict | int | str]]:
     """
     Read a user's cached statistics.
 
     Return:
-        dict[str, dict[str, int | str]]: Cached data.
+        dict[str, dict[str, dict | int | str]]: Cached data.
 
     """
 
@@ -39,16 +38,16 @@ def get_cache() -> dict[str, dict[str, int | str]]:
         with Path(CACHE_DIR / f"{USERNAME}.json").open(
             encoding=ENCODING,
         ) as cache:
-            data: dict[str, dict[str, int | str]] = load(cache)
+            data: dict[str, dict[str, dict | int | str]] = load(cache)
     except (FileNotFoundError, JSONDecodeError):
-        data: dict[str, dict[str, int | str]] = {}
+        data: dict[str, dict[str, dict | int | str]] = {}
 
     return data
 
 
 def update_cache(
     user: AuthenticatedUser, emails: set[str]
-) -> dict[str, dict[str, int | str]]:
+) -> dict[str, dict[str, dict | int | str]]:
     """
     Update cached statistics, write them, and return them.
 
@@ -57,31 +56,34 @@ def update_cache(
         emails: User's email to check commit authorship.
 
     Return:
-        dict[str, dict[str, int | str]]: Updated cache.
+        dict[str, dict[str, dict | int | str]]: Updated cache.
 
     """
 
-    data: dict[str, dict[str, int | str]] = get_cache()
+    data: dict[str, dict[str, dict | int | str]] = get_cache()
 
     for repo in get_affiliated_repos(user):
         repo_hash: str = hash_repo(repo.name)
-        current_commits: int = get_branched_commits(repo)
 
-        if current_commits == 0 or (
-            repo_hash in data and data[repo_hash]["commits"] == current_commits
-        ):
+        heads: dict[str, str] = get_branch_heads(repo)
+        prev_heads = str(data.get(repo_hash, {}).get("heads"))
+
+        if prev_heads == heads:
             continue
 
         try:
-            additions, deletions, user_commits = calc_repo_data(user, emails, repo)
+            additions, deletions, user_commits, total_commits = calc_repo_data(
+                user, emails, repo
+            )
         except GithubException as e:
             print(f"Error processing a repository: {e!s}")
             print("Setting its data to 0.")
-            additions = deletions = user_commits = 0
+            additions = deletions = user_commits = total_commits = 0
 
         data[repo_hash] = {
+            "heads": heads,
+            "commits": total_commits,
             "user_commits": user_commits,
-            "commits": current_commits,
             "additions": additions,
             "deletions": deletions,
         }
@@ -90,7 +92,7 @@ def update_cache(
     return data
 
 
-def write_cache(data: dict[str, dict[str, int | str]]) -> None:
+def write_cache(data: dict[str, dict[str, dict | int | str]]) -> None:
     """
     Write user's updated statistics to a cache file.
 

@@ -46,12 +46,15 @@ def get_cache() -> dict[str, dict[str, int | str]]:
     return data
 
 
-def update_cache(user: AuthenticatedUser) -> dict[str, dict[str, int | str]]:
+def update_cache(
+    user: AuthenticatedUser, emails: set[str]
+) -> dict[str, dict[str, int | str]]:
     """
     Update cached statistics, write them, and return them.
 
     Args:
-        user: User to cache stats for.
+        user:   User to cache stats for.
+        emails: User's email to check commit authorship.
 
     Return:
         dict[str, dict[str, int | str]]: Updated cache.
@@ -70,7 +73,7 @@ def update_cache(user: AuthenticatedUser) -> dict[str, dict[str, int | str]]:
             continue
 
         try:
-            additions, deletions, user_commits = calc_repo_data(user, repo)
+            additions, deletions, user_commits = calc_repo_data(user, emails, repo)
         except GithubException as e:
             print(f"Error processing a repository: {e!s}")
             print("Setting its data to 0.")

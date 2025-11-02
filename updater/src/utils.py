@@ -75,13 +75,14 @@ def hash_repo(name: str) -> str:
     return new_hash(HASH_KEY, name.encode(ENCODING), sha256).hexdigest()
 
 
-def is_user_commit(user: AuthenticatedUser, commit: Commit) -> bool:
+def is_user_commit(user: AuthenticatedUser, emails: set[str], commit: Commit) -> bool:
     """
     Check if commit belongs to defined user.
 
     Args:
         commit: Commit to check.
         user:   User to check.
+        emails: User's verified emails.
 
     Returns:
         bool: If the commit was authored by the user.
@@ -96,7 +97,7 @@ def is_user_commit(user: AuthenticatedUser, commit: Commit) -> bool:
             commit.commit.author.email.lower() if commit.commit.author.email else ""
         )
 
-        if commit_email in get_verified_emails(user):
+        if commit_email in emails:
             return True
 
     return bool(commit.author and commit.author.login == user.login)

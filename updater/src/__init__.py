@@ -16,7 +16,7 @@ from .calc_loc import get_total_loc
 from .calc_repos import calc_stargazers, get_owned_repos
 from .consts import ACCESS_TOKEN
 from .svg import update_profile_cards
-from .utils import calculate_age
+from .utils import calculate_age, get_verified_emails
 
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
@@ -30,8 +30,9 @@ def main() -> None:
     """
 
     user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN)).get_user()  # type: ignore[reportAssignmentType]
+    emails = set(get_verified_emails(user))
 
-    cache: dict[str, dict[str, int | str]] = update_cache(user)
+    cache: dict[str, dict[str, int | str]] = update_cache(user, emails)
     owned_repos: PaginatedList[Repository] = get_owned_repos(user)
 
     age_str: str = calculate_age(datetime(2005, 7, 7, tzinfo=UTC))

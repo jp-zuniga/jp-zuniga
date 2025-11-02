@@ -73,12 +73,17 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
             continue
 
         element_value = f"{value:,}" if isinstance(value, int) else str(value)
+        dots_count = (
+            JUST_LENGTHS[f"{element}_dots"] - len(element_value)
+            if element not in ("loc_add", "loc_del") else None
+        )
+
         _update_single_element(
             root,
             f"{element}_dots",
             element,
             element_value,
-            JUST_LENGTHS[f"{element}_dots"] - len(element_value),
+            dots_count,
         )
 
     new_loc_total = f"{kwargs['loc_total']:,}"
@@ -98,7 +103,7 @@ def _update_single_element(
     dots_id: str,
     element_id: str,
     element_value: str,
-    dots_count: int,
+    dots_count: int | None,
 ) -> None:
     """
     Update an SVG element and its corresponding justification dots.
@@ -123,7 +128,7 @@ def _update_single_element(
 
     value_element.text = element_value
 
-    if element_id in ("loc_add", "loc_del"):
+    if element_id in ("loc_add", "loc_del") and dots_count is None:
         return
 
     dots_id = f"{element_id}_dots"
@@ -132,4 +137,4 @@ def _update_single_element(
         msg = "Invalid or nonexistent dots field for given `element_id`."
         raise ValueError(msg)
 
-    dots_element.text = f" {'.' * dots_count} "
+    dots_element.text = f" {'.' * dots_count} "  # type: ignore[reportOperatorIssue]

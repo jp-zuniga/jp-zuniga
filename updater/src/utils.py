@@ -1,16 +1,22 @@
 """
-General utilities used by script.
+General utilities used by the script.
 """
 
+from __future__ import annotations
+
 from datetime import UTC, datetime
+from hashlib import sha256
+from hmac import new as new_hash
+from typing import TYPE_CHECKING
 
 from dateutil.relativedelta import relativedelta
+from github.GithubException import GithubException
 
+from .consts import ENCODING, HASH_KEY
 
-class CacheError(Exception):
-    """
-    Custom exception for cache errors.
-    """
+if TYPE_CHECKING:
+    from github.AuthenticatedUser import AuthenticatedUser
+    from github.Commit import Commit
 
 
 def calculate_age(bday: datetime) -> str:
@@ -32,6 +38,68 @@ def calculate_age(bday: datetime) -> str:
         f"{diff.days} day{'s' if diff.days != 1 else ''}"
         f"{' !!!' if (diff.months == 0 and diff.days == 0) else ''}"
     )
+
+
+def get_verified_emails(user: AuthenticatedUser) -> list[str]:
+    """
+    Fetch all verified email addresses for the given user.
+
+    Returns:
+        list[str]: User's verified emails.
+
+    """
+
+    try:
+        return [
+            email_info.email.lower()
+            for email_info in user.get_emails()
+            if email_info.verified
+        ]
+    except GithubException as g:
+        print(f"Warning: Could not fetch verified emails: {g!s}")
+        return []
+
+
+def hash_repo(name: str) -> str:
+    """
+    Create a keyed hash from a repository name.
+
+    Args:
+        name: Repo name to hash.
+
+    Return:
+        str: `hmac` keyed hash.
+
+    """
+
+    return new_hash(HASH_KEY, name.encode(ENCODING), sha256).hexdigest()
+
+
+def is_user_commit(user: AuthenticatedUser, commit: Commit) -> bool:
+    """
+    Check if commit belongs to defined user.
+
+    Args:
+        commit: Commit to check.
+        user:   User to check.
+
+    Returns:
+        bool: If the commit was authored by the user.
+
+    """
+
+    if commit.author and commit.author.id == user.id:
+        return True
+
+    if commit.commit and commit.commit.author:
+        commit_email: str = (
+            commit.commit.author.email.lower() if commit.commit.author.email else ""
+        )
+
+        if commit_email in get_verified_emails(user):
+            return True
+
+    return bool(commit.author and commit.author.login == user.login)
 
 
 def validate_kwargs(**kwargs: int | str) -> bool:

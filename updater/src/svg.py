@@ -11,8 +11,9 @@ from lxml.etree import (
     parse as lxml_parse,
 )
 
+from .cache_man import CacheError
 from .consts import JUST_LENGTHS, SVG_DIR
-from .utils import CacheError, validate_kwargs
+from .utils import validate_kwargs
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -20,19 +21,32 @@ if TYPE_CHECKING:
     from lxml.etree import _Element as lxml_elem, _ElementTree as lxml_tree
 
 
-def update_svg(svg_name: str, **kwargs: int | str) -> None:
+def update_profile_cards(**kwargs: int | str) -> None:
     """
-    Update SVG file with the new data.
+    Update light/dark cards with new data.
 
     Args:
-        svg_name: Image to be updated.
-        kwargs:   Keyword arguments corresponding to new statistics.
+        kwargs: Keyword arguments corresponding to new stats.
 
     """
 
     if not validate_kwargs(**kwargs):
         msg = "All statistics must be provided to update profile card."
         raise ValueError(msg)
+
+    _update_svg("dark_profile_card.svg", **kwargs)
+    _update_svg("light_profile_card.svg", **kwargs)
+
+
+def _update_svg(svg_name: str, **kwargs: int | str) -> None:
+    """
+    Update SVG file with new data.
+
+    Args:
+        svg_name: Image to be updated.
+        kwargs:   Keyword arguments corresponding to new stats.
+
+    """
 
     svg_path: Path = SVG_DIR / svg_name
 
@@ -50,7 +64,7 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
 
     Args:
         root:   Root XML element of image.
-        kwargs: Keyword arguments corresponding to new statistics.
+        kwargs: Keyword arguments corresponding to new stats.
 
     """
 

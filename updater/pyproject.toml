@@ -13,15 +13,12 @@
 [tool.ruff.lint]
     allowed-confusables = ["−"]
     ignore = [
-        "A004",   # ignore shadowed built-ins
-        "COM812", # let ruff handle trailing commas
+        "COM812", # let formatter handle trailing commas
         "D200",   # enforce multi-line docstrings
         "D202",   # allow blank line after docstrings
         "D203",   # no blank lines between class def and docstring
         "D212",   # ignore "summary not on first line of docstring"
-        "EM102",  # allow f-strings in exception constructors
         "T201",   # allow `print` statements
-        "TRY003", # allow long messages in exception constructors
     ]
     select = ["ALL"]
 

@@ -82,31 +82,34 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
         _update_single_element(
             root,
             f"{element}_dots",
+            dots_count,
             element,
             element_value,
-            dots_count,
         )
 
-    new_loc_total = f"{kwargs['loc_total']:,}"
-    loc_total_dots_count = JUST_LENGTHS["loc_total_dots"] - len(
-        f"{new_loc_total} , +{kwargs['loc_add']:,} , −{kwargs['loc_del']:,}",
+    loc_total: int = kwargs["loc_total"]  # type: ignore[reportAssignmentType]
+    loc_total_str = f"{'−' if loc_total < 0 else ''}{loc_total:,}"
+    loc_line_len = len(
+        f"{loc_total_str} , +{kwargs['loc_add']:,} , −{kwargs['loc_del']:,}",
     )
+
+    loc_total_dots_count = JUST_LENGTHS["loc_total_dots"] - loc_line_len
 
     _update_single_element(
         root,
         "loc_total_dots",
-        "loc_total",
-        new_loc_total,
         loc_total_dots_count,
+        "loc_total",
+        loc_total_str,
     )
 
 
 def _update_single_element(
     root: lxml_elem,
     dots_id: str,
+    dots_count: int | None,
     element_id: str,
     element_value: str,
-    dots_count: int | None,
 ) -> None:
     """
     Update an SVG element and its corresponding justification dots.
@@ -129,9 +132,14 @@ def _update_single_element(
         msg = "Invalid or nonexistent `element_id`."
         raise ValueError(msg)
 
+    if element_id == "loc_add":
+        element_value = f"+{element_value}"
+    elif element_id == "loc_del":
+        element_value = f"−{element_value}"
+
     value_element.text = element_value
 
-    if element_id in ("loc_add", "loc_del") and dots_count is None:
+    if dots_count is None:
         return
 
     dots_id = f"{element_id}_dots"

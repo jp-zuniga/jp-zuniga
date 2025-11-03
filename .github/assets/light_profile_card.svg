@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="935px" height="550px" font-family="'JetBrainsMono Nerd Font Mono', 'Noto Sans Mono', 'DejaVu Sans Mono', Consolas, Menlo, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" width="935px" height="550px" font-family="'JetBrainsMono Nerd Font Mono', 'Noto Sans Mono', 'DejaVu Sans Mono', monospace">
     <style>
         .pic { fill: #575279; font-weight: bold; }
         .border { fill: #9893a5; font-weight: bold; }

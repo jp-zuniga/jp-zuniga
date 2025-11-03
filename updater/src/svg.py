@@ -75,7 +75,8 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
         element_value = f"{value:,}" if isinstance(value, int) else str(value)
         dots_count = (
             JUST_LENGTHS[f"{element}_dots"] - len(element_value)
-            if element not in ("loc_add", "loc_del") else None
+            if element not in ("loc_add", "loc_del")
+            else None
         )
 
         _update_single_element(
@@ -87,14 +88,16 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
         )
 
     new_loc_total = f"{kwargs['loc_total']:,}"
+    loc_total_dots_count = JUST_LENGTHS["loc_total_dots"] - len(
+        f"{new_loc_total} , +{kwargs['loc_add']:,} , −{kwargs['loc_del']:,}",
+    )
+
     _update_single_element(
         root,
         "loc_total_dots",
         "loc_total",
         new_loc_total,
-        len(
-            f"{new_loc_total} , +{kwargs['loc_add']:,} , −{kwargs['loc_del']:,}",
-        ),
+        loc_total_dots_count,
     )
 
 

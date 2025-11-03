@@ -66,7 +66,7 @@ def update_cache(
         repo_hash: str = hash_repo(repo.name)
 
         heads: dict[str, str] = get_branch_heads(repo)
-        prev_heads = str(data.get(repo_hash, {}).get("heads"))
+        prev_heads: dict[str, str] = data.get(repo_hash, {}).get("heads")  # type: ignore[reportAssignmentType]
 
         if prev_heads == heads:
             continue

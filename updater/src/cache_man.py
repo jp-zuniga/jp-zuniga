@@ -5,14 +5,13 @@ Functions for handling the caching of statistics.
 from __future__ import annotations
 
 from json import JSONDecodeError, dump, load
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from github.GithubException import GithubException
 
 from .calc_loc import calc_repo_data
 from .calc_repos import get_affiliated_repos
-from .consts import CACHE_DIR, ENCODING, USERNAME
+from .consts import CACHE_FILE, ENCODING
 from .utils import get_branch_heads, hash_repo
 
 if TYPE_CHECKING:
@@ -35,9 +34,7 @@ def get_cache() -> dict[str, dict[str, dict | int | str]]:
     """
 
     try:
-        with Path(CACHE_DIR / f"{USERNAME}.json").open(
-            encoding=ENCODING,
-        ) as cache:
+        with CACHE_FILE.open(encoding=ENCODING) as cache:
             data: dict[str, dict[str, dict | int | str]] = load(cache)
     except (FileNotFoundError, JSONDecodeError):
         data: dict[str, dict[str, dict | int | str]] = {}
@@ -102,9 +99,7 @@ def write_cache(data: dict[str, dict[str, dict | int | str]]) -> None:
     """
 
     try:
-        with Path(CACHE_DIR / f"{USERNAME}.json").open(
-            encoding=ENCODING, mode="w"
-        ) as cache:
+        with CACHE_FILE.open(encoding=ENCODING, mode="w") as cache:
             dump(data, cache, indent=2, sort_keys=False)
     except OSError as o:
         msg = f"Failed to write cache: {o!s}"

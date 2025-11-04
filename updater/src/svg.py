@@ -18,7 +18,7 @@ from .utils import validate_kwargs
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from lxml.etree import _Element as lxml_elem, _ElementTree as lxml_tree
+    from lxml.etree import _Element as LxmlElem, _ElementTree as LxmlTree
 
 
 def update_profile_cards(**kwargs: int | str) -> None:
@@ -51,14 +51,76 @@ def _update_svg(svg_name: str, **kwargs: int | str) -> None:
     svg_path: Path = SVG_DIR / svg_name
 
     try:
-        tree: lxml_tree = lxml_parse(svg_path, parser=None)
+        tree: LxmlTree = lxml_parse(svg_path, parser=None)
         _update_elements(tree.getroot(), **kwargs)
         tree.write(svg_path, encoding="utf-8", xml_declaration=True)  # type: ignore[reportCallIssue]
     except (OSError, ParseError) as e:
-        raise CacheError(f"SVG update failed: {e!s}") from e
+        msg = f"SVG update failed: {e!s}"
+        raise CacheError(msg) from e
 
 
-def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
+def _fmt_thousands(v: int) -> str:
+    return f"{v:,}"
+
+
+def _fmt_total(v: int) -> str:
+    return f"−{abs(v):,}" if v < 0 else f"{v:,}"
+
+
+def _fmt_add(v: int) -> str:
+    return f"+{v:,}"
+
+
+def _fmt_del(v: int) -> str:
+    return f"−{v:,}"
+
+
+def _set_text(root: LxmlElem, element_id: str, text: str) -> None:
+    el: Any = root.find(path=f".//*[@id='{element_id}']", namespaces=None)
+    if el is None:
+        msg = f"Invalid or nonexistent element_id: {element_id!r}"
+        raise ValueError(msg)
+
+    el.text = text
+
+
+def _justify_from_dots(root: LxmlElem, dots_id: str, target_visible_len: int) -> None:
+    dots_el: Any = root.find(path=f".//*[@id='{dots_id}']", namespaces=None)
+    if dots_el is None:
+        msg = f"Invalid or nonexistent dots_id: {dots_id!r}"
+        raise ValueError(msg)
+
+    y = dots_el.get("y")
+    parent = dots_el.getparent()
+    if parent is None:
+        return
+
+    children = list(parent)
+    try:
+        start_idx = children.index(dots_el) + 1
+    except ValueError:
+        return
+
+    visible_text: list[str] = []
+    for child in children[start_idx:]:
+        if child.tag.split("}")[-1] != "tspan":
+            continue
+        if child.get("y") != y:
+            break
+
+        text: str = child.text or ""
+        if "│" in text:
+            break
+
+        visible_text.append(text)
+
+    current_len = len("".join(visible_text))
+    needed = max(target_visible_len - current_len, 0)
+
+    dots_el.text = f" {'.' * needed} "
+
+
+def _update_elements(root: LxmlElem, **kwargs: int | str) -> None:
     """
     Batch update all statistics.
 
@@ -68,84 +130,13 @@ def _update_elements(root: lxml_elem, **kwargs: int | str) -> None:
 
     """
 
-    for element, value in kwargs.items():
-        if element == "loc_total":
-            continue
+    _set_text(root, "age", str(kwargs["age"]))
+    _set_text(root, "stars", _fmt_thousands(int(kwargs["stars"])))
+    _set_text(root, "repos", _fmt_thousands(int(kwargs["repos"])))
+    _set_text(root, "commits", _fmt_thousands(int(kwargs["commits"])))
+    _set_text(root, "loc_total", _fmt_total(int(kwargs["loc_total"])))
+    _set_text(root, "loc_add", _fmt_add(int(kwargs["loc_add"])))
+    _set_text(root, "loc_del", _fmt_del(int(kwargs["loc_del"])))
 
-        element_value = f"{value:,}" if isinstance(value, int) else str(value)
-        dots_count = (
-            JUST_LENGTHS[f"{element}_dots"] - len(element_value)
-            if element not in ("loc_add", "loc_del")
-            else None
-        )
-
-        _update_single_element(
-            root,
-            f"{element}_dots",
-            dots_count,
-            element,
-            element_value,
-        )
-
-    loc_total: int = kwargs["loc_total"]  # type: ignore[reportAssignmentType]
-    loc_total_str = f"{'−' if loc_total < 0 else ''}{loc_total:,}"
-    loc_line_len = len(
-        f"{loc_total_str} , +{kwargs['loc_add']:,} , −{kwargs['loc_del']:,}",
-    )
-
-    loc_total_dots_count = JUST_LENGTHS["loc_total_dots"] - loc_line_len
-
-    _update_single_element(
-        root,
-        "loc_total_dots",
-        loc_total_dots_count,
-        "loc_total",
-        loc_total_str,
-    )
-
-
-def _update_single_element(
-    root: lxml_elem,
-    dots_id: str,
-    dots_count: int | None,
-    element_id: str,
-    element_value: str,
-) -> None:
-    """
-    Update an SVG element and its corresponding justification dots.
-
-    Args:
-        root:          Root XML element of image.
-        dots_id:       ID of element's justification dots.
-        element_id:    ID of element to update.
-        element_value: New value of element.
-        dots_count:    Amount of justification dots for new value.
-
-    """
-
-    value_element: Any = root.find(
-        path=f".//*[@id='{element_id}']",
-        namespaces=None,
-    )
-
-    if value_element is None:
-        msg = "Invalid or nonexistent `element_id`."
-        raise ValueError(msg)
-
-    if element_id == "loc_add":
-        element_value = f"+{element_value}"
-    elif element_id == "loc_del":
-        element_value = f"−{element_value}"
-
-    value_element.text = element_value
-
-    if dots_count is None:
-        return
-
-    dots_id = f"{element_id}_dots"
-    dots_element: Any = root.find(path=f".//*[@id='{dots_id}']", namespaces=None)
-    if dots_element is None:
-        msg = "Invalid or nonexistent dots field for given `element_id`."
-        raise ValueError(msg)
-
-    dots_element.text = f" {'.' * dots_count} "  # type: ignore[reportOperatorIssue]
+    for dots_id, target in JUST_LENGTHS.items():
+        _justify_from_dots(root, dots_id, target)

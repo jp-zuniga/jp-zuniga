@@ -31,5 +31,7 @@ SRC_DIR: Path = FILE_PATH.parent
 CACHE_DIR = Path(SRC_DIR / "cache")
 CACHE_DIR.mkdir(exist_ok=True)
 
+CACHE_FILE = Path(CACHE_DIR / f"{USERNAME}.json")
+
 SVG_DIR = Path(ROOT_DIR / ".github" / "assets")
 SVG_DIR.mkdir(exist_ok=True)

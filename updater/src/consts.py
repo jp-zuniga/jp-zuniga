@@ -21,7 +21,7 @@ JUST_LENGTHS: dict[str, int] = {
     "stars_dots": 45,
     "repos_dots": 45,
     "commits_dots": 43,
-    "loc_total_dots": 35,
+    "loc_total_dots": 37,
 }
 
 FILE_PATH: Path = Path(__file__).resolve()

@@ -102,14 +102,14 @@
         "last_seen": "2025-11-05T06:15:46Z"
       },
       "script-upgrade": {
-        "head": "df8d86725737faecdb14e263f15df85860fa779e",
-        "last_seen": "2025-11-04T01:48:13Z"
+        "head": "27ce4b49de21980415d66bae2e9783eed4bf7012",
+        "last_seen": "2025-11-05T17:42:50Z"
       }
     },
-    "additions": 6904,
-    "deletions": 6101,
-    "user_commits": 220,
-    "commits": 286
+    "additions": 7264,
+    "deletions": 6282,
+    "user_commits": 225,
+    "commits": 291
   },
   "2fb45db34b83ebdf765e43137340e64463f0828e088231acbebe25cc0df876e9": {
     "branches": {

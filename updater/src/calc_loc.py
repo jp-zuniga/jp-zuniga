@@ -9,65 +9,107 @@ from typing import TYPE_CHECKING
 from github.GithubException import GithubException
 
 from .consts import EMPTY_REPO_ERR
-from .utils import is_user_commit
+from .utils import from_iso_z, is_user_commit, to_iso_z
 
 if TYPE_CHECKING:
+    from datetime import datetime
+
     from github.AuthenticatedUser import AuthenticatedUser
     from github.Repository import Repository
 
+    from .consts import BranchData, CacheDict, RepoData
 
-def calc_repo_data(
+
+def calc_repo_data(  # noqa: C901
     user: AuthenticatedUser,
     emails: set[str],
     repo: Repository,
-) -> tuple[int, int, int, int]:
+    branches: BranchData,
+) -> RepoData:
     """
-    Calculate a user's authored data across all branches in a repository.
+    Incrementally calculate the user's authored data for a repository.
+
+    Walk only commits that are new since the last run, per branch,
+    and dedupe SHAs across branches to avoid double-counting merges.
 
     Args:
-        user:   User whose commits will be processed.
-        emails: User's emails to check commit authorship.
-        repo:   Repository to calculate data for.
+        user:     User whose commits will be processed.
+        emails:   User's emails to check commit authorship.
+        repo:     Repository to calculate data for.
+        branches: Cached branch data (head SHA and last-seen date).
 
     Returns:
-        (int, int, int, int): Additions, deletions, user commits, and total commits.
+        RepoData: Tuple containing: new additions, new deletions,
+                                    new user commits, new total commits,
+                                    new branch data.
 
     """
 
-    additions: int = 0
-    deletions: int = 0
-    user_commits: int = 0
+    additions_d: int = 0
+    deletions_d: int = 0
+    user_commits_d: int = 0
+    commits_d: int = 0
+
     processed: set[str] = set()
 
     for branch in repo.get_branches():
         try:
-            for commit in repo.get_commits(sha=branch.name):
-                sha = commit.sha
-                if sha in processed:
-                    continue
+            head_sha = branch.commit.sha
+            prev_head = branches[branch.name]["head"]
+            last_seen = branches[branch.name]["last_seen"]
 
-                processed.add(sha)
+            if prev_head == head_sha:
+                continue
 
-                if is_user_commit(user, emails, commit):
-                    # avoid doubled api calls for individual commit stats
-                    stats = commit.stats
+            try:
+                for commit in repo.get_commits(
+                    sha=branch.name, since=from_iso_z(last_seen)
+                ):
+                    sha = commit.sha
+                    if sha in processed:
+                        if sha == prev_head:
+                            break
+                        continue
+                    if sha == prev_head:
+                        break
 
-                    additions += stats.additions
-                    deletions += stats.deletions
-                    user_commits += 1
+                    processed.add(sha)
+                    commits_d += 1
+
+                    if is_user_commit(user, emails, commit):
+                        stats = commit.stats
+                        additions_d += stats.additions
+                        deletions_d += stats.deletions
+                        user_commits_d += 1
+
+            except GithubException as e:
+                if e.status != EMPTY_REPO_ERR:
+                    print(
+                        "Error getting commits for branch "
+                        f"{branch.name} in {repo.full_name}: {e!s}",
+                    )
+
+            # safety first even if it means an absolutely degenerate get
+            head_date: datetime | None = getattr(  # type: ignore[reportAssignmentType]
+                getattr(getattr(branch.commit, "commit", None), "committer", None),
+                "date",
+                None,
+            )
+
+            branches[branch.name] = {
+                "head": head_sha,
+                "last_seen": to_iso_z(head_date),
+            }
 
         except GithubException as e:
             if e.status != EMPTY_REPO_ERR:
-                print(
-                    "Error getting commits for branch "
-                    f"{branch.name} in {repo.full_name}: {e!s}",
-                )
+                print(f"Error getting branches for {repo.full_name}: {e!s}")
 
-    return additions, deletions, user_commits, len(processed)
+    return additions_d, deletions_d, user_commits_d, commits_d, branches
 
 
 def get_total_loc(
-    cached_data: dict[str, dict[str, dict | int | str]],
+    cached_data: CacheDict,
 ) -> tuple[int, int, int]:
     """
     Use cached data to calculate total lines of code across all repositories.

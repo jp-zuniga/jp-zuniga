@@ -2,8 +2,15 @@
 Functions for calculating commit statistics.
 """
 
+from __future__ import annotations
 
-def get_total_commits(cached_data: dict[str, dict[str, dict | int | str]]) -> int:
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .consts import CacheDict
+
+
+def get_total_commits(cached_data: CacheDict) -> int:
     """
     Use cached data to calculate all user-authored commits.
 

@@ -11,11 +11,13 @@ from github.GithubException import GithubException
 
 from .calc_loc import calc_repo_data
 from .calc_repos import get_affiliated_repos
-from .consts import CACHE_FILE, ENCODING
-from .utils import get_branch_heads, hash_repo
+from .consts import CACHE_FILE, ENCODING, BranchData
+from .utils import hash_repo
 
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
+
+    from .consts import CacheDict, CachedRepo
 
 
 class CacheError(Exception):
@@ -24,72 +26,78 @@ class CacheError(Exception):
     """
 
 
-def get_cache() -> dict[str, dict[str, dict | int | str]]:
+def get_cache() -> CacheDict:
     """
     Read a user's cached statistics.
 
     Return:
-        dict[str, dict[str, dict | int | str]]: Cached data.
+        CacheDict: Cached data.
 
     """
 
     try:
         with CACHE_FILE.open(encoding=ENCODING) as cache:
-            data: dict[str, dict[str, dict | int | str]] = load(cache)
+            data: CacheDict = load(cache)
     except (FileNotFoundError, JSONDecodeError):
-        data: dict[str, dict[str, dict | int | str]] = {}
+        data = {}
 
     return data
 
 
-def update_cache(
-    user: AuthenticatedUser, emails: set[str]
-) -> dict[str, dict[str, dict | int | str]]:
+def update_cache(user: AuthenticatedUser, emails: set[str]) -> CacheDict:
     """
-    Update cached statistics, write them, and return them.
+    Incrementally update cached statistics, write them, and return them.
 
     Args:
         user:   User to cache stats for.
-        emails: User's email to check commit authorship.
+        emails: User's verified emails to check commit authorship.
 
     Return:
-        dict[str, dict[str, dict | int | str]]: Updated cache.
+        CacheDict: Updated cache.
 
     """
 
-    data: dict[str, dict[str, dict | int | str]] = get_cache()
+    data: CacheDict = get_cache()
 
     for repo in get_affiliated_repos(user):
         repo_hash: str = hash_repo(repo.name)
 
-        heads: dict[str, str] = get_branch_heads(repo)
-        prev_heads: dict[str, str] = data.get(repo_hash, {}).get("heads")  # type: ignore[reportAssignmentType]
-
-        if prev_heads == heads:
-            continue
+        prev: CachedRepo = data[repo_hash]
+        prev_branches: BranchData = prev["branches"]  # type: ignore[reportAssignmentType]
 
         try:
-            additions, deletions, user_commits, total_commits = calc_repo_data(
-                user, emails, repo
+            adds_d, dels_d, user_commits_d, commits_d, new_branches = calc_repo_data(
+                user=user,
+                emails=emails,
+                repo=repo,
+                branches=prev_branches,
             )
         except GithubException as e:
             print(f"Error processing a repository: {e!s}")
-            print("Setting its data to 0.")
-            additions = deletions = user_commits = total_commits = 0
+            print("Setting its deltas to 0.")
+            adds_d = dels_d = user_commits_d = commits_d = 0
+            new_branches = prev_branches
 
+        # get previous totals
+        prev_adds = int(prev["additions"])  # type: ignore[reportArgumentType]
+        prev_dels = int(prev["deletions"])  # type: ignore[reportArgumentType]
+        prev_user_commits = int(prev["user_commits"])  # type: ignore[reportArgumentType]
+        prev_commits = int(prev["commits"])  # type: ignore[reportArgumentType]
+
+        # add deltas
         data[repo_hash] = {
-            "heads": heads,
-            "commits": total_commits,
-            "user_commits": user_commits,
-            "additions": additions,
-            "deletions": deletions,
+            "branches": new_branches,
+            "additions": prev_adds + adds_d,
+            "deletions": prev_dels + dels_d,
+            "user_commits": prev_user_commits + user_commits_d,
+            "commits": prev_commits + commits_d,
         }
 
     write_cache(data)
     return data
 
 
-def write_cache(data: dict[str, dict[str, dict | int | str]]) -> None:
+def write_cache(data: CacheDict) -> None:
     """
     Write user's updated statistics to a cache file.
 

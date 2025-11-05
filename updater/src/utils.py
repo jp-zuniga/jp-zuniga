@@ -41,6 +41,21 @@ def calculate_age(bday: datetime) -> str:
     )
 
 
+def from_iso_z(s: str) -> datetime:
+    """
+    Parse an ISO8601 Z string back into a UTC-aware datetime.
+
+    Args:
+        s: String to be converted to a `datetime` object.
+
+    Return:
+        datetime: Object corresponding to IS8601 Z string.
+
+    """
+
+    return datetime.fromisoformat(s).astimezone(UTC)
+
+
 def get_branch_heads(repo: Repository) -> dict[str, str]:
     """
     Fetch the heads of all the branches in the given repository.
@@ -117,6 +132,25 @@ def is_user_commit(user: AuthenticatedUser, emails: set[str], commit: Commit) ->
             return True
 
     return bool(commit.author and commit.author.login == user.login)
+
+
+def to_iso_z(dt: datetime | None = None) -> str:
+    """
+    Serialize a datetime to an ISO8601 Z string.
+
+    Args:
+        dt: `datetime` object to be converted to a string.
+            Defaults to current UTC time if not provided.
+
+    Return:
+        str: ISO8601 Z string corresponding to `datetime` given.
+
+    """
+
+    if dt is None:
+        dt = datetime.now(tz=UTC)
+
+    return dt.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
 def validate_kwargs(**kwargs: int | str) -> bool:

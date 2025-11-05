@@ -10,6 +10,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+BranchData = dict[str, dict[str, str]]
+CachedRepo = dict[str, int | BranchData]
+CacheDict = dict[str, CachedRepo]
+RepoData = tuple[int, int, int, int, BranchData]
+
 ENCODING: str = "utf-8"
 ACCESS_TOKEN: str = environ["ACCESS_TOKEN"]
 HASH_KEY: bytes = environ["HASH_KEY"].encode(ENCODING)

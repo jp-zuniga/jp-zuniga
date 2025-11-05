@@ -23,6 +23,8 @@ if TYPE_CHECKING:
     from github.PaginatedList import PaginatedList
     from github.Repository import Repository
 
+    from .consts import CacheDict
+
 
 def main() -> None:
     """
@@ -32,7 +34,7 @@ def main() -> None:
     user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN), per_page=100).get_user()  # type: ignore[reportAssignmentType]
     emails = set(get_verified_emails(user))
 
-    cache: dict[str, dict[str, dict | int | str]] = update_cache(user, emails)
+    cache: CacheDict = update_cache(user, emails)
     owned_repos: PaginatedList[Repository] = get_owned_repos(user)
 
     age_str: str = calculate_age(datetime(2005, 7, 7, tzinfo=UTC))

@@ -166,7 +166,7 @@ def validate_kwargs(**kwargs: int | str) -> bool:
     """
 
     return all(
-        key in kwargs
+        key in kwargs and isinstance(kwargs[key], str if key == "age" else int)
         for key in (
             "age",
             "stars",

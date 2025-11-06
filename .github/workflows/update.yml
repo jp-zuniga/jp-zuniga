@@ -6,8 +6,10 @@ on:
     workflow-dispatch:       # for manual retriggers
 
 jobs:
-    update:
-        runs-on: ubuntu-latest
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      content: write
 
     steps:
       - name: Checkout repository
@@ -31,14 +33,18 @@ jobs:
                 key: ${{ runner.os }}-uv-${{ hashFiles("pyproject.toml") }}
                 restore-keys: ${{ runner.os }}-uv-
 
-      - name: Setup environment and run script
-        working-directory: ./updater
+      - name: Setup environment
+        run: |
+          cd updater
+          uv venv --python $(cat .python-version)
+          uv sync
+
+      - name: Run script
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          uv venv --python $(cat .python-version)
-          uv sync
+          cd updater
           uv run main.py
 
       - name: Commit changes

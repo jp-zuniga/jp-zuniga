@@ -91,6 +91,26 @@ def get_verified_emails(user: AuthenticatedUser) -> list[str]:
         return []
 
 
+def hash_branch(branch_name: str, repo_hash: str) -> str:
+    """
+    Create a keyed hash from a branch, salted by its repository's hash.
+
+    Args:
+        branch_name: Branch to hash.
+        repo_hash:   Hashed repository name to use as salt.
+
+    Return:
+        str: Keyed `hmac` hash.
+
+    """
+
+    return new_hash(
+        HASH_KEY,
+        f"{repo_hash}:{branch_name}".encode(ENCODING),
+        sha256,
+    ).hexdigest()
+
+
 def hash_repo(name: str) -> str:
     """
     Create a keyed hash from a repository name.
@@ -99,7 +119,7 @@ def hash_repo(name: str) -> str:
         name: Repo name to hash.
 
     Return:
-        str: `hmac` keyed hash.
+        str: Keyed `hmac` hash.
 
     """
 

@@ -54,17 +54,22 @@ def calc_repo_data(  # noqa: C901
 
     for branch in repo.get_branches():
         try:
+            prev_branches: dict[str, str] = branches.get(branch.name, {})
+
+            prev_head = prev_branches.get("head", "")
+            last_seen = prev_branches.get("last_seen", "")
+
             head_sha = branch.commit.sha
-            prev_head = branches[branch.name]["head"]
-            last_seen = branches[branch.name]["last_seen"]
 
             if prev_head == head_sha:
                 continue
 
+            kwargs: dict[str, datetime] = {}
+            if last_seen != "":
+                kwargs["since"] = from_iso_z(last_seen)
+
             try:
-                for commit in repo.get_commits(
-                    sha=branch.name, since=from_iso_z(last_seen)
-                ):
+                for commit in repo.get_commits(sha=branch.name, **kwargs):  # type: ignore[reportArgumentType]
                     sha = commit.sha
                     if sha in processed:
                         if sha == prev_head:
@@ -81,6 +86,11 @@ def calc_repo_data(  # noqa: C901
                         additions_d += stats.additions
                         deletions_d += stats.deletions
                         user_commits_d += 1
+                        print(f"logging commit {sha} ({commits_d + 1})")
+                        print(f"commit branch: {branch.name}")
+                        print(f"commit adds:   {additions_d}")
+                        print(f"commit dels:   {deletions_d}")
+                        print()
 
             except GithubException as e:
                 if e.status != EMPTY_REPO_ERR:
@@ -126,7 +136,7 @@ def get_total_loc(
     dels: int = 0
 
     for repo in cached_data.values():
-        adds += int(repo["additions"])  # type: ignore[reportArgumentType]
-        dels += int(repo["deletions"])  # type: ignore[reportArgumentType]
+        adds += int(repo.get("additions", 0))  # type: ignore[reportArgumentType]
+        dels += int(repo.get("deletions", 0))  # type: ignore[reportArgumentType]
 
     return adds - dels, adds, dels

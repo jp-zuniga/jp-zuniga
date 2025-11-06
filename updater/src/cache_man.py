@@ -62,8 +62,8 @@ def update_cache(user: AuthenticatedUser, emails: set[str]) -> CacheDict:
     for repo in get_affiliated_repos(user):
         repo_hash: str = hash_repo(repo.name)
 
-        prev: CachedRepo = data[repo_hash]
-        prev_branches: BranchData = prev["branches"]  # type: ignore[reportAssignmentType]
+        prev: CachedRepo = data.get(repo_hash, {})
+        prev_branches: BranchData = prev.get("branches", {})  # type: ignore[reportAssignmentType]
 
         try:
             adds_d, dels_d, user_commits_d, commits_d, new_branches = calc_repo_data(
@@ -79,10 +79,10 @@ def update_cache(user: AuthenticatedUser, emails: set[str]) -> CacheDict:
             new_branches = prev_branches
 
         # get previous totals
-        prev_adds = int(prev["additions"])  # type: ignore[reportArgumentType]
-        prev_dels = int(prev["deletions"])  # type: ignore[reportArgumentType]
-        prev_user_commits = int(prev["user_commits"])  # type: ignore[reportArgumentType]
-        prev_commits = int(prev["commits"])  # type: ignore[reportArgumentType]
+        prev_adds = int(prev.get("additions", 0))  # type: ignore[reportArgumentType]
+        prev_dels = int(prev.get("deletions", 0))  # type: ignore[reportArgumentType]
+        prev_user_commits = int(prev.get("user_commits", 0))  # type: ignore[reportArgumentType]
+        prev_commits = int(prev.get("commits", 0))  # type: ignore[reportArgumentType]
 
         # add deltas
         data[repo_hash] = {

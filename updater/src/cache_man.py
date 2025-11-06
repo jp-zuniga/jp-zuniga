@@ -36,7 +36,7 @@ def get_cache() -> CacheDict:
     """
 
     try:
-        with CACHE_FILE.open(encoding=ENCODING) as cache:
+        with CACHE_FILE.open(encoding=ENCODING, mode="r") as cache:
             data: CacheDict = load(cache)
     except (FileNotFoundError, JSONDecodeError):
         data = {}
@@ -61,7 +61,6 @@ def update_cache(user: AuthenticatedUser, emails: set[str]) -> CacheDict:
 
     for repo in get_affiliated_repos(user):
         repo_hash: str = hash_repo(repo.name)
-
         prev: CachedRepo = data.get(repo_hash, {})
         prev_branches: BranchData = prev.get("branches", {})  # type: ignore[reportAssignmentType]
 
@@ -70,10 +69,12 @@ def update_cache(user: AuthenticatedUser, emails: set[str]) -> CacheDict:
                 user=user,
                 emails=emails,
                 repo=repo,
+                repo_hash=repo_hash,
                 branches=prev_branches,
             )
         except GithubException as e:
-            print(f"Error processing a repository: {e!s}")
+            print(f"Error processing repository: {e!s}")
+            print()
             print("Setting its deltas to 0.")
             adds_d = dels_d = user_commits_d = commits_d = 0
             new_branches = prev_branches

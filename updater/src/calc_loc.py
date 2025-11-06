@@ -73,12 +73,11 @@ def calc_repo_data(
 
         for commit in repo.get_commits(sha=branch.name, **kwargs):  # type: ignore[reportArgumentType]
             sha = commit.sha
-            if sha in processed:
-                if sha == prev_head:
-                    break
-                continue
+
             if sha == prev_head:
                 break
+            if sha in processed:
+                continue
 
             processed.add(sha)
             commits_d += 1

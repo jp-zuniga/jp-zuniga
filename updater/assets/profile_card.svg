@@ -47,15 +47,15 @@
     </text>
     <text font-size="16">
         <tspan x="380" y="20" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ──────────────────────────────╮</tspan>
-        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> .................. </tspan><tspan class="value" id="age_data">20 years, 0 months, 8 days</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="75" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ................................. </tspan><tspan class="value">Linux Mint 22.1</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="100" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> .............................. </tspan><tspan class="value">Nushell 0.105.1</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="125" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> ............................... </tspan><tspan class="value">VS Code 1.102</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_data_dots"> ................... </tspan><tspan class="value" id="age_data">20 years, 2 months, 1 day</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="75" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> .................................. </tspan><tspan class="value">Code 1.103</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="100" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> ................................... </tspan><tspan class="value">Fish 4.0.2</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="125" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ..................................... </tspan><tspan class="value">NixOS 25.05</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="155" class="border">├── </tspan><tspan class="title">User.Profile</tspan><tspan class="border"> ────────────────────────────────────────┤</tspan>
-        <tspan x="380" y="185" class="border">│ ‣ </tspan><tspan class="key">Hobbies</tspan><tspan class="border"> ......... </tspan><tspan class="value">OSS, Photography, Creative Writing</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="185" class="border">│ ‣ </tspan><tspan class="key">Hobbies</tspan><tspan class="border"> ........ </tspan><tspan class="value">FOSS, Photography, Creative Writing</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="210" class="border">│ ‣ </tspan><tspan class="key">Skills.Soft</tspan><tspan class="border"> ....... </tspan><tspan class="value">Communication, Critical Analysis</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="235" class="border">│ ‣ </tspan><tspan class="key">Skills.Hard</tspan><tspan class="border"> ............. </tspan><tspan class="value">UI Design, UX Optimization</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="260" class="border">│ ‣ </tspan><tspan class="key">Languages.Machine</tspan><tspan class="border"> ......... </tspan><tspan class="value">C, C++, C#, Rust, Python</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="260" class="border">│ ‣ </tspan><tspan class="key">Languages.Machine</tspan><tspan class="border"> ......... </tspan><tspan class="value">C/C++, Nix, Rust, Python</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="285" class="border">│ ‣ </tspan><tspan class="key">Languages.Human</tspan><tspan class="border"> ........... </tspan><tspan class="value">English, Spanish, French</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="315" class="border">├── </tspan><tspan class="title">User.Credentials</tspan><tspan class="border"> ────────────────────────────────────┤</tspan>
         <tspan x="380" y="345" class="border">│ ‣ </tspan><tspan class="key">Email</tspan><tspan class="border"> ...................... </tspan><tspan class="value">jp.zuniga.dev@gmail.com</tspan><tspan class="border"> │</tspan>

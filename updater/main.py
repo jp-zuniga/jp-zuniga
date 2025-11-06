@@ -20,9 +20,9 @@ def calculate_age(birthday: datetime) -> str:
     diff = relativedelta(datetime.today(), birthday)
     return (
         f"{'🎂 ' if diff.months == 0 and diff.days == 0 else ''}"
-        + f"{diff.years} years"
-        + f"{f', {diff.months}' if diff.months != 0 else ''}{' month' + 's' if diff.months > 1 else ''}"
-        + f"{f', {diff.days}' if diff.days != 0 else ''}{' month' + 's' if diff.days > 1 else ''}"
+        + f"{diff.years} year{'s' if diff.years != 1 else ''}, "
+        + f"{diff.months} month{'s' if diff.months != 1 else ''}, "
+        + f"{diff.days} day{'s' if diff.days != 1 else ''}"
     )
 
 
@@ -525,7 +525,6 @@ def user_getter(username):
 
 def main():
     age_data = calculate_age(BIRTHDAY)
-    print(age_data)
     total_loc = loc_query(["OWNER"], 7)
     commit_data = commit_counter(7)
     star_data = graph_repos_stars("stars", ["OWNER"])

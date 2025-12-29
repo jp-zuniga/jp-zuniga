@@ -9,9 +9,8 @@ from typing import TYPE_CHECKING
 
 from github.GithubException import GithubException
 
-from .calc_loc import calc_repo_data
-from .calc_repos import get_affiliated_repos
 from .consts import CACHE_FILE, ENCODING, BranchData
+from .repos import calc_repo_data, get_affiliated_repos
 from .utils import hash_repo
 
 if TYPE_CHECKING:

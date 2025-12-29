@@ -11,14 +11,17 @@ from lxml.etree import (
     parse as lxml_parse,
 )
 
-from .cache_man import CacheError
+from .cache import CacheError
 from .consts import JUST_LENGTHS, SVG_DIR
 from .utils import validate_kwargs
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from lxml.etree import _Element as LxmlElem, _ElementTree as LxmlTree
+    from lxml.etree import (
+        _Element as LxmlElem,
+        _ElementTree as LxmlTree,
+    )
 
 
 def update_profile_cards(**kwargs: int | str) -> None:

@@ -2,11 +2,13 @@
 Fetch a user's Github statistics and update a profile card.
 """
 
-from .cache_man import update_cache
-from .calc_commits import get_total_commits
-from .calc_loc import get_total_loc
-from .calc_repos import calc_stargazers, get_owned_repos
+from __future__ import annotations
+
+from .cache import update_cache
+from .commits import get_total_commits
 from .consts import ACCESS_TOKEN
+from .loc import get_total_loc
+from .repos import calc_stargazers, get_owned_repos
 from .svg import update_profile_cards
 from .utils import calculate_age, get_verified_emails
 

@@ -71,7 +71,7 @@ def get_branch_heads(repo: Repository) -> dict[str, str]:
     return {branch.name: branch.commit.sha for branch in repo.get_branches()}
 
 
-def get_verified_emails(user: AuthenticatedUser) -> list[str]:
+def get_verified_emails(user: AuthenticatedUser) -> set[str]:
     """
     Fetch all verified email addresses for the given user.
 
@@ -81,14 +81,14 @@ def get_verified_emails(user: AuthenticatedUser) -> list[str]:
     """
 
     try:
-        return [
+        return {
             email_info.email.lower()
             for email_info in user.get_emails()
             if email_info.verified
-        ]
+        }
     except GithubException as g:
         print(f"Warning: Could not fetch verified emails: {g!s}")
-        return []
+        return set()
 
 
 def hash_branch(branch_name: str, repo_hash: str) -> str:

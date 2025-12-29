@@ -1,5 +1,5 @@
 """
-Functions for calculating lines of code statistics.
+Functions for calculating repository statistics.
 """
 
 from __future__ import annotations
@@ -12,9 +12,10 @@ if TYPE_CHECKING:
     from datetime import datetime
 
     from github.AuthenticatedUser import AuthenticatedUser
+    from github.PaginatedList import PaginatedList
     from github.Repository import Repository
 
-    from .consts import BranchData, CacheDict, RepoData
+    from .consts import BranchData, RepoData
 
 
 def calc_repo_data(
@@ -103,25 +104,46 @@ def calc_repo_data(
     return additions_d, deletions_d, user_commits_d, commits_d, branches
 
 
-def get_total_loc(
-    cached_data: CacheDict,
-) -> tuple[int, int, int]:
+def calc_stargazers(repos: PaginatedList[Repository]) -> int:
     """
-    Use cached data to calculate total lines of code across all repositories.
+    Iterate through the given user's owned repositories and sum their stargazers.
 
     Args:
-        cached_data: Dictionary with up-to-date cached stats.
+        repos: User's owned repositores.
 
     Return:
-        (int, int, int): User's lines of code (total, additions, deletions).
+        int: Total stargazer count across all owned repos.
 
     """
 
-    adds: int = 0
-    dels: int = 0
+    return sum(repo.stargazers_count for repo in repos)
 
-    for repo in cached_data.values():
-        adds += int(repo.get("additions", 0))  # type: ignore[reportArgumentType]
-        dels += int(repo.get("deletions", 0))  # type: ignore[reportArgumentType]
 
-    return adds - dels, adds, dels
+def get_affiliated_repos(user: AuthenticatedUser) -> PaginatedList[Repository]:
+    """
+    Get all repositories a user has write-access to.
+
+    Args:
+        user: User to get repo data for.
+
+    Return:
+        PaginatedList[Repository]: Repos user can write to.
+
+    """
+
+    return user.get_repos(affiliation="owner,collaborator,organization_member")
+
+
+def get_owned_repos(user: AuthenticatedUser) -> PaginatedList[Repository]:
+    """
+    Get all repositories a user owns.
+
+    Args:
+        user: User to get repo data for.
+
+    Return:
+        PaginatedList[Repository]: User's owned repos.
+
+    """
+
+    return user.get_repos(type="owner")

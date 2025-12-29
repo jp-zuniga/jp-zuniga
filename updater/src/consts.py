@@ -2,6 +2,8 @@
 Constants used by the script.
 """
 
+from __future__ import annotations
+
 from hashlib import sha256
 from os import environ
 from pathlib import Path
@@ -33,10 +35,10 @@ FILE_PATH: Path = Path(__file__).resolve()
 ROOT_DIR: Path = FILE_PATH.parents[2]
 SRC_DIR: Path = FILE_PATH.parent
 
-CACHE_DIR = Path(SRC_DIR / "cache")
+CACHE_DIR: Path = Path(SRC_DIR / "cache")
 CACHE_DIR.mkdir(exist_ok=True)
 
-CACHE_FILE = Path(CACHE_DIR / f"{USERNAME}.json")
+CACHE_FILE: Path = Path(CACHE_DIR / f"{USERNAME}.json")
 
-SVG_DIR = Path(ROOT_DIR / ".github" / "assets")
+SVG_DIR: Path = Path(ROOT_DIR / ".github" / "assets")
 SVG_DIR.mkdir(exist_ok=True)

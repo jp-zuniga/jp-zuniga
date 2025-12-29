@@ -10,13 +10,17 @@ from typing import TYPE_CHECKING
 from github import Github
 from github.Auth import Token
 
-from src.cache_man import update_cache
-from src.calc_commits import get_total_commits
-from src.calc_loc import get_total_loc
-from src.calc_repos import calc_stargazers, get_owned_repos
-from src.consts import ACCESS_TOKEN
-from src.svg import update_profile_cards
-from src.utils import calculate_age, get_verified_emails
+from src import (
+    ACCESS_TOKEN,
+    calc_stargazers,
+    calculate_age,
+    get_owned_repos,
+    get_total_commits,
+    get_total_loc,
+    get_verified_emails,
+    update_cache,
+    update_profile_cards,
+)
 
 if TYPE_CHECKING:
     from github.AuthenticatedUser import AuthenticatedUser
@@ -31,15 +35,18 @@ def main() -> None:
     Execute script.
     """
 
-    user: AuthenticatedUser = Github(auth=Token(ACCESS_TOKEN), per_page=100).get_user()  # type: ignore[reportAssignmentType]
-    emails = set(get_verified_emails(user))
+    user: AuthenticatedUser = Github(  # type: ignore[reportAssignmentType]
+        auth=Token(token=ACCESS_TOKEN), per_page=100
+    ).get_user()
 
-    cache: CacheDict = update_cache(user, emails)
+    cache: CacheDict = update_cache(user=user, emails=get_verified_emails(user))
+
     owned_repos: PaginatedList[Repository] = get_owned_repos(user)
 
     age_str: str = calculate_age(datetime(2005, 7, 7, tzinfo=UTC))
     star_count: int = calc_stargazers(owned_repos)
     commit_count: int = get_total_commits(cache)
+
     loc_total, loc_add, loc_del = get_total_loc(cache)
 
     update_profile_cards(

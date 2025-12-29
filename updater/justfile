@@ -1,0 +1,16 @@
+set quiet
+
+[private]
+default:
+  just --list --list-heading $'  Recipes:\n' --list-prefix "    "
+
+# ---------------------------------------------------------
+
+fix:
+  ruff check --fix --unsafe-fixes
+
+fmt:
+  ruff format
+
+lint:
+  ruff check --unsafe-fixes

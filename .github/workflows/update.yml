@@ -36,7 +36,7 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           HASH_KEY: ${{ secrets.HASH_KEY }}
           USERNAME: ${{ secrets.USERNAME }}
-        run: uv run -m src
+        run: uv run main.py
 
       - name: commit && push changes
         run: |

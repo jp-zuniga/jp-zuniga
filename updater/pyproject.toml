@@ -5,24 +5,29 @@
         "python-dateutil>=2.9.0.post0",
         "python-dotenv>=1.1.1",
     ]
-    description = "refresh profile's stats."
-    name = "updater"
+
+    description     = "refresh profile's stats."
+    name            = "updater"
     requires-python = ">=3.13"
-    version = "0.4"
+    version         = "0.4"
 
 [tool.ruff.lint]
     allowed-confusables = ["−"]
     ignore = [
-        "COM812", # let formatter handle trailing commas
-        "D200",   # enforce multi-line docstrings
-        "D202",   # allow blank line after docstrings
-        "D203",   # no blank lines between class def and docstring
-        "D212",   # ignore "summary not on first line of docstring"
-        "T201",   # allow `print` statements
+        "COM812",
+        "D200",
+        "D202",
+        "D203",
+        "D212",
+        "T201",
     ]
+
     select = ["ALL"]
 
     [tool.ruff.lint.isort]
-        combine-as-imports         = true
-        force-sort-within-sections = true
-        order-by-type              = true
+        case-sensitive         = true
+        combine-as-imports     = true
+        force-wrap-aliases     = true
+        order-by-type          = true
+        relative-imports-order = "closest-to-furthest"
+        required-imports       = ["from __future__ import annotations"]

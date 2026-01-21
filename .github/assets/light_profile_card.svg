@@ -47,7 +47,7 @@
     </text>
     <text font-size="16">
         <tspan x="380" y="20" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ──────────────────────────────╮</tspan>
-        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_dots"> ................. </tspan><tspan class="value" id="age">20 years, 6 months, 13 days</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_dots"> ................. </tspan><tspan class="value" id="age">20 years, 6 months, 14 days</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="75" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> .................................. </tspan><tspan class="value">Code 1.106</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="100" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> ................................... </tspan><tspan class="value">Fish 4.2.1</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="125" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ..................................... </tspan><tspan class="value">NixOS 25.11</tspan><tspan class="border"> │</tspan>
@@ -64,8 +64,8 @@
         <tspan x="380" y="425" class="border">├── </tspan><tspan class="title">User.Git</tspan><tspan class="border"> ────────────────────────────────────────────┤</tspan>
         <tspan x="380" y="450" class="border">│ ‣ </tspan><tspan class="key">Stars</tspan><tspan class="border" id="stars_dots"> ........................................... </tspan><tspan class="value" id="stars">34</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="475" class="border">│ ‣ </tspan><tspan class="key">Repos</tspan><tspan class="border" id="repos_dots"> ........................................... </tspan><tspan class="value" id="repos">38</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="500" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commits_dots"> ...................................... </tspan><tspan class="value" id="commits">2,881</tspan><tspan class="border"> │</tspan>
-        <tspan x="380" y="525" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ........ </tspan><tspan class="value" id="loc_total">222,707</tspan><tspan class="border"> , </tspan><tspan class="add" id="loc_add">+512,652</tspan><tspan class="border"> , </tspan><tspan class="del" id="loc_del">−289,945</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="500" class="border">│ ‣ </tspan><tspan class="key">Commits</tspan><tspan class="border" id="commits_dots"> ...................................... </tspan><tspan class="value" id="commits">2,882</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="525" class="border">│ ‣ </tspan><tspan class="key">Lines of Code</tspan><tspan class="border" id="loc_total_dots"> ........ </tspan><tspan class="value" id="loc_total">222,720</tspan><tspan class="border"> , </tspan><tspan class="add" id="loc_add">+512,732</tspan><tspan class="border"> , </tspan><tspan class="del" id="loc_del">−290,012</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="550" class="border">╰────────────────────────────────────────────────────────╯</tspan>
     </text>
 </svg>

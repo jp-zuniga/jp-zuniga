@@ -47,7 +47,7 @@
     </text>
     <text font-size="16">
         <tspan x="380" y="20" class="border">╭── </tspan><tspan class="title">User: "Joaquín Zúñiga"</tspan><tspan class="border"> ──────────────────────────────╮</tspan>
-        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_dots"> ................. </tspan><tspan class="value" id="age">20 years, 6 months, 20 days</tspan><tspan class="border"> │</tspan>
+        <tspan x="380" y="50" class="border">│ ‣ </tspan><tspan class="key">Uptime</tspan><tspan class="border" id="age_dots"> ................. </tspan><tspan class="value" id="age">20 years, 6 months, 21 days</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="75" class="border">│ ‣ </tspan><tspan class="key">Editor</tspan><tspan class="border"> .................................. </tspan><tspan class="value">Code 1.106</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="100" class="border">│ ‣ </tspan><tspan class="key">Shell</tspan><tspan class="border"> ................................... </tspan><tspan class="value">Fish 4.2.1</tspan><tspan class="border"> │</tspan>
         <tspan x="380" y="125" class="border">│ ‣ </tspan><tspan class="key">OS</tspan><tspan class="border"> ..................................... </tspan><tspan class="value">NixOS 25.11</tspan><tspan class="border"> │</tspan>

@@ -1,0 +1,505 @@
+{
+  "80674bba842e243e74be965a2790111372f1cde7ce540f49d9e2bd116623261b": {
+    "branches": {
+      "04745855ab9615b8d486e42e526596add6e22894f53f84a8276043df82bcb155": {
+        "head": "a0bd089898475a6b83de3babc2959abf871df95f",
+        "last_seen": "2025-11-19T22:52:43Z"
+      }
+    },
+    "additions": 827,
+    "deletions": 0,
+    "user_commits": 1,
+    "commits": 1
+  },
+  "1853a48f6acb39cc8af9ecbbec54247e60854fb91691827dccb14086a722e484": {
+    "branches": {
+      "7dcdb75a3f8788346eb36300ba0dcc3f9b5e295269be2adbe2cb46056298f12f": {
+        "head": "28c7f6673cc0b9472b13b729d0b5bdec5d59f172",
+        "last_seen": "2025-09-17T22:34:15Z"
+      }
+    },
+    "additions": 265,
+    "deletions": 59,
+    "user_commits": 5,
+    "commits": 10
+  },
+  "625da3b7c6be2ff634452af8c70524b198b12eb2502e31e9dcaef1fbfc73eb5c": {
+    "branches": {
+      "2a1b19ff61c1d52ca9d90189e2a5557a95842bc8d9546a1cfa5aeb40a3a2c117": {
+        "head": "58a9dfaeec32e5dfdc211a934bb9acf22d3be46c",
+        "last_seen": "2024-12-06T09:20:43Z"
+      },
+      "4ac7320ecff9139e4d57e9cc1aba97eb8d53152975fb61b40873c993b350a519": {
+        "head": "f451e30fab368181c3c6afd576eeb193d450b18e",
+        "last_seen": "2024-12-06T08:40:58Z"
+      },
+      "d9cc1b78f65d46f754a61d01bfcf207c836d4ccc36bfef1ed343bd7e255550e1": {
+        "head": "424cea94df0b93ae143e3bf8cf0cad46eaa26e21",
+        "last_seen": "2024-12-06T15:40:20Z"
+      }
+    },
+    "additions": 150255,
+    "deletions": 139766,
+    "user_commits": 14,
+    "commits": 52
+  },
+  "aacb38e28a4df446e14921f4dfae813f0980de07759308fbd872ed9f0144079c": {
+    "branches": {
+      "29b319c637be17f852c44886b9552cfd57082b539ee93208d5b9eca57029482b": {
+        "head": "42b6bd3c520d81217ce97e3bd6073ec2a2740f2c",
+        "last_seen": "2025-12-24T00:54:31Z"
+      }
+    },
+    "additions": 4631,
+    "deletions": 23,
+    "user_commits": 4,
+    "commits": 4
+  },
+  "1f571a8a953399910bcf85ebc27202c830e88259410080e08a0dbf70b54ceb80": {
+    "branches": {
+      "e685d104e0af648e0a5e5e2bb1d10cf0880c7a70759a7ddcc5b20eb321c60495": {
+        "head": "916aed0b552a7c0f86cbdc410fef6c1c564c3a73",
+        "last_seen": "2025-09-28T20:14:40Z"
+      }
+    },
+    "additions": 5001,
+    "deletions": 407,
+    "user_commits": 29,
+    "commits": 29
+  },
+  "1fdfd510e67f8c592bd9329a8985a9a5616fe75919785f20598adff302ce5b22": {
+    "branches": {
+      "e04e876958bf207eedfd95ff1ef9c449467c5c1d17d44720b2e3717174313f77": {
+        "head": "cdd1bbbeda7a5cc8cb877e786bac1f99f0c14b8b",
+        "last_seen": "2026-02-11T03:54:22Z"
+      },
+      "b9da1b0eeb769f045aea8437c2d25b912bdaeeb5c7012137327fe0e927411ec6": {
+        "head": "5568ead757f8e37f927a4dd7243dd87ec406787f",
+        "last_seen": "2026-02-10T18:40:44Z"
+      },
+      "b327097da6fbe40846d336f3b8d3a02f08df24bb755276b20aae0ad2a64c6fd3": {
+        "head": "3b73be9b9581872db8db77335205476f9847668e",
+        "last_seen": "2026-02-11T22:46:10Z"
+      },
+      "c174576971da75a19a509f7cc4cc8c0c5fc1dc0394a51d2a626da3be9c4073d4": {
+        "head": "e18740e5657a70bea83e0155ec42d6e75ce4abaa",
+        "last_seen": "2026-02-11T22:45:14Z"
+      },
+      "e33bfa2c6b6b320a566f921f0138f3aa6d946e3c0fc589eed61d2c779b2260d7": {
+        "head": "bdea2acf3eabd5db3c2fb538e8ab2a151e02f221",
+        "last_seen": "2026-02-10T18:40:13Z"
+      }
+    },
+    "additions": 44571,
+    "deletions": 25418,
+    "user_commits": 477,
+    "commits": 561
+  },
+  "ee667099d0d4b833c455e99288242ce0cd23457e0edda4970d214e4b82b4a8ad": {
+    "branches": {
+      "708b8be00deb2626fd27af5c83606ec96a567fae868d831379c795ac8061eafb": {
+        "head": "d5b47611db0351471a3750404b8df952b86111f0",
+        "last_seen": "2026-01-16T23:11:42Z"
+      }
+    },
+    "additions": 1484,
+    "deletions": 0,
+    "user_commits": 2,
+    "commits": 2
+  },
+  "e9c78f9f7d74f2dac6d7edaf7be5ddc240d572da9470f63a5b6a7a5c86ce89ad": {
+    "branches": {
+      "34cb2ac3636ec343624595d5831f38735b44cb2477d69e8a99844c6346823767": {
+        "head": "e12b002e5d9bd7dc4346f34eedbcb354c31f6e49",
+        "last_seen": "2025-12-13T02:23:44Z"
+      }
+    },
+    "additions": 2801,
+    "deletions": 561,
+    "user_commits": 28,
+    "commits": 34
+  },
+  "87b31b291d8be30cb943074d142fd005b68c9089e74d506cfebbf7f796da738d": {
+    "branches": {
+      "254a1b03ee6ef91b62f4a89c4147f7615d3a3e2d29ae1993287d2fb6a2c2e1ab": {
+        "head": "9e7283bda5c085c59412db6b7b8b77ac9992ba90",
+        "last_seen": "2025-11-20T04:41:34Z"
+      }
+    },
+    "additions": 719,
+    "deletions": 34,
+    "user_commits": 9,
+    "commits": 9
+  },
+  "4610a39adca4d0c062964ccccac4ba220af7c01ef0498a749af5e935e5721a7c": {
+    "branches": {
+      "5c2083cc7ada5e8c1aff97c4cc51d0d00263f72646065e6c94b939766ed67356": {
+        "head": "dd4f1501f1d2e79036c0da6eccd967cd7e947554",
+        "last_seen": "2026-02-04T16:26:20Z"
+      }
+    },
+    "additions": 3354,
+    "deletions": 761,
+    "user_commits": 7,
+    "commits": 7
+  },
+  "5a0a43d81fd9f99dcef7381128299e9044bcd768ccf3715227e049214066dd6e": {
+    "branches": {
+      "bbaaf0acf9f491613b876ae795d57da4dd1dfb2b7280352a286efbd955a87ca5": {
+        "head": "2079907bd06fa76b103524db4ea2eda90f3f5786",
+        "last_seen": "2025-12-18T07:26:35Z"
+      },
+      "56a94c26d2c7b640751b4ad27e35642afde53cec8c3c99177eedfaf804b48845": {
+        "head": "e5f0ea43375952d5232865d628cf021c3134f9e9",
+        "last_seen": "2026-01-17T14:34:30Z"
+      },
+      "e776d81b1b1e2f8778276527075363a9d2ec024de129d150ebf7cbe943804d11": {
+        "head": "dbd855688662aa8301c9aedbf1d3347e7b4219b5",
+        "last_seen": "2025-12-20T17:28:26Z"
+      }
+    },
+    "additions": 16361,
+    "deletions": 10751,
+    "user_commits": 237,
+    "commits": 237
+  },
+  "c8b65977db8f63589ffdd3381629239195a31b8529cfee9898b804745a8d9964": {
+    "branches": {
+      "89df64041688739b7294ea4f011145d54105bac8f46e48885cdcb0b681c6be75": {
+        "head": "58eb6f1592d58a6b0b8a3e3b5d5691314cbb13d0",
+        "last_seen": "2025-12-31T22:43:20Z"
+      }
+    },
+    "additions": 4667,
+    "deletions": 381,
+    "user_commits": 35,
+    "commits": 35
+  },
+  "486b770faac4722975300595c23cbda0ae715b5c2781d8e28ed367548fca5be5": {
+    "branches": {
+      "60c744f33c76059f66dac6a7db2b7fe6f20a1b1c832ac04d04f6b784cc02d475": {
+        "head": "002c4a53d3f1e0602b31ae95002072399ef04df8",
+        "last_seen": "2025-11-16T18:11:34Z"
+      }
+    },
+    "additions": 98143,
+    "deletions": 65996,
+    "user_commits": 340,
+    "commits": 340
+  },
+  "0203bacdd4a02a39b022fd42211823b1d98415fd492b369bc13fb77b83ba2616": {
+    "branches": {
+      "57ba746500ec729a5389b94511f8a2b085e28f9cc23a07917fb62ad7a8cc2d29": {
+        "head": "9457a7ab1729f08f2b786f5f570f90891e567d41",
+        "last_seen": "2025-10-29T22:34:18Z"
+      },
+      "cf2e098c980a93f78758ff9847f490bb9f1d53ce71bbab5ed4277a1dc365d2be": {
+        "head": "5988eaacf225ad9b356fb13a7555e597742b7f21",
+        "last_seen": "2025-11-01T02:54:54Z"
+      }
+    },
+    "additions": 6,
+    "deletions": 1,
+    "user_commits": 2,
+    "commits": 3
+  },
+  "6d643f891f199c6db4250cbbdb93cd469baa38b2294bca7918b777ddc0a549d6": {
+    "branches": {
+      "396b2fea86cd221db98c27ce130d611a3bc48577eee36bc296e2381a6e4e1582": {
+        "head": "6310325b22ad7f48a3be9a29a672d250c90881af",
+        "last_seen": "2025-12-03T01:54:31Z"
+      }
+    },
+    "additions": 1468,
+    "deletions": 66,
+    "user_commits": 8,
+    "commits": 8
+  },
+  "f6f0e74ea995ad995d86d4c9e2e854fa9c4095ec2bb2a577cb45b8e96b11bfe6": {
+    "branches": {
+      "3def63359615ef9d76ee3726991ae1817030f00c86d2edf5084af7712ad3eb46": {
+        "head": "5c1bfd1fd26c21f6a7262a5607d4efebf486ecc9",
+        "last_seen": "2026-02-15T18:23:47Z"
+      }
+    },
+    "additions": 6267,
+    "deletions": 5874,
+    "user_commits": 196,
+    "commits": 359
+  },
+  "7348a2ae2f176b26d16cf7cc6cb368e69e36cf59489465923f14f9649a2e502d": {
+    "branches": {
+      "f4e6db0c77a9d42761f1a67aed08628c1ac35f5ae3cb6feffee72e14b0cb1f5b": {
+        "head": "bef44656460f3d86fea249ff86ff2308d50e83fc",
+        "last_seen": "2025-11-21T19:36:08Z"
+      }
+    },
+    "additions": 3577,
+    "deletions": 0,
+    "user_commits": 5,
+    "commits": 5
+  },
+  "437f2e10c093ff21f98977e0c795cb6de33d05c152a49deae0c519ff787305ca": {
+    "branches": {
+      "99712f3c14f5ca8b122b2e70f5547b7242c42105ea582910d4dca2c9577f53d4": {
+        "head": "c11a964feddbc518f0d6f103142de665aa5b3c95",
+        "last_seen": "2025-07-15T19:26:08Z"
+      }
+    },
+    "additions": 1162,
+    "deletions": 269,
+    "user_commits": 8,
+    "commits": 8
+  },
+  "2fb45db34b83ebdf765e43137340e64463f0828e088231acbebe25cc0df876e9": {
+    "branches": {
+      "34bf7fd15250c69cbff0f02800561cf537860c6acfd19829bdf25d9f407e83c8": {
+        "head": "7fb355e82a21d354f45a3790fcbde7bb003d7c53",
+        "last_seen": "2025-09-28T20:17:36Z"
+      }
+    },
+    "additions": 761,
+    "deletions": 71,
+    "user_commits": 8,
+    "commits": 8
+  },
+  "b5840386f61b7829359387d4a44ecaf87c8ae53afc46378457c5d01e296b1d1b": {
+    "branches": {
+      "a607588c680bd9e654310d6348462634dc6a39ffc34e2bc924aff5a0888b16aa": {
+        "head": "cad41bc3454666b51b9dc3e0f4f8860436165986",
+        "last_seen": "2025-11-18T01:21:47Z"
+      }
+    },
+    "additions": 1915,
+    "deletions": 706,
+    "user_commits": 27,
+    "commits": 27
+  },
+  "392d47a78dfd30a2dbd1e18081302cda62779a5df203d37e4ac354850322c6f4": {
+    "branches": {
+      "96170062aea6a9b449b0334d7f07c2fe43c412a188fc491aade0aea5f6b4b0b3": {
+        "head": "eaebdd050c71761476c8ae198625566010ee3f89",
+        "last_seen": "2025-12-20T02:47:27Z"
+      }
+    },
+    "additions": 555,
+    "deletions": 0,
+    "user_commits": 1,
+    "commits": 1
+  },
+  "386775bd76f3b9bfe21c0d1a2eda52b2af8508290dd418ee57a7b9c6a2198b5f": {
+    "branches": {
+      "ddaa42f9a85dba23783cfe45abe89cd382926630334abf34552b82452c81ecd5": {
+        "head": "7a28ce6e529bbfae5c18907263abe74ee0d783d1",
+        "last_seen": "2025-11-20T05:48:08Z"
+      }
+    },
+    "additions": 211,
+    "deletions": 28,
+    "user_commits": 7,
+    "commits": 7
+  },
+  "d347e1d6cbbef92511ea2ba8261bcab7d868de8108009446427f3eb4a3a68d37": {
+    "branches": {
+      "9b129d4d8813f9f7a65a55d5e86efe42d6b5f83e7548e4b109b975ebf87221f3": {
+        "head": "3320dd4d4757821e9cbca0a7a10c1665ce95ad51",
+        "last_seen": "2025-11-15T06:58:22Z"
+      }
+    },
+    "additions": 316,
+    "deletions": 88,
+    "user_commits": 8,
+    "commits": 8
+  },
+  "afd6ef9321a563049eb084d14eaad7d1325369a13942d057b8fb18488d84d42d": {
+    "branches": {},
+    "additions": 0,
+    "deletions": 0,
+    "user_commits": 0,
+    "commits": 0
+  },
+  "b938de4cfe8f90af81b601f15a32241a0ce9338b330aee888cad560fef56e159": {
+    "branches": {
+      "39f753af80708b62ad3b37665e1d3be64daf6490106c65fee7a4d3b5bd8c4e9d": {
+        "head": "725db590ffe640c34b86f73d229331b7a616c039",
+        "last_seen": "2025-11-21T02:31:41Z"
+      },
+      "9093d512b7bb6b5e1f6daafffaebba1f576bc93af454921856c3d699e8002857": {
+        "head": "d66fa58731136d92695894abd717a71d084fc01a",
+        "last_seen": "2025-11-06T23:34:49Z"
+      },
+      "d522425f21c6f90d5fe58090e14e14accc52a6d1be76931b415285dda03f40b0": {
+        "head": "ed67c70ec5a806436b52344dd08fa3e0094e4a9b",
+        "last_seen": "2025-12-20T20:55:14Z"
+      },
+      "a9f404e34c4d0ca764cd6c25d18f2806813b79d44cdace26555368511f3b3ad6": {
+        "head": "25b5801bce763c55a24ea9c26664029d5d7a940f",
+        "last_seen": "2025-12-20T18:35:00Z"
+      },
+      "be94453d3a51f79b04986556b1a18269ad8b70e5c47acdb099191c221402f2c9": {
+        "head": "88345b88f795d2b82f8de22fe15109c53ec46837",
+        "last_seen": "2025-11-20T01:06:48Z"
+      }
+    },
+    "additions": 35963,
+    "deletions": 8702,
+    "user_commits": 224,
+    "commits": 277
+  },
+  "2eab88fb956f5e5bec1266fb1e35ff9fbb0d48670a7d65796f01484aa31a9afc": {
+    "branches": {
+      "8926e1f3043ccfd3a2bfd3a581f8e259a4afb8202c508831b4fb18df937c55e4": {
+        "head": "24da412403238d0b78fffeb0e1670dc9dcbe6d82",
+        "last_seen": "2025-09-30T16:24:06Z"
+      }
+    },
+    "additions": 359,
+    "deletions": 68,
+    "user_commits": 6,
+    "commits": 8
+  },
+  "7ecaeaf698afaa2855bea86299b45e50a936f81a74ce4525bbaced7db95af275": {
+    "branches": {
+      "7013bca9ac3bd0451cc7969755e8e0f870fd5b302f1416e5251a8c277cb17bf1": {
+        "head": "4fac2d835ecad5a59e3638130e1503260d48d7ce",
+        "last_seen": "2025-11-20T05:52:08Z"
+      }
+    },
+    "additions": 9737,
+    "deletions": 2952,
+    "user_commits": 17,
+    "commits": 17
+  },
+  "a52e2fef431be8693eec4edb096e746a44fe89eb5074610a362379a0c302210d": {
+    "branches": {
+      "37201141258f781881432c6390d5b79c7cf7950edb9fadcca3a1c0676624d9ec": {
+        "head": "c0113b07a73efd8d612c89b3aaefe3f83b43b607",
+        "last_seen": "2025-11-18T17:26:23Z"
+      }
+    },
+    "additions": 1274,
+    "deletions": 151,
+    "user_commits": 20,
+    "commits": 20
+  },
+  "b5c6d5ffe4b4a4e7e38802aec24f294e7ad3b7625184c54412faa41efd602864": {
+    "branches": {
+      "4a109a6decdd9c258b9c3ee50eb8dd21e921855e225121520e575332948f423e": {
+        "head": "924395b527622231d451093542238ff3bc2a6054",
+        "last_seen": "2025-12-20T02:10:50Z"
+      }
+    },
+    "additions": 5,
+    "deletions": 4,
+    "user_commits": 27,
+    "commits": 27
+  },
+  "82eb6e2bc7183247b16510d112cdd0e43e3710a71a5dcc7fa2014960cb8cd2dd": {
+    "branches": {
+      "5394107c173f9427654e49331e21c47ac54bc8315b61bc81c08b08def7d989ab": {
+        "head": "5d491bdf09dcfc4773c77abee4507a8944c1f0d1",
+        "last_seen": "2025-09-28T23:14:38Z"
+      }
+    },
+    "additions": 1320,
+    "deletions": 498,
+    "user_commits": 13,
+    "commits": 15
+  },
+  "cbcd2bb170d42567db91780ad891872f8f90f338d3ea773279003d2cef883061": {
+    "branches": {
+      "ddac4b2be710ea2e671cf46d61e2ebc684885671aec160113ed1577c065fdd1d": {
+        "head": "ae171becae1671c50a74910e19eae40b3b7ced40",
+        "last_seen": "2025-09-28T20:36:04Z"
+      }
+    },
+    "additions": 1773,
+    "deletions": 70,
+    "user_commits": 17,
+    "commits": 17
+  },
+  "fb74722fb1eed41a1d41c39f3711bdfec5040d59c2ac2d86173495ea97a1e745": {
+    "branches": {
+      "76d588837c5f8a6647bb2b5ae717eb1d30076dad22a8124f4e7e6e291865549b": {
+        "head": "59b4a7a05c6c62c6bf5220e928d9bf9d7eb63bc5",
+        "last_seen": "2025-09-28T20:19:49Z"
+      }
+    },
+    "additions": 6838,
+    "deletions": 300,
+    "user_commits": 6,
+    "commits": 6
+  },
+  "77aac5640e8e59b9a7451ab74d1c8f6f410e78af10c5987f3c5de1aa1ce4c4c9": {
+    "branches": {
+      "f9adc3c3786782176e83fd113f124d720c472fe8368fcd141b23f7cf6123f3a6": {
+        "head": "a13346c212834e649509fcae5f30d2869c937922",
+        "last_seen": "2025-12-29T20:44:47Z"
+      }
+    },
+    "additions": 159,
+    "deletions": 0,
+    "user_commits": 2,
+    "commits": 2
+  },
+  "553a3fe6adee57c9b47d1129de32fbd084bb394fc28bcdba8cead5300a279b99": {
+    "branches": {
+      "9eb85b92a9327dd1cc602e5c2c6deb6cc50d6583a7254206bb297f82ddd14063": {
+        "head": "929de9336cb1ee240337d86cb26edffe67284695",
+        "last_seen": "2025-07-15T04:30:13Z"
+      }
+    },
+    "additions": 4402,
+    "deletions": 38,
+    "user_commits": 6,
+    "commits": 6
+  },
+  "229bc7c75e6117d0c2a7c5e00b61105122b54b3f3a50d7ffbdb90c8237daf602": {
+    "branches": {
+      "039c1c581c287d3424fe4c78f6534fe8b6ff77e4d194d80e3236e4c921c98a5e": {
+        "head": "628865a448646f551eb67f14d9087cde699f4136",
+        "last_seen": "2025-11-23T17:56:15Z"
+      }
+    },
+    "additions": 7,
+    "deletions": 0,
+    "user_commits": 5,
+    "commits": 5
+  },
+  "3659fad7507df79a84e27b00612db23e0645c2a1bf96552a756b10e9f62fc772": {
+    "branches": {
+      "be0e2bf32d180d59ad50f5907b758a9244609c003f015a41874b2346dcf2c51e": {
+        "head": "5720a0f5cf1ea184834b3c93a44cccd644945cf4",
+        "last_seen": "2025-12-01T07:28:34Z"
+      }
+    },
+    "additions": 6800,
+    "deletions": 2525,
+    "user_commits": 143,
+    "commits": 143
+  },
+  "06438b9a0f0d8d79c7b54f0900566bd8c30a4ecd2396fa96889497bc3bfaa662": {
+    "branches": {
+      "7d5e98cc83379ca7f923f96912cddd39db6bab83336fbde71db13416009dc46a": {
+        "head": "5cb2f33ba62e6325ca7012b9ee3390455c346f59",
+        "last_seen": "2025-08-02T16:50:44Z"
+      }
+    },
+    "additions": 1116,
+    "deletions": 84,
+    "user_commits": 7,
+    "commits": 7
+  },
+  "28deabcbf85c02e90f0890464a77b9005b3fbb6f7ae118df7699ad79538c78bc": {
+    "branches": {
+      "0baef1790148e0790f307c3a91077c1d8bd778ea2e44fca8684298d4513a6f3d": {
+        "head": "e9318dba4f2293417f9dbf022dbaca7499f95d03",
+        "last_seen": "2025-07-05T20:53:36Z"
+      }
+    },
+    "additions": 193,
+    "deletions": 0,
+    "user_commits": 1,
+    "commits": 1
+  }
+}
